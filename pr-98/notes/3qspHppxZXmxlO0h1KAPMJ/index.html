@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-98/k_logo.svg" />
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The Go server replaces __TRACK_SESSION__ with a token unique to its process. The tab strip
+        // uses it to keep restored tabs across a reload (same token) but drop them on a fresh launch
+        // (new token). Left as the literal placeholder in the static export, where it stays constant.
+        window.__trackSession = "__TRACK_SESSION__";
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+      })();
+    </script>
+    <style>
+      /* Reserve the app-shell background before the CSS bundle and React arrive: without this the page
+         is blank/white until the bundle mounts, then the real background flashes in — and on the static
+         site that flash lands on top of already-rendered content, scoring as layout shift (CLS). Values
+         must stay in sync with the --bg light/dark tokens in styles.css. */
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      body {
+        background: #f7f7f4;
+      }
+      :root[data-theme="dark"] body {
+        background: #161814;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) body {
+          background: #161814;
+        }
+      }
+    </style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-98/assets/index-DI3vfGEg.js"></script>
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-98/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-98/assets/markdown-lxCaTmy3.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-98/assets/react-D31PUji2.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-98/assets/tanstack-CbNXYLVq.js">
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-98/assets/index-cRJVM924.css">
+  <title>Block links · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Block links"><meta property="og:type" content="article"><meta property="og:description" content="Sometimes the thing worth linking to is not a whole note or a heading section but a single paragraph or list item. Mark the block with an id, and it becomes …"><script>window.__TRACK_STATE__={"mutations":[],"queries":[{"dehydratedAt":1785948179896,"state":{"data":{"root":"4natsB9HePrQdC0vJQKsvv","title":"track"},"dataUpdateCount":1,"dataUpdatedAt":1785948179894,"error":null,"errorUpdateCount":0,"errorUpdatedAt":0,"fetchFailureCount":0,"fetchFailureReason":null,"fetchMeta":null,"isInvalidated":false,"status":"success","fetchStatus":"idle"},"queryKey":["site"],"queryHash":"[\"site\"]"},{"dehydratedAt":1785948179896,"state":{"data":{"note":{"includes":[{"line":39,"source_line":2,"kind":"note","etag":"e76e4e3b9221a19e824a752967badc34","title":"Linking notes","caption":"Linking notes#^explicit-links","lines":["Links in track are explicit: you write `[[Title]]` in a note body to point at another note. There is","no implicit auto-linking of bare words — a link exists only where you wrote one."]}],"note_id":"3qspHppxZXmxlO0h1KAPMJ","file_kind":"note","path":"","title":"Block links","days":["2026-07-26"],"copy_path":"","created":"2026-07-26","updated":1785948117,"props":[{"key":"up","value":"Linking notes","type":"link","line":0}],"body":"# Block links\n\nSometimes the thing worth linking to is not a whole note or a heading section but a single\nparagraph or list item. Mark the block with an id, and it becomes a link target — the same idea as\nObsidian's block references.\n\n## Marking a block\n\nEnd a paragraph or list item with `^id` — a caret, then letters, digits, `-` or `_`:\n\n```markdown\nThe paragraph you want to point at. ^my-block\n\n- a list item worth citing ^li-1\n```\n\nIds are **manual only**: track never generates one, matching its explicit-link philosophy — an\nanchor exists only where you wrote one. The marker is data, not prose: the rendered note hides it.\nInside one note, the first occurrence of an id wins, so keep ids unique per note.\n\n## Linking to a block\n\n`[[Title#^id]]` resolves to the marked block. In the [[Web workspace]] (and on this published\nsite), following the link opens the note, scrolls to the block, and highlights it; the static\nexport gives the block a real anchor, so a deep link into a page lands on it too. In the editor,\ngo-to-definition on the link jumps to the marker's line.\n\nTry it live — this link targets the marked intro paragraph of [[Linking notes]]:\n\n[[Linking notes#^explicit-links|The \"links are explicit\" paragraph]]\n\n## Transcluding a block\n\nA block reference also works with transclusion: `![[Title#^id]]` on its own line embeds just that\nblock, through the same machinery that embeds a whole note (`![[Title]]`) or a heading section\n(`![[Title#Heading]]`). The block arrives with its marker stripped.\n\nThe embed below is written as `![[Linking notes#^explicit-links]]`:\n\n![[Linking notes#^explicit-links]]\n\n## This page marks its own blocks\n\nThis very paragraph carries the id `^self-demo`, so `[[Block links#^self-demo]]` navigates here —\nclick [[Block links#^self-demo|this self-link]] and watch the highlight. ^self-demo\n","etag":"22185485116e2637425b836f97933558"},"backlinks":[{"note_id":"5TjZrtnIp272Pu1vDOoFTI","file_kind":"note","title":"Hierarchy"},{"note_id":"4natsB9HePrQdC0vJQKsvv","file_kind":"note","title":"track"},{"note_id":"3eUjhpw6SZX83jXq4rtDpG","file_kind":"note","title":"Linking notes"}],"trail":[{"note_id":"4natsB9HePrQdC0vJQKsvv","file_kind":"note","title":"track"},{"note_id":"3eUjhpw6SZX83jXq4rtDpG","file_kind":"note","title":"Linking notes"}],"children":[]},"dataUpdateCount":1,"dataUpdatedAt":1785948179895,"error":null,"errorUpdateCount":0,"errorUpdatedAt":0,"fetchFailureCount":0,"fetchFailureReason":null,"fetchMeta":null,"isInvalidated":false,"status":"success","fetchStatus":"idle"},"queryKey":["note","3qspHppxZXmxlO0h1KAPMJ"],"queryHash":"[\"note\",\"3qspHppxZXmxlO0h1KAPMJ\"]"},{"dehydratedAt":1785948179896,"state":{"data":{"markdown":"# Block links\n\nSometimes the thing worth linking to is not a whole note or a heading section but a single\nparagraph or list item. Mark the block with an id, and it becomes a link target — the same idea as\nObsidian's block references.\n\n## Marking a block\n\nEnd a paragraph or list item with `^id` — a caret, then letters, digits, `-` or `_`:\n\n```markdown\nThe paragraph you want to point at. ^my-block\n\n- a list item worth citing ^li-1\n```\n\nIds are **manual only**: track never generates one, matching its explicit-link philosophy — an\nanchor exists only where you wrote one. The marker is data, not prose: the rendered note hides it.\nInside one note, the first occurrence of an id wins, so keep ids unique per note.\n\n## Linking to a block\n\n`[[Title#^id]]` resolves to the marked block. In the [[Web workspace]] (and on this published\nsite), following the link opens the note, scrolls to the block, and highlights it; the static\nexport gives the block a real anchor, so a deep link into a page lands on it too. In the editor,\ngo-to-definition on the link jumps to the marker's line.\n\nTry it live — this link targets the marked intro paragraph of [[Linking notes]]:\n\n[[Linking notes#^explicit-links|The \"links are explicit\" paragraph]]\n\n## Transcluding a block\n\nA block reference also works with transclusion: `![[Title#^id]]` on its own line embeds just that\nblock, through the same machinery that embeds a whole note (`![[Title]]`) or a heading section\n(`![[Title#Heading]]`). The block arrives with its marker stripped.\n\nThe embed below is written as `![[Linking notes#^explicit-links]]`:\n\n![[Linking notes#^explicit-links]]\n\n## This page marks its own blocks\n\nThis very paragraph carries the id `^self-demo`, so `[[Block links#^self-demo]]` navigates here —\nclick [[Block links#^self-demo|this self-link]] and watch the highlight. ^self-demo\n"},"dataUpdateCount":1,"dataUpdatedAt":1785948179895,"error":null,"errorUpdateCount":0,"errorUpdatedAt":0,"fetchFailureCount":0,"fetchFailureReason":null,"fetchMeta":null,"isInvalidated":false,"status":"success","fetchStatus":"idle"},"queryKey":["render","","# Block links\n\nSometimes the thing worth linking to is not a whole note or a heading section but a single\nparagraph or list item. Mark the block with an id, and it becomes a link target — the same idea as\nObsidian's block references.\n\n## Marking a block\n\nEnd a paragraph or list item with `^id` — a caret, then letters, digits, `-` or `_`:\n\n```markdown\nThe paragraph you want to point at. ^my-block\n\n- a list item worth citing ^li-1\n```\n\nIds are **manual only**: track never generates one, matching its explicit-link philosophy — an\nanchor exists only where you wrote one. The marker is data, not prose: the rendered note hides it.\nInside one note, the first occurrence of an id wins, so keep ids unique per note.\n\n## Linking to a block\n\n`[[Title#^id]]` resolves to the marked block. In the [[Web workspace]] (and on this published\nsite), following the link opens the note, scrolls to the block, and highlights it; the static\nexport gives the block a real anchor, so a deep link into a page lands on it too. In the editor,\ngo-to-definition on the link jumps to the marker's line.\n\nTry it live — this link targets the marked intro paragraph of [[Linking notes]]:\n\n[[Linking notes#^explicit-links|The \"links are explicit\" paragraph]]\n\n## Transcluding a block\n\nA block reference also works with transclusion: `![[Title#^id]]` on its own line embeds just that\nblock, through the same machinery that embeds a whole note (`![[Title]]`) or a heading section\n(`![[Title#Heading]]`). The block arrives with its marker stripped.\n\nThe embed below is written as `![[Linking notes#^explicit-links]]`:\n\n![[Linking notes#^explicit-links]]\n\n## This page marks its own blocks\n\nThis very paragraph carries the id `^self-demo`, so `[[Block links#^self-demo]]` navigates here —\nclick [[Block links#^self-demo|this self-link]] and watch the highlight. ^self-demo\n"],"queryHash":"[\"render\",\"\",\"# Block links\\n\\nSometimes the thing worth linking to is not a whole note or a heading section but a single\\nparagraph or list item. Mark the block with an id, and it becomes a link target — the same idea as\\nObsidian's block references.\\n\\n## Marking a block\\n\\nEnd a paragraph or list item with `^id` — a caret, then letters, digits, `-` or `_`:\\n\\n```markdown\\nThe paragraph you want to point at. ^my-block\\n\\n- a list item worth citing ^li-1\\n```\\n\\nIds are **manual only**: track never generates one, matching its explicit-link philosophy — an\\nanchor exists only where you wrote one. The marker is data, not prose: the rendered note hides it.\\nInside one note, the first occurrence of an id wins, so keep ids unique per note.\\n\\n## Linking to a block\\n\\n`[[Title#^id]]` resolves to the marked block. In the [[Web workspace]] (and on this published\\nsite), following the link opens the note, scrolls to the block, and highlights it; the static\\nexport gives the block a real anchor, so a deep link into a page lands on it too. In the editor,\\ngo-to-definition on the link jumps to the marker's line.\\n\\nTry it live — this link targets the marked intro paragraph of [[Linking notes]]:\\n\\n[[Linking notes#^explicit-links|The \\\"links are explicit\\\" paragraph]]\\n\\n## Transcluding a block\\n\\nA block reference also works with transclusion: `![[Title#^id]]` on its own line embeds just that\\nblock, through the same machinery that embeds a whole note (`![[Title]]`) or a heading section\\n(`![[Title#Heading]]`). The block arrives with its marker stripped.\\n\\nThe embed below is written as `![[Linking notes#^explicit-links]]`:\\n\\n![[Linking notes#^explicit-links]]\\n\\n## This page marks its own blocks\\n\\nThis very paragraph carries the id `^self-demo`, so `[[Block links#^self-demo]]` navigates here —\\nclick [[Block links#^self-demo|this self-link]] and watch the highlight. ^self-demo\\n\"]"}]}</script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
