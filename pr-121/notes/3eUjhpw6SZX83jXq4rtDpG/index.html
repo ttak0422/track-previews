@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-121/track-icon.svg" data-track-favicon />
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The Go server replaces __TRACK_SESSION__ with a token unique to its process. The tab strip
+        // uses it to keep restored tabs across a reload (same token) but drop them on a fresh launch
+        // (new token). Left as the literal placeholder in the static export, where it stays constant.
+        window.__trackSession = "__TRACK_SESSION__";
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "6wvHuvB6ki4WD8tuz7AQoNZ4o61YxFxkLNwbVirMcTc=";
+      })();
+    </script>
+    <style>
+      /* Reserve the app-shell background before the CSS bundle and React arrive: without this the page
+         is blank/white until the bundle mounts, then the real background flashes in — and on the static
+         site that flash lands on top of already-rendered content, scoring as layout shift (CLS). The
+         values must stay in sync with the --bg token in styles.css, which is why they are written the
+         same way it is: one light-dark() pair driven by color-scheme, since the stylesheet that sets
+         color-scheme has not loaded yet. */
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      :root {
+        color-scheme: light dark;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      body {
+        background: light-dark(#fbfaf8, #141618);
+      }
+    </style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-121/assets/index-Cu6p2dAQ.js"></script>
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-121/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-121/assets/markdown-lxCaTmy3.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-121/assets/react-D31PUji2.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-121/assets/tanstack-CbNXYLVq.js">
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-121/assets/index-B-TEWnXs.css">
+  <title>Linking notes · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Linking notes"><meta property="og:type" content="article"><meta property="og:description" content="Links in track are explicit: you write Title in a note body to point at another note. There is no implicit auto linking of bare words — a link exists only wh…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-121/notes/3eUjhpw6SZX83jXq4rtDpG/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-121/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
