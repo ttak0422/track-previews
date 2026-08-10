@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-137/track-icon.svg" data-track-favicon />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The Go server replaces __TRACK_SESSION__ with a token unique to its process. The tab strip
+        // uses it to keep restored tabs across a reload (same token) but drop them on a fresh launch
+        // (new token). Left as the literal placeholder in the static export, where it stays constant.
+        window.__trackSession = "__TRACK_SESSION__";
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "nsA/6xC9DUtabdTlDFHR+vBanTwB3WinYUrgSyfrlJQ=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "dfc5d86252bce29d";
+      })();
+    </script>
+    <style>
+      /* Reserve the app-shell background before the CSS bundle and React arrive: without this the page
+         is blank/white until the bundle mounts, then the real background flashes in — and on the static
+         site that flash lands on top of already-rendered content, scoring as layout shift (CLS). The
+         values must stay in sync with the --bg token in styles.css, which is why they are written the
+         same way it is: one light-dark() pair driven by color-scheme, since the stylesheet that sets
+         color-scheme has not loaded yet. */
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      :root {
+        color-scheme: light dark;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      body {
+        background: light-dark(#fbfaf8, #141618);
+      }
+    </style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-137/assets/index-Bc5GfaK9.js"></script>
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-137/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-137/assets/markdown-lxCaTmy3.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-137/assets/react-D31PUji2.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-137/assets/tanstack-CbNXYLVq.js">
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-137/assets/index-CjsZLikD.css">
+  <title>Syntax · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Syntax"><meta property="og:type" content="article"><meta property="og:description" content="A note is plain Markdown — CommonMark plus GitHub Flavored Markdown (tables, task lists, strikethrough). track is strongly influenced by Obsidian and borrows…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-137/notes/6RVpp0kGC9SPIhxkcDM93m/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-137/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
