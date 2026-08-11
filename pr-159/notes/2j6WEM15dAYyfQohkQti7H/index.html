@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-159/track-icon.svg" data-track-favicon />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The Go server replaces __TRACK_SESSION__ with a token unique to its process. The tab strip
+        // uses it to keep restored tabs across a reload (same token) but drop them on a fresh launch
+        // (new token). Left as the literal placeholder in the static export, where it stays constant.
+        window.__trackSession = "__TRACK_SESSION__";
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "WVpauHENPRJSZwvzNMveKTpgzH1pa7WWhHBUUH5dNsM=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "2ccdaa045e20ad79";
+      })();
+    </script>
+    <style>
+      /* Reserve the app-shell background before the CSS bundle and React arrive: without this the page
+         is blank/white until the bundle mounts, then the real background flashes in — and on the static
+         site that flash lands on top of already-rendered content, scoring as layout shift (CLS). The
+         values must stay in sync with the --bg token in styles.css, which is why they are written the
+         same way it is: one light-dark() pair driven by color-scheme, since the stylesheet that sets
+         color-scheme has not loaded yet. */
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      :root {
+        color-scheme: light dark;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      body {
+        background: light-dark(#fbfaf8, #141618);
+      }
+    </style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-159/assets/index-_fZn9FJB.js"></script>
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-159/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-159/assets/markdown-lxCaTmy3.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-159/assets/react-D31PUji2.js">
+    <link rel="modulepreload" crossorigin href="/track-previews/pr-159/assets/tanstack-CbNXYLVq.js">
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-159/assets/index-CWWrgdE2.css">
+  <title>Mindmaps · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Mindmaps"><meta property="og:type" content="article"><meta property="og:description" content="A mindmap fence draws a left to right tree of rounded nodes — a quick way to see the structure of an idea, or of the note itself. The tree is laid out by a s…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-159/notes/2j6WEM15dAYyfQohkQti7H/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-159/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
