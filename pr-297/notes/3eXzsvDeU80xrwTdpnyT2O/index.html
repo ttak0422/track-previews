@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-297/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "lf5OzZ/m+V7gZhjE+7Yx9Kg6jefb3dHeFzOrJPJcrHw=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "c922dcd454949ea1";
+      })();
+    </script>
+    <style>
+      /* Reserve the app-shell background before the CSS bundle and React arrive: without this the page
+         is blank/white until the bundle mounts, then the real background flashes in — and on the static
+         site that flash lands on top of already-rendered content, scoring as layout shift (CLS). The
+         values must stay in sync with the --bg token in styles.css, which is why they are written the
+         same way it is: one light-dark() pair driven by color-scheme, since the stylesheet that sets
+         color-scheme has not loaded yet. */
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      :root {
+        color-scheme: light dark;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      body {
+        background: light-dark(#fbfaf8, #141618);
+      }
+    </style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-297/assets/index-W6LsROTv.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-297/assets/index-BUUpqKGa.css">
+  <title>Web workspace · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Web workspace"><meta property="og:type" content="article"><meta property="og:description" content="track web serves a local browser workspace for reading and navigating the vault. It is a thin frontend over the CLI: it renders note bodies, resolves ... lin…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-297/notes/3eXzsvDeU80xrwTdpnyT2O/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-297/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-297/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-297/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-297/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-297/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-297/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-new"><button class="rail-button" type="button" aria-label="Recently created notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-plus rail-icon-svg" aria-hidden="true"><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-297/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div><div><a aria-label="Voice input" href="/track-previews/pr-297/voice" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-microphone rail-icon-svg" aria-hidden="true"><path d="M9 5a3 3 0 0 1 3 -3a3 3 0 0 1 3 3v5a3 3 0 0 1 -3 3a3 3 0 0 1 -3 -3l0 -5"></path><path d="M5 10a7 7 0 0 0 14 0"></path><path d="M8 21l8 0"></path><path d="M12 17l0 4"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-297/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>reviewed</dt><dd><span class="note-prop-value note-prop-date">2026-06-18</span></dd></div><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">reference</span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Saturday, October 3, 2026 at 01:39:36 PM">2026-10-03</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Web workspace<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-web-workspace">Web workspace</h1>
+<p><code class="inline-code">track web</code> serves a local browser workspace for reading and navigating the vault. It is a thin
+frontend over the <span class="wiki-link pending">CLI</span>: it renders note bodies, resolves <code class="inline-code">[[...]]</code> links into navigable,
+hover-previewable anchors, and draws the note graph.</p>
+<h2 id="h-what-it-offers">What it offers</h2>
+<ul>
+<li>Rendered Markdown reading with GFM tables, task lists, and Mermaid diagrams.</li>
+<li>Hover previews and persistent floating windows for linked notes and media.</li>
+<li>A local link graph you can open per-note or full-screen.</li>
+<li>Follow mode, so the web view tracks the note you are editing in Neovim.</li>
+<li>A configurable <span class="wiki-link pending">Home dashboard</span> landing note, with recent-notes, journal, and pinned widgets.</li>
+<li>A metadata editor (the Meta dialog in the note actions menu): dedicated fields for the note&#x27;s
+title, tags, description, cover image, and icon, plus a free-form block for <span class="wiki-link pending">Properties</span>. Built-in
+fields get typed controls — the cover image can be uploaded straight from the browser into the
+vault assets — while props stays free-form YAML. The engine composes and validates the whole edit
+(the same rules as <code class="inline-code">track meta --edit</code>); the frontend never assembles YAML. Changing the title
+renames the note and rewrites its backlinks. The published static site has no editor.</li>
+</ul>
+<h2 id="h-media-embeds-and-diagrams">Media embeds and diagrams</h2>
+<p>A Markdown image link on its own line becomes a rich block embed — YouTube players, Twitter/X posts,
+PDFs, image URLs, Open Graph link cards, and text-file attachments (including Mermaid diagrams). Fenced
+code blocks are syntax highlighted (with a copy button) and a <code class="inline-code">mermaid</code> fence renders inline. See
+<span class="wiki-link pending">Embeds</span> for the full list and syntax, and <span class="wiki-link pending">Charts</span> for <code class="inline-code">.viewspec.json</code> chart embeds.</p>
+<h2 id="h-relationship-to-the-static-export">Relationship to the static export</h2>
+<p>The static site produced by <code class="inline-code">track export-site</code> is the <em>published</em> counterpart of this workspace:
+rendered content only, with no editor, search index, or heatmap top page. It reuses the same Markdown
+and Mermaid rendering so a published note reads the way it does here, while <span class="wiki-link pending">Linking notes</span> explains
+how cross-note links are resolved against the published set.</p>
+<h2 id="h-static-apps">Static apps</h2>
+<p>A vault can keep a browser app at <code class="inline-code">apps/&lt;name&gt;/index.html</code>. A link to <code class="inline-code">/apps/&lt;name&gt;/</code> or
+<code class="inline-code">apps/&lt;name&gt;/</code> opens it as a top-level HTML page on a separate listener, not as a note embed. A link
+from a note in a registered vault opens that vault&#x27;s app; a direct app URL defaults to the workspace
+launch vault. The app listener uses the workspace port plus one, and startup fails if that adjacent
+port is unavailable. See <span class="wiki-link pending">Static apps</span> for setup, multi-vault behavior, trust boundaries, and
+publishing. For HTML displayed inside a note, see <span class="wiki-link pending">Embeds</span>.</p>
+<h2 id="h-searching-from-the-workspace">Searching from the workspace</h2>
+<p>The workspace search box runs the same unscoped search as the <span class="wiki-link pending">CLI</span> as you type: title and <code class="inline-code">#tag</code>
+matches appear first, followed by full-text matches from note <em>bodies</em> in a separate <strong>Full text</strong>
+group. Body matches are ranked by relevance and include code-block and CJK matches. Use
+<code class="inline-code">track search --scope body</code> when you want body-only results from the CLI; the workspace already
+combines both scopes. See <span class="wiki-link pending">Searching notes</span> for the query rules it shares.</p></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-297/tags/help/reference">#<!-- -->help/reference</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-web-workspace">Web workspace</a><a class="backlink note-toc-entry" href="#h-what-it-offers" style="padding-left:2em">What it offers</a><a class="backlink note-toc-entry" href="#h-media-embeds-and-diagrams" style="padding-left:2em">Media embeds and diagrams</a><a class="backlink note-toc-entry" href="#h-relationship-to-the-static-export" style="padding-left:2em">Relationship to the static export</a><a class="backlink note-toc-entry" href="#h-static-apps" style="padding-left:2em">Static apps</a><a class="backlink note-toc-entry" href="#h-searching-from-the-workspace" style="padding-left:2em">Searching from the workspace</a></div></section><section class="backlinks" aria-labelledby="children-heading"><h3 id="children-heading">Children</h3><div class="backlink-list"><a href="/track-previews/pr-297/notes/6Xgzgy44LKYysmaRlzVScf" class="backlink">Home dashboard</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">17</span></h3><div class="backlink-list"><a href="/track-previews/pr-297/notes/1fBExGozUeXAXNB324DsDk" class="backlink">Babel</a><a href="/track-previews/pr-297/notes/3qspHppxZXmxlO0h1KAPMJ" class="backlink">Block links</a><a href="/track-previews/pr-297/notes/5bsKWpzrLcdY0SkLtwsCr9" class="backlink">CLI</a><a href="/track-previews/pr-297/notes/6Xgzgy44LKYysmaRlzVScf" class="backlink">Home dashboard</a><a href="/track-previews/pr-297/notes/5bBoWd3NKXixIBj7useATQ" class="backlink">Diagrams</a><a href="/track-previews/pr-297/notes/36ukB4V5MfAQePgJsUVhnS" class="backlink">Embeds</a><a href="/track-previews/pr-297/notes/5TjZrtnIp272Pu1vDOoFTI" class="backlink">Hierarchy</a><a href="/track-previews/pr-297/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-297/notes/3eUjhpw6SZX83jXq4rtDpG" class="backlink">Linking notes</a><a href="/track-previews/pr-297/notes/2sNIBTsmREke9vFuCe6TLb" class="backlink">Properties</a><a href="/track-previews/pr-297/notes/3wprWYHB4uc1XstTDDjile" class="backlink">Query</a><a href="/track-previews/pr-297/notes/2KOlBRK4KsOQ2JVVHeuKuI" class="backlink">Searching notes</a><a href="/track-previews/pr-297/notes/6RVpp0kGC9SPIhxkcDM93m" class="backlink">Syntax</a><a href="/track-previews/pr-297/notes/2ttYx8EMEu4moyUaesc1p7" class="backlink">Tasks</a><a href="/track-previews/pr-297/notes/6lkMYz6DB66BiNMLmXjG9e" class="backlink">Visualization</a><a href="/track-previews/pr-297/notes/6nlndTCAVT8yIkSqAD6dVL" class="backlink">A deprecated note<span class="note-flag-badge note-flag-badge-deprecated">DEPRECATED</span></a><a href="/track-previews/pr-297/notes/3wY11oP23XDXhfwykMsUBZ" class="backlink">Static apps</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-297/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-297/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
