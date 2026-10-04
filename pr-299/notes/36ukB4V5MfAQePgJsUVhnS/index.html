@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-299/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "bGE/MGvD89jOMqeRpUjpDWvzfvnir3VTm08Ci++jGcE=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "eaad04bda30f4c87";
+      })();
+    </script>
+    <style>
+      /* Reserve the app-shell background before the CSS bundle and React arrive: without this the page
+         is blank/white until the bundle mounts, then the real background flashes in — and on the static
+         site that flash lands on top of already-rendered content, scoring as layout shift (CLS). The
+         values must stay in sync with the --bg token in styles.css, which is why they are written the
+         same way it is: one light-dark() pair driven by color-scheme, since the stylesheet that sets
+         color-scheme has not loaded yet. */
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      :root {
+        color-scheme: light dark;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      body {
+        background: light-dark(#fbfaf8, #141618);
+      }
+    </style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-299/assets/index-DpMDbCZK.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-299/assets/index-BUUpqKGa.css">
+  <title>Embeds · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Embeds"><meta property="og:type" content="article"><meta property="og:description" content="An embed is a standalone Markdown image link — on its own line — that track renders as rich media instead of a plain &lt;img . Inline image syntax inside a para…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-299/notes/36ukB4V5MfAQePgJsUVhnS/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-299/assets/3cpMcKXdZutzkjTjAalKfl.svg"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-299/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-299/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-299/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-299/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-299/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-new"><button class="rail-button" type="button" aria-label="Recently created notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-plus rail-icon-svg" aria-hidden="true"><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-299/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div><div><a aria-label="Voice input" href="/track-previews/pr-299/voice" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-microphone rail-icon-svg" aria-hidden="true"><path d="M9 5a3 3 0 0 1 3 -3a3 3 0 0 1 3 3v5a3 3 0 0 1 -3 3a3 3 0 0 1 -3 -3l0 -5"></path><path d="M5 10a7 7 0 0 0 14 0"></path><path d="M8 21l8 0"></path><path d="M12 17l0 4"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-299/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span><span class="note-crumb"><a href="/track-previews/pr-299/notes/6lkMYz6DB66BiNMLmXjG9e">Visualization</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">visualization</span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, October 4, 2026 at 04:41:59 AM">2026-10-04</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Embeds<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-embeds">Embeds</h1>
+<p>An embed is a standalone Markdown image link — <code class="inline-code">![alt](src)</code> <strong>on its own line</strong> — that track renders
+as rich media instead of a plain <code class="inline-code">&lt;img&gt;</code>. Inline image syntax inside a paragraph stays inline, so
+embedding is always opt-in and ordinary <code class="inline-code">[text](url)</code> links are never turned into noisy previews. track
+routes each embed by the kind of target (below); only <code class="inline-code">http(s)</code> and relative URLs feed an iframe, so a
+note cannot smuggle a <code class="inline-code">javascript:</code> document into an embed.</p>
+<p>See also <span class="wiki-link pending">Diagrams</span> and <span class="wiki-link pending">Charts</span>.</p>
+<h2 id="h-local-files">Local files</h2>
+<p>Local media belongs under the vault&#x27;s <code class="inline-code">assets/</code> directory. <code class="inline-code">track asset import ./image.png</code> copies the
+file there and prints the relative reference you can paste into a note:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![track logo](assets/logo.png)</code></pre></div>
+<div class="media-frame"><img class="embed embed-image" src="/track-previews/pr-299/assets/2Pi2kxEbPwJ3LBK1hcKJ6y.png" alt="track logo" loading="lazy" decoding="async"/><div class="media-controls"><button class="media-control media-preview" type="button" aria-label="Preview" title="Preview"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-picture-in-picture rail-icon-svg" aria-hidden="true"><path d="M11 19h-6a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4"></path><path d="M14 15a1 1 0 0 1 1 -1h5a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-5a1 1 0 0 1 -1 -1l0 -3"></path></svg></button><button class="media-control" type="button" aria-label="Enlarge" title="Enlarge"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-maximize rail-icon-svg" aria-hidden="true"><path d="M4 8v-2a2 2 0 0 1 2 -2h2"></path><path d="M4 16v2a2 2 0 0 0 2 2h2"></path><path d="M16 4h2a2 2 0 0 1 2 2v2"></path><path d="M16 20h2a2 2 0 0 0 2 -2v-2"></path></svg></button></div></div>
+<p>A relative <code class="inline-code">assets/&lt;file&gt;</code> reference is served from the vault by the local server, so it is never
+treated as a YouTube/tweet/OGP URL.</p>
+<h2 id="h-youtube">YouTube</h2>
+<p>A YouTube watch, share, or embed URL becomes an inline player:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![Intro](https://www.youtube.com/watch?v=aqz-KE-bpKQ)</code></pre></div>
+<div class="embed embed-video"><iframe src="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ" title="Intro" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen=""></iframe></div>
+<h2 id="h-google-maps">Google Maps</h2>
+<p>A Google Maps share or embed URL becomes an inline map. Paste the <code class="inline-code">Share → Embed a map</code> URL as-is, or
+build the keyless form yourself with a query or coordinates — no API key is needed. Short
+<code class="inline-code">maps.app.goo.gl</code> links need a network redirect to resolve, so those fall back to an Open Graph card
+instead:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![都庁](https://maps.google.com/maps?q=35.6896,139.6917&amp;z=16&amp;output=embed)</code></pre></div>
+<p>This one is live — it centers on the Tokyo Metropolitan Government building (都庁):</p>
+<div class="embed embed-map"><iframe src="https://maps.google.com/maps?q=35.6896%2C139.6917&amp;z=16&amp;output=embed" title="都庁" loading="lazy" allowFullScreen="" referrerPolicy="no-referrer-when-downgrade"></iframe></div>
+<h2 id="h-twitter-x">Twitter / X</h2>
+<p>A tweet URL renders the actual post via Twitter&#x27;s official widgets (matching how Obsidian embeds
+tweets), not just a link card. While the widget loads it shows a plain link, and if the post cannot be
+rendered — deleted, blocked, or offline — it falls back to the generic Open Graph card:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![](https://x.com/elonmusk/status/1585341984679469056?s=20)</code></pre></div>
+<div class="embed embed-tweet"><div></div><a class="md-link embed-fallback" href="https://x.com/elonmusk/status/1585341984679469056?s=20" target="_blank" rel="noreferrer noopener">https://x.com/elonmusk/status/1585341984679469056?s=20</a></div>
+<h2 id="h-pdf">PDF</h2>
+<p>A PDF (local asset or remote URL) opens in a paged slide-deck viewer rather than a download link:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![Deck](assets/slides.pdf)</code></pre></div>
+<p>This one is live — page through it with the arrows (or click a page). The sample is a three-page
+deck with just the page number on each page:</p>
+<div class="media-frame"><div class="embed embed-pdf" tabindex="0"><div class="pdf-deck-stage" role="img" aria-label="Deck"><canvas class="pdf-deck-canvas"></canvas><span class="pdf-deck-loading">Loading…</span></div><div class="pdf-deck-bar"><button type="button" class="pdf-deck-nav" disabled="" aria-label="Previous page"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-chevron-left rail-icon-svg" aria-hidden="true"><path d="M15 6l-6 6l6 6"></path></svg></button><span class="pdf-deck-count">…</span><button type="button" class="pdf-deck-nav" disabled="" aria-label="Next page"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-chevron-right rail-icon-svg" aria-hidden="true"><path d="M9 6l6 6l-6 6"></path></svg></button><a class="md-link pdf-deck-open" href="/track-previews/pr-299/assets/6ZkavUEVBSYE39JZgUlq0w.pdf" target="_blank" rel="noreferrer noopener">Deck</a></div></div><div class="media-controls"><button class="media-control media-preview" type="button" aria-label="Preview" title="Preview"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-picture-in-picture rail-icon-svg" aria-hidden="true"><path d="M11 19h-6a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4"></path><path d="M14 15a1 1 0 0 1 1 -1h5a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-5a1 1 0 0 1 -1 -1l0 -3"></path></svg></button><button class="media-control" type="button" aria-label="Enlarge" title="Enlarge"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-maximize rail-icon-svg" aria-hidden="true"><path d="M4 8v-2a2 2 0 0 1 2 -2h2"></path><path d="M4 16v2a2 2 0 0 0 2 2h2"></path><path d="M16 4h2a2 2 0 0 1 2 2v2"></path><path d="M16 20h2a2 2 0 0 0 2 -2v-2"></path></svg></button></div></div>
+<h2 id="h-web-pages-open-graph">Web pages (Open Graph)</h2>
+<p>Any other <code class="inline-code">http(s)</code> page becomes an Open Graph card — its title, description, and preview image pulled
+from the page&#x27;s <code class="inline-code">og:</code> metadata:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![](https://example.com/article)</code></pre></div>
+<h2 id="h-text-file-attachments">Text-file attachments</h2>
+<p>A text file imported with <code class="inline-code">track asset import</code> is fetched and rendered inline instead of shown as a
+broken image. A config file, script, or data snippet you want to keep beside a note (<code class="inline-code">.txt</code>, <code class="inline-code">.json</code>,
+<code class="inline-code">.yaml</code>, <code class="inline-code">.csv</code>, <code class="inline-code">.sh</code>, …) renders as a syntax-highlighted code block:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![](assets/pod.yaml)</code></pre></div>
+<div class="media-frame"><div class="embed text-asset text-asset-loading">Loading…</div><div class="media-controls"><button class="media-control media-preview" type="button" aria-label="Preview" title="Preview"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-picture-in-picture rail-icon-svg" aria-hidden="true"><path d="M11 19h-6a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4"></path><path d="M14 15a1 1 0 0 1 1 -1h5a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-5a1 1 0 0 1 -1 -1l0 -3"></path></svg></button><button class="media-control" type="button" aria-label="Enlarge" title="Enlarge"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-maximize rail-icon-svg" aria-hidden="true"><path d="M4 8v-2a2 2 0 0 1 2 -2h2"></path><path d="M4 16v2a2 2 0 0 0 2 2h2"></path><path d="M16 4h2a2 2 0 0 1 2 2v2"></path><path d="M16 20h2a2 2 0 0 0 2 -2v-2"></path></svg></button></div></div>
+<p>Two text kinds render as something richer instead: a diagram source (<code class="inline-code">.mmd</code> / <code class="inline-code">.mermaid</code> for
+Mermaid, <code class="inline-code">.dot</code> / <code class="inline-code">.gv</code> for Graphviz, <code class="inline-code">.d2</code> for D2, <code class="inline-code">.drawio</code> for draw.io) becomes a <strong>diagram</strong> —
+see <span class="wiki-link pending">Diagrams</span> — and a
+<code class="inline-code">.viewspec.json</code> becomes a <strong>chart</strong> — see <span class="wiki-link pending">Charts</span>.</p>
+<h2 id="h-html-pages">HTML pages</h2>
+<p>An HTML file is a vault asset like any other: <code class="inline-code">track asset import ./demo.html</code> copies it under
+<code class="inline-code">assets/</code>, and the standard embed syntax mounts it in a <strong>sandboxed iframe</strong> — its own JS and CSS run,
+but it is isolated from the workspace (unique opaque origin, no access to the app, cookies, or storage):</p>
+<p>For a full-page browser app with relative files, use <span class="wiki-link pending">Static apps</span> instead. A static app opens as a
+top-level page with no iframe or sandbox; this <code class="inline-code">assets/</code> embed stays inside the note and sandboxed.</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![Demo](assets/demo.html)</code></pre></div>
+<div class="embed embed-html"><iframe src="/track-previews/pr-299/assets/2s2EXl7i0Opz7sJYvSIvgl.html" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals" allow="clipboard-write" loading="lazy" title="Demo" style="height:420px;min-height:420px"></iframe></div>
+<p>A remote <code class="inline-code">http(s)://…/page.html</code> URL is not mounted this way: it becomes an Open Graph card like any
+other web page rather than a sandboxed iframe — see <em>Web pages (Open Graph)</em> above. On a published site
+that card is fetched from the reader&#x27;s browser rather than the local <code class="inline-code">/api/ogp</code> proxy, so the reader
+still connects to the remote host — one metadata request (which a cross-origin refusal degrades to a
+bare link) instead of a fully rendered, scripted page. The iframe has a fixed default height since a
+raw HTML page has no intrinsic aspect ratio, but you can set it with a <code class="inline-code">:height</code> option after the embed
+— the same Org-style <code class="inline-code">:key value</code> tail <span class="wiki-link pending">Babel</span> and note includes use:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![Demo](assets/demo.html) :height 480<!-- -->
+<!-- -->![Map](assets/map.html) :height 90%</code></pre></div>
+<p>A bare number is pixels; a <code class="inline-code">%</code> or <code class="inline-code">vh</code> value is a share of the viewport height.</p>
+<p>Use <code class="inline-code">:frame none</code> when the embedded page should sit directly on the note without the visible frame:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![Demo](assets/demo.html) :frame none</code></pre></div>
+<p>This changes only the border, rounded corners, and clipping around the iframe. The sandbox stays in
+place, so the page still runs with <code class="inline-code">allow-scripts allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals</code> and <code class="inline-code">allow=&quot;clipboard-write&quot;</code>, and no <code class="inline-code">allow-same-origin</code>.</p>
+<p>A link opened from the embedded page comes up as an ordinary tab rather than a sandboxed one, and the
+frame grants the embedded page <code class="inline-code">clipboard-write</code> permission.</p>
+<p>The sandbox has no <code class="inline-code">allow-forms</code>, and a blocked submission never dispatches the <code class="inline-code">submit</code> event — so an
+embedded page that relies on <code class="inline-code">&lt;form&gt;</code> submit semantics silently does nothing. Drive actions from
+JavaScript click handlers (<code class="inline-code">&lt;button type=&quot;button&quot;&gt;</code>) and <code class="inline-code">window.open</code> instead; an Enter-key shortcut
+needs its own <code class="inline-code">keydown</code> listener.</p>
+<p>The <span class="wiki-link pending">Web workspace</span> renders every embed live; the static export (<span class="wiki-link pending">CLI</span> <code class="inline-code">export-site</code>) renders the
+same output for a published note.</p></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-299/tags/help/visualization/embeds">#<!-- -->help/visualization/embeds</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-embeds">Embeds</a><a class="backlink note-toc-entry" href="#h-local-files" style="padding-left:2em">Local files</a><a class="backlink note-toc-entry" href="#h-youtube" style="padding-left:2em">YouTube</a><a class="backlink note-toc-entry" href="#h-google-maps" style="padding-left:2em">Google Maps</a><a class="backlink note-toc-entry" href="#h-twitter-x" style="padding-left:2em">Twitter / X</a><a class="backlink note-toc-entry" href="#h-pdf" style="padding-left:2em">PDF</a><a class="backlink note-toc-entry" href="#h-web-pages-open-graph" style="padding-left:2em">Web pages (Open Graph)</a><a class="backlink note-toc-entry" href="#h-text-file-attachments" style="padding-left:2em">Text-file attachments</a><a class="backlink note-toc-entry" href="#h-html-pages" style="padding-left:2em">HTML pages</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">07</span></h3><div class="backlink-list"><a href="/track-previews/pr-299/notes/4cyRC8BKwFIIo92KY1wPvF" class="backlink">Charts</a><a href="/track-previews/pr-299/notes/5bBoWd3NKXixIBj7useATQ" class="backlink">Diagrams</a><a href="/track-previews/pr-299/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-299/notes/6RVpp0kGC9SPIhxkcDM93m" class="backlink">Syntax</a><a href="/track-previews/pr-299/notes/6lkMYz6DB66BiNMLmXjG9e" class="backlink">Visualization</a><a href="/track-previews/pr-299/notes/3eXzsvDeU80xrwTdpnyT2O" class="backlink">Web workspace</a><a href="/track-previews/pr-299/notes/3wY11oP23XDXhfwykMsUBZ" class="backlink">Static apps</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-299/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-299/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
