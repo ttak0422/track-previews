@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-341/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "7gz5WMbC13EnviNSINJxeqaVmyXJfbJjqR+WfVs4gZM=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "43e56ab900942d28";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-341/assets/index-DZlMz0ej.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-341/assets/index-CVhiCNQO.css">
+  <title>Charts · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Charts"><meta property="og:type" content="article"><meta property="og:description" content="track render turns a declarative View Spec (JSON) into a chart, reading data from the Canonical Data Model — plain JSONL files, one record per line, one kind…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-341/notes/4cyRC8BKwFIIo92KY1wPvF/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-341/assets/0LCTPwSYTPDDvRlBwPPAS5.svg"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-341/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-341/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-341/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-341/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-341/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-341/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-341/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span><span class="note-crumb"><a href="/track-previews/pr-341/notes/6lkMYz6DB66BiNMLmXjG9e">Visualization</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>reviewed</dt><dd><span class="note-prop-value note-prop-date">2026-06-24</span></dd></div><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">visualization</span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Monday, October 26, 2026 at 02:53:48 AM">2026-10-26</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Charts<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-charts">Charts</h1>
+<p><code class="inline-code">track render</code> turns a declarative <strong>View Spec</strong> (JSON) into a chart, reading data from the
+<strong>Canonical Data Model</strong> — plain JSONL files, one record per line, one kind per file. track never
+fetches data itself; external sources are converted into this model by separate <code class="inline-code">track-fetch-*</code> tools.</p>
+<p>See also <span class="wiki-link pending">Diagrams</span> and <span class="wiki-link pending">Embeds</span>. For unavailable readings, start with
+<span class="wiki-link pending">Missing metric observations</span> below.</p>
+<h2 id="h-data-the-canonical-data-model">Data: the Canonical Data Model</h2>
+<p>A data file is JSONL with one homogeneous <em>kind</em> per file. Every record carries a schema <code class="inline-code">version</code>.</p>
+<table><thead><tr><th>Kind</th><th>Required fields</th><th>Meaning</th></tr></thead><tbody><tr><td><code class="inline-code">event</code></td><td><code class="inline-code">time</code>, <code class="inline-code">title</code></td><td>A point-in-time happening (news, post, milestone).</td></tr><tr><td><code class="inline-code">price</code></td><td><code class="inline-code">entity</code>, <code class="inline-code">time</code>, <code class="inline-code">open</code>, <code class="inline-code">high</code>, <code class="inline-code">low</code>, <code class="inline-code">close</code></td><td>One OHLCV bar.</td></tr><tr><td><code class="inline-code">metric</code></td><td><code class="inline-code">name</code>, <code class="inline-code">time</code>, <code class="inline-code">value</code></td><td>A named numeric sample, or an explicit missing observation with a reason.</td></tr><tr><td><code class="inline-code">entity</code></td><td><code class="inline-code">id</code>, <code class="inline-code">name</code></td><td>A thing series refer to (ticker, index, sector).</td></tr><tr><td><code class="inline-code">annotation</code></td><td><code class="inline-code">time</code>, <code class="inline-code">text</code></td><td>A label for narrative overlays.</td></tr></tbody></table>
+<p>The full field list (with optional fields and types) is printed by <code class="inline-code">track render --help</code>, derived from
+the typed structs so it never drifts. Example <code class="inline-code">series.jsonl</code> (a <code class="inline-code">metric</code> kind):</p>
+<div class="code-block" data-language="jsonl"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;demo&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;1&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<span class="syntax-number">3</span>}<!-- -->
+<!-- -->{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;demo&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;2&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<span class="syntax-number">7</span>}<!-- -->
+<!-- -->{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;demo&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;3&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<span class="syntax-number">4</span>}</code></pre></div>
+<p><code class="inline-code">kind</code> is a real schema: rendering validates each record against it and <strong>fails with an error</strong> if a
+required field is missing or a numeric field is non-numeric, rather than drawing a partial chart. Extra
+fields beyond the schema are allowed, so a spec can still chart custom columns.</p>
+<p>Canonical data files live in the vault&#x27;s <code class="inline-code">data/</code> directory (created by <code class="inline-code">track init</code>) — that is where
+<code class="inline-code">track-fetch-*</code> tools write their output. A spec references a file by path, so data may live anywhere a
+spec can reach.</p>
+<h2 id="h-missing-metric-observations">Missing metric observations</h2>
+<p>A missing reading is different from an observed zero. Keep a dated record with <code class="inline-code">&quot;value&quot;: null</code>
+and a nonblank <code class="inline-code">missing_reason</code> when a measurement is unavailable. Do not replace it with <code class="inline-code">0</code>,
+copy the previous reading, or omit its date if the gap should be visible.</p>
+<p>For example, save these synthetic readings as <code class="inline-code">readings.jsonl</code>:</p>
+<div class="code-block" data-language="jsonl"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;news_sources&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;2026-10-01&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<span class="syntax-number">18</span>}<!-- -->
+<!-- -->{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;news_sources&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;2026-10-02&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<span class="syntax-number">12</span>}<!-- -->
+<!-- -->{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;news_sources&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;2026-10-03&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<!-- -->null<!-- -->,<span class="syntax-string">&quot;missing_reason&quot;</span>:<span class="syntax-string">&quot;Collection unavailable&quot;</span>}<!-- -->
+<!-- -->{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;news_sources&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;2026-10-04&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<span class="syntax-number">3</span>}<!-- -->
+<!-- -->{<span class="syntax-string">&quot;version&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;name&quot;</span>:<span class="syntax-string">&quot;news_sources&quot;</span>,<span class="syntax-string">&quot;time&quot;</span>:<span class="syntax-string">&quot;2026-10-05&quot;</span>,<span class="syntax-string">&quot;value&quot;</span>:<span class="syntax-number">0</span>}</code></pre></div>
+<p>Save this View Spec alongside it as <code class="inline-code">readings.json</code>, then render it:</p>
+<div class="code-block" data-language="json"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>{<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;version&quot;</span>:<!-- --> <span class="syntax-number">2</span>,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;mark&quot;</span>:<!-- --> <span class="syntax-string">&quot;line&quot;</span>,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;News sources (synthetic)&quot;</span>,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;data&quot;</span>:<!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;kind&quot;</span>:<!-- --> <span class="syntax-string">&quot;metric&quot;</span>,<!-- --> <span class="syntax-string">&quot;source&quot;</span>:<!-- --> <span class="syntax-string">&quot;readings.jsonl&quot;</span> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;encoding&quot;</span>:<!-- --> <!-- -->{<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;x&quot;</span>:<!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;time&quot;</span> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;y&quot;</span>:<!-- --> <!-- -->[<!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;value&quot;</span>,<!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;Source count&quot;</span> <!-- -->}<!-- -->]<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;detail&quot;</span>:<!-- --> <!-- -->[<!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;missing_reason&quot;</span>,<!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;Missing reason&quot;</span> <!-- -->}<!-- -->]<!-- -->
+<!-- --> <!-- --> <!-- -->}<!-- -->
+<!-- -->}</code></pre></div>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->render<!-- --> <!-- -->-<!-- -->-<!-- -->spec<!-- --> <!-- -->readings<!-- -->.<!-- -->json<!-- --> <!-- -->-<!-- -->-<!-- -->out<!-- --> <!-- -->readings<!-- -->.<!-- -->html<!-- -->
+<!-- -->track<!-- --> <!-- -->render<!-- --> <!-- -->-<!-- -->-<!-- -->spec<!-- --> <!-- -->readings<!-- -->.<!-- -->json<!-- --> <!-- -->-<!-- -->-<!-- -->out<!-- --> <!-- -->readings<!-- -->.<!-- -->svg<!-- --> <!-- -->-<!-- -->-<!-- -->renderer<!-- --> <!-- -->svg</code></pre></div>
+<p>The same example is rendered here. October 3 breaks the line; October 5 is a genuine zero:</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p>Keep the explanation beside the chart when readers must always see it. A missing mark may have
+no hover target, even with <code class="inline-code">encoding.detail</code>:</p>
+<table><thead><tr><th>Date</th><th>Reading</th><th>Explanation</th></tr></thead><tbody><tr><td>October 3</td><td>Unknown</td><td>Collection unavailable; this is not evidence that attention fell.</td></tr><tr><td>October 5</td><td>0</td><td>The measurement completed and observed zero sources.</td></tr></tbody></table>
+<p>A source URL or vault note can travel with a reading using the existing <code class="inline-code">encoding.href</code> or
+<code class="inline-code">encoding.note</code> channel. Use <code class="inline-code">encoding.detail</code> for a reason, source label, or other extra columns;
+for a larger dashboard, the <span class="wiki-link pending">article table</span> can keep
+all reasons and evidence visible. Tracking collection health and calculating the readings remain
+the producer&#x27;s responsibility: track does not fetch data or infer why it is missing.</p>
+<h3 id="h-what-charts-and-dashboards-do-with-a-gap">What charts and dashboards do with a gap</h3>
+<ul>
+<li><strong>Line and area:</strong> break at the missing observation, without connecting across it or drawing zero.
+A date absent from the file cannot create a gap automatically; supply an explicit missing record.</li>
+<li><strong>Moving average:</strong> a <code class="inline-code">window</code> containing a missing observation is also missing. The average
+resumes once the complete trailing window has numeric readings.</li>
+<li><strong>Ranking:</strong> <code class="inline-code">sort: &quot;value&quot;</code> and <code class="inline-code">sort: &quot;-value&quot;</code> both place categories with no finite values
+after observed categories, then apply <code class="inline-code">limit</code>. A real zero still ranks numerically: in a descending
+ranking it comes before a negative value, while a missing value comes after both. Partially observed
+multi-series categories keep their existing sum of finite values; check completeness in the producer.</li>
+<li><strong>Gauge:</strong> an explicit null in the newest filtered input clears the needle and numeric reading.
+A later number, including zero, restores them. A gauge uses <code class="inline-code">mark: &quot;gauge&quot;</code> with
+<code class="inline-code">&quot;encoding&quot;: {&quot;y&quot;: [{&quot;field&quot;: &quot;value&quot;}]}</code> and no x channel. Input order determines latest,
+so write observations in chronological order; track does not calculate freshness.</li>
+<li><strong>Dashboard import:</strong> a valid series containing only missing observations can still be selected
+by <code class="inline-code">track metrics dashboard</code>. It is an existing series with no readings yet, not an unknown series.</li>
+</ul>
+<h3 id="h-fixing-invalid-metric-records">Fixing invalid metric records</h3>
+<p>Rendering stops with an error for malformed data instead of silently treating it as missing:</p>
+<ul>
+<li>Keep <code class="inline-code">name</code>, <code class="inline-code">time</code>, and the <code class="inline-code">value</code> key on every record, including missing observations</li>
+<li>Use JSON <code class="inline-code">null</code>, not the string <code class="inline-code">&quot;null&quot;</code>, and provide a nonblank string <code class="inline-code">missing_reason</code></li>
+<li>Omit <code class="inline-code">missing_reason</code> when the value is numeric; a nonblank reason with a number is contradictory</li>
+<li>Do not use <code class="inline-code">NaN</code>, infinity, an empty string, or arbitrary text as a number</li>
+</ul>
+<p>These rules apply to <code class="inline-code">metric.value</code>; price OHLC fields still require numbers. Existing numeric
+metric records, including numeric strings, continue to work without migration. Older track versions
+may reject the new null form, so update readers before sharing datasets that use it.</p>
+<h2 id="h-view-spec-one-chart">View Spec: one chart</h2>
+<p>A View Spec names a data source, a <strong>mark</strong> (what to draw), and an <strong>encoding</strong> that maps record fields
+onto visual channels. It knows nothing about the renderer, so the same spec can be drawn by different
+backends.</p>
+<div class="code-block" data-language="json"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>{<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;version&quot;</span>:<!-- --> <span class="syntax-number">2</span>,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;mark&quot;</span>:<!-- --> <span class="syntax-string">&quot;line&quot;</span>,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;Line&quot;</span>,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;data&quot;</span>:<!-- --> <!-- -->{<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;kind&quot;</span>:<!-- --> <span class="syntax-string">&quot;metric&quot;</span>,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;records&quot;</span>:<!-- --> <!-- -->[<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;name&quot;</span>:<!-- --> <span class="syntax-string">&quot;demo&quot;</span>,<!-- --> <span class="syntax-string">&quot;time&quot;</span>:<!-- --> <span class="syntax-string">&quot;1&quot;</span>,<!-- --> <span class="syntax-string">&quot;value&quot;</span>:<!-- --> <span class="syntax-number">3</span> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;name&quot;</span>:<!-- --> <span class="syntax-string">&quot;demo&quot;</span>,<!-- --> <span class="syntax-string">&quot;time&quot;</span>:<!-- --> <span class="syntax-string">&quot;2&quot;</span>,<!-- --> <span class="syntax-string">&quot;value&quot;</span>:<!-- --> <span class="syntax-number">7</span> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;name&quot;</span>:<!-- --> <span class="syntax-string">&quot;demo&quot;</span>,<!-- --> <span class="syntax-string">&quot;time&quot;</span>:<!-- --> <span class="syntax-string">&quot;3&quot;</span>,<!-- --> <span class="syntax-string">&quot;value&quot;</span>:<!-- --> <span class="syntax-number">4</span> <!-- -->}<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <!-- -->]<!-- -->
+<!-- --> <!-- --> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <span class="syntax-string">&quot;encoding&quot;</span>:<!-- --> <!-- -->{<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;x&quot;</span>:<!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;time&quot;</span> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;y&quot;</span>:<!-- --> <!-- -->[<!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;value&quot;</span> <!-- -->}<!-- --> <!-- -->]<!-- -->
+<!-- --> <!-- --> <!-- -->}<!-- -->
+<!-- -->}</code></pre></div>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->render<!-- --> <!-- -->-<!-- -->-<!-- -->spec<!-- --> <!-- -->chart<!-- -->.<!-- -->json<!-- --> <!-- -->-<!-- -->-<!-- -->out<!-- --> <!-- -->chart<!-- -->.<!-- -->html</code></pre></div>
+<p>Rendered output:</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p>Key fields:</p>
+<ul>
+<li><code class="inline-code">mark</code> — <code class="inline-code">line</code>, <code class="inline-code">bar</code>, <code class="inline-code">point</code>, <code class="inline-code">area</code>, <code class="inline-code">rect</code>, <code class="inline-code">candlestick</code>, <code class="inline-code">treemap</code>, or <code class="inline-code">gauge</code>.</li>
+<li><code class="inline-code">encoding.*.type</code> — <code class="inline-code">quantitative</code> (default) or <code class="inline-code">nominal</code> (a category). Nominal on the right axis
+picks the form: a nominal-y <code class="inline-code">bar</code> is horizontal, a nominal-x <code class="inline-code">point</code> is a scatter (vs a bubble), and
+<code class="inline-code">rect</code> needs nominal x and y.</li>
+<li><code class="inline-code">encoding.y[].axis</code> — set <code class="inline-code">&quot;y2&quot;</code> to put a series on a secondary right-hand axis (two series on different scales).</li>
+<li><code class="inline-code">encoding.y[].domain</code> — optional <code class="inline-code">[min,max]</code> for a quantitative primary value axis. Shared-axis
+declarations must agree; bar/area ranges include zero; out-of-range data is a render error.</li>
+<li><code class="inline-code">encoding.color</code> — a nominal field that splits records into one colored series per value
+(on <code class="inline-code">rect</code> it is instead the quantitative heatmap cell value).</li>
+<li><code class="inline-code">sort</code> / <code class="inline-code">limit</code> — on the category-axis channel: order categories by label or value
+(<code class="inline-code">ascending|descending|value|-value</code>) and keep only the first N (top-N).</li>
+<li><code class="inline-code">stack</code> — on a bar&#x27;s measure channel (<code class="inline-code">y[0]</code>, or <code class="inline-code">x</code> for a horizontal bar): stack the series.</li>
+<li><code class="inline-code">filter</code> — <code class="inline-code">{field, equals}</code> shorthand, or <code class="inline-code">{all: [{field, op, value}]}</code> with <code class="inline-code">op</code> of
+<code class="inline-code">eq|ne|lt|le|gt|ge</code> for multi-field, range, and period filtering.</li>
+<li><code class="inline-code">y[].mark</code> — <code class="inline-code">line|bar|area</code> on a y channel draws that series in its own form: a <strong>combo chart</strong>
+(volume bars + an index line on <code class="inline-code">y2</code>). Dense category charts also zoom automatically: wheel/pinch
+always, plus a range slider past 30 categories.</li>
+<li><code class="inline-code">y[].window</code> — replace the series with its rolling mean over the trailing N records (a moving
+average); the first N-1 points stay empty.</li>
+<li><code class="inline-code">overlays</code> — reference geometry over the chart: <code class="inline-code">{source, kind}</code> (or <code class="inline-code">{records, kind}</code> with the
+events inline) draws events/annotations as vertical markers, <code class="inline-code">{y, axis?, label?}</code> a horizontal
+threshold line, <code class="inline-code">{from, to, label?}</code> a shaded period band, and <code class="inline-code">{x, y, label}</code> a callout bubble
+pointing at one data point. A marker overlay with <code class="inline-code">display: &quot;box&quot;</code> also draws each event as an
+always-visible annotation box hugging the plot (web reader only).</li>
+</ul>
+<h2 id="h-embedding-a-chart-in-a-note">Embedding a chart in a note</h2>
+<p>Every image on this page is a <strong>View Spec asset rendered by track</strong>, not a hand-made picture. A
+<code class="inline-code">.viewspec.json</code> asset carries the spec <em>and its data inline</em> (<code class="inline-code">data.records</code>), so it is a complete,
+self-contained chart. Embed it like any image and track resolves it at build time; the published page
+draws it as an interactive ECharts chart:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>![Line](assets/chart-line.viewspec.json)</code></pre></div>
+<p>Just drop the <code class="inline-code">.viewspec.json</code> file into the assets directory and reference it — no <code class="inline-code">import</code> step is
+required (<code class="inline-code">track asset import</code> only copies a file there for you). There is no separate data file to
+keep in sync and no CDN — the engine resolves the spec at build time and the site&#x27;s bundled ECharts
+draws it. The charts below are each one embedded <code class="inline-code">.viewspec.json</code>.</p>
+<h3 id="h-writing-the-spec-inline">Writing the spec inline</h3>
+<p>Prefer to keep the spec in the note itself? Fence a block with <code class="inline-code">viewspec</code> — the same way a <code class="inline-code">mermaid</code>
+fence embeds a <span class="wiki-link pending">diagram</span> — and it renders as an interactive ECharts chart (hover
+tooltips, legend toggling) in both the web workspace and the published site.
+Inline <code class="inline-code">data.records</code> keeps the block self-contained; <code class="inline-code">data.source</code> reads a JSONL file
+from the vault&#x27;s <code class="inline-code">data/</code> directory. If the spec is invalid, the error and the source are shown at the
+block&#x27;s position, so a typo never hides your text:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```viewspec<!-- -->
+<!-- -->{<!-- -->
+<!-- -->  &quot;version&quot;: 2,<!-- -->
+<!-- -->  &quot;mark&quot;: &quot;bar&quot;,<!-- -->
+<!-- -->  &quot;title&quot;: &quot;Notes per week&quot;,<!-- -->
+<!-- -->  &quot;data&quot;: {<!-- -->
+<!-- -->    &quot;kind&quot;: &quot;metric&quot;,<!-- -->
+<!-- -->    &quot;records&quot;: [<!-- -->
+<!-- -->      { &quot;name&quot;: &quot;notes&quot;, &quot;time&quot;: &quot;W1&quot;, &quot;value&quot;: 4 },<!-- -->
+<!-- -->      { &quot;name&quot;: &quot;notes&quot;, &quot;time&quot;: &quot;W2&quot;, &quot;value&quot;: 7 },<!-- -->
+<!-- -->      { &quot;name&quot;: &quot;notes&quot;, &quot;time&quot;: &quot;W3&quot;, &quot;value&quot;: 5 },<!-- -->
+<!-- -->      { &quot;name&quot;: &quot;notes&quot;, &quot;time&quot;: &quot;W4&quot;, &quot;value&quot;: 9 }<!-- -->
+<!-- -->    ]<!-- -->
+<!-- -->  },<!-- -->
+<!-- -->  &quot;encoding&quot;: {<!-- -->
+<!-- -->    &quot;x&quot;: { &quot;field&quot;: &quot;time&quot;, &quot;type&quot;: &quot;nominal&quot;, &quot;title&quot;: &quot;Week&quot; },<!-- -->
+<!-- -->    &quot;y&quot;: [ { &quot;field&quot;: &quot;value&quot;, &quot;title&quot;: &quot;Notes&quot; } ]<!-- -->
+<!-- -->  }<!-- -->
+<!-- -->}<!-- -->
+<!-- -->```</code></pre></div>
+<p>It renders as (live):</p>
+<figure class="viewspec-chart-wrap"><div class="viewspec-chart" role="img" aria-label="Notes per week"></div></figure>
+<p><strong><code class="inline-code">area</code></strong> — a line with the region down to zero filled; every line channel (color split, y2, sort) works unchanged.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong><code class="inline-code">bar</code></strong> — values per category; the baseline is pinned to zero, so negatives drop below it.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Horizontal bar</strong> (<code class="inline-code">mark: bar</code>, nominal y) — for rankings; categories run down the left, the value axis along the bottom.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Scatter</strong> (<code class="inline-code">mark: point</code>, nominal x) — points over a category x-axis, the connecting line suppressed.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Color split</strong> (<code class="inline-code">encoding.color</code>, nominal) — one series per category value, each in its own color; works on <code class="inline-code">line</code>, <code class="inline-code">bar</code>, and <code class="inline-code">point</code>.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Sort and top-N</strong> (<code class="inline-code">sort</code>, <code class="inline-code">limit</code> on the category-axis channel) — order categories by label
+(<code class="inline-code">ascending</code>/<code class="inline-code">descending</code>) or by their value total (<code class="inline-code">value</code>/<code class="inline-code">-value</code>), and keep only the first N.
+Here a ranking: the nominal y sorted <code class="inline-code">-value</code> with <code class="inline-code">limit: 5</code>.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Stacked bars</strong> (<code class="inline-code">stack: true</code> on the bar&#x27;s measure channel) — series pile up per category instead
+of sitting side by side; combines with a color split. On a horizontal bar, set it on <code class="inline-code">encoding.x</code>.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Combo</strong> (<code class="inline-code">y[].mark</code>) — series in mixed forms: volume bars with an index line on the secondary axis.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Heatmap</strong> (<code class="inline-code">mark: rect</code>) — a 2D grid of <code class="inline-code">x</code> columns × <code class="inline-code">y[0]</code> rows, each cell colored by <code class="inline-code">encoding.color</code> (with a value legend).</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Timeline</strong> (<code class="inline-code">mark: point</code>, nominal y) — one dot per record at its <code class="inline-code">(column, lane)</code>; an optional <code class="inline-code">size</code> scales the dot, one color per lane.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Candlestick</strong> (<code class="inline-code">mark: candlestick</code>, <code class="inline-code">kind: price</code>) — one OHLC candle per record: a high–low wick
+behind an open–close body, green when the close is at or above the open, red otherwise. The
+open/high/low/close fields are implied by the <code class="inline-code">price</code> kind, so the encoding needs only <code class="inline-code">x</code>.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Moving averages and volume</strong> (<code class="inline-code">encoding.y</code> on a candlestick) — explicit y channels draw extra
+series over the candles: <code class="inline-code">window: N</code> turns a field into its rolling mean (<code class="inline-code">close</code> + <code class="inline-code">window: 25</code> =
+MA25, starting as a gap until N records exist), and <code class="inline-code">{&quot;field&quot;: &quot;volume&quot;, &quot;mark&quot;: &quot;bar&quot;, &quot;axis&quot;: &quot;y2&quot;}</code>
+adds volume bars in a bottom band, each colored by its candle&#x27;s direction (green rising, red falling).</p>
+<div class="code-block" data-language="json"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-string">&quot;y&quot;</span>:<!-- --> <!-- -->[<!-- -->
+<!-- --> <!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;close&quot;</span>,<!-- --> <span class="syntax-string">&quot;window&quot;</span>:<!-- --> <span class="syntax-number">5</span>,<!-- --> <!-- --> <span class="syntax-string">&quot;mark&quot;</span>:<!-- --> <span class="syntax-string">&quot;line&quot;</span>,<!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;MA5&quot;</span> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;close&quot;</span>,<!-- --> <span class="syntax-string">&quot;window&quot;</span>:<!-- --> <span class="syntax-number">25</span>,<!-- --> <span class="syntax-string">&quot;mark&quot;</span>:<!-- --> <span class="syntax-string">&quot;line&quot;</span>,<!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;MA25&quot;</span> <!-- -->}<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;field&quot;</span>:<!-- --> <span class="syntax-string">&quot;volume&quot;</span>,<!-- --> <span class="syntax-string">&quot;mark&quot;</span>:<!-- --> <span class="syntax-string">&quot;bar&quot;</span>,<!-- --> <span class="syntax-string">&quot;axis&quot;</span>:<!-- --> <span class="syntax-string">&quot;y2&quot;</span>,<!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;Volume&quot;</span> <!-- -->}<!-- -->
+<!-- -->]</code></pre></div>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Treemap</strong> (<code class="inline-code">mark: treemap</code>) — the industry-map view: one rectangle per record, its area from
+<code class="inline-code">encoding.size</code> and its color from <code class="inline-code">encoding.color</code>, grouped one level by an optional nominal <code class="inline-code">y[0]</code>;
+the nominal <code class="inline-code">x</code> names each leaf. With <code class="inline-code">&quot;scale&quot;: &quot;diverging&quot;</code> on the color channel the ramp centers on
+zero — negatives red, positives green, like the candlestick colors — so a market-cap map of daily
+change reads at a glance. It is axis-less: <code class="inline-code">sort</code>/<code class="inline-code">limit</code> and overlays are rejected.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Overlays</strong> — a vertical <code class="inline-code">{records, kind}</code> event marker, a dashed <code class="inline-code">{y, label}</code> threshold line, a
+shaded <code class="inline-code">{from, to, label}</code> period band, and a <code class="inline-code">{x, y, label}</code> callout bubble pointing at a data point,
+over any category-axis chart. All four travel with the spec (inline records or literal values — no
+second data file), so they work in embedded assets too.</p>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p><strong>Annotation boxes</strong> (<code class="inline-code">display: &quot;box&quot;</code> on a marker overlay) — each event also becomes a small
+always-visible box hugging the plot, boxes alternating above and below it: the date (the <code class="inline-code">at</code> value,
+trimmed to its day), the wrapped label, and a source link taken from the record&#x27;s <code class="inline-code">url</code>. The chart
+doubles as a scannable index of its evidence. The rail is drawn by the web reader (workspace and
+published site); the standalone HTML page, the composed article, and the SVG renderer keep the
+classic marker look.</p>
+<div class="code-block" data-language="json"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-string">&quot;overlays&quot;</span>:<!-- --> <!-- -->[<!-- -->
+<!-- --> <!-- --> <!-- -->{<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;records&quot;</span>:<!-- --> <!-- -->[<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- -->{<!-- --> <span class="syntax-string">&quot;time&quot;</span>:<!-- --> <span class="syntax-string">&quot;2026-01-12&quot;</span>,<!-- --> <span class="syntax-string">&quot;title&quot;</span>:<!-- --> <span class="syntax-string">&quot;v1.0 released&quot;</span>,<!-- --> <span class="syntax-string">&quot;url&quot;</span>:<!-- --> <span class="syntax-string">&quot;https://example.com/release&quot;</span> <!-- -->}<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <!-- -->]<!-- -->,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;kind&quot;</span>:<!-- --> <span class="syntax-string">&quot;event&quot;</span>,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;label&quot;</span>:<!-- --> <span class="syntax-string">&quot;title&quot;</span>,<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-string">&quot;display&quot;</span>:<!-- --> <span class="syntax-string">&quot;box&quot;</span>
+<!-- --> <!-- --> <!-- -->}<!-- -->
+<!-- -->]</code></pre></div>
+<div class="embed text-asset text-asset-loading">Loading…</div>
+<p>A <strong>bubble</strong> (<code class="inline-code">mark: point</code> with a quantitative x, <code class="inline-code">{x, y, r}</code> points sized by <code class="inline-code">size</code>) is drawn over
+linear axes by both the default <code class="inline-code">echarts</code> renderer and the <code class="inline-code">svg</code> renderer.</p>
+<h2 id="h-renderers">Renderers</h2>
+<table><thead><tr><th>Renderer</th><th>Output</th><th>Notes</th></tr></thead><tbody><tr><td><code class="inline-code">echarts</code> (default)</td><td>Self-contained HTML</td><td>Interactive (tooltips, legend toggling); loads Apache ECharts from a CDN at view time. All marks.</td></tr><tr><td><code class="inline-code">svg</code></td><td>Static SVG</td><td>No scripts, no CDN — embeds anywhere. All marks, including heatmap, timeline, and candlestick.</td></tr></tbody></table>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->render<!-- --> <!-- -->-<!-- -->-<!-- -->spec<!-- --> <!-- -->chart<!-- -->.<!-- -->json<!-- --> <!-- -->-<!-- -->-<!-- -->out<!-- --> <!-- -->chart<!-- -->.<!-- -->svg<!-- --> <!-- -->-<!-- -->-<!-- -->renderer<!-- --> <!-- -->svg</code></pre></div>
+<h2 id="h-articles-prose-charts-in-one-page">Articles: prose + charts in one page</h2>
+<p>A spec with a <code class="inline-code">blocks</code> array composes Markdown prose, multiple charts, and filterable tables into a
+single HTML article — the &quot;data + layout + rendering&quot; unit for a data story.</p>
+<p>The full notation (every field, all marks, examples) is always available with:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->render<!-- --> <!-- -->-<!-- -->-<!-- -->help</code></pre></div></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-341/tags/help/visualization/charts">#<!-- -->help/visualization/charts</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-charts">Charts</a><a class="backlink note-toc-entry" href="#h-data-the-canonical-data-model" style="padding-left:2em">Data: the Canonical Data Model</a><a class="backlink note-toc-entry" href="#h-missing-metric-observations" style="padding-left:2em">Missing metric observations</a><a class="backlink note-toc-entry" href="#h-what-charts-and-dashboards-do-with-a-gap" style="padding-left:4em">What charts and dashboards do with a gap</a><a class="backlink note-toc-entry" href="#h-fixing-invalid-metric-records" style="padding-left:4em">Fixing invalid metric records</a><a class="backlink note-toc-entry" href="#h-view-spec-one-chart" style="padding-left:2em">View Spec: one chart</a><a class="backlink note-toc-entry" href="#h-embedding-a-chart-in-a-note" style="padding-left:2em">Embedding a chart in a note</a><a class="backlink note-toc-entry" href="#h-writing-the-spec-inline" style="padding-left:4em">Writing the spec inline</a><a class="backlink note-toc-entry" href="#h-renderers" style="padding-left:2em">Renderers</a><a class="backlink note-toc-entry" href="#h-articles-prose-charts-in-one-page" style="padding-left:2em">Articles: prose + charts in one page</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">08</span></h3><div class="backlink-list"><a href="/track-previews/pr-341/notes/5bBoWd3NKXixIBj7useATQ" class="backlink">Diagrams</a><a href="/track-previews/pr-341/notes/36ukB4V5MfAQePgJsUVhnS" class="backlink">Embeds</a><a href="/track-previews/pr-341/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-341/notes/2j6WEM15dAYyfQohkQti7H" class="backlink">Mindmaps</a><a href="/track-previews/pr-341/notes/6RVpp0kGC9SPIhxkcDM93m" class="backlink">Syntax</a><a href="/track-previews/pr-341/notes/6lkMYz6DB66BiNMLmXjG9e" class="backlink">Visualization</a><a href="/track-previews/pr-341/notes/3eXzsvDeU80xrwTdpnyT2O" class="backlink">Web workspace</a><a href="/track-previews/pr-341/notes/6QDiV3ntkwRxXx0cTApZN1" class="backlink">Web clipper</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-341/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-341/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
