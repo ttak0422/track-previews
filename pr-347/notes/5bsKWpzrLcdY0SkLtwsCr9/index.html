@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-347/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "77fdlTiGeOx0GvNoz6zRydAjz5jhdUX5aODJvEtsL14=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "3b805b919385d84b";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-347/assets/index-CR92cs8M.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-347/assets/index-6bJR5kpA.css">
+  <title>CLI · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="CLI"><meta property="og:type" content="article"><meta property="og:description" content="The track command is the source of truth for the vault. Every subcommand that changes note content reindexes immediately, so search and links stay current wi…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-347/notes/5bsKWpzrLcdY0SkLtwsCr9/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-347/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="+nAO3RUPGJutGBJmYzU+ylUot5WHzhLcPX4dxovDwriWlne5eh2NWOVwNvJzhyrD8wZlvXeELQ5ujiy7sGU9+wIAnPr7PvPGBti2DLRp/wPZqD1GRaD4PM4bPnNKFXPSTAQBiU0K/EQYN0g9+YL+nehTm20dxLs5VNy4m0w4BEe1pCoJk4gUk6IPvNhBNk+jkd7A7qrri4+OlPRrrF4AusAcRQtMyQUfdAzD9anCmFpsclRpwT67SZb9/bAyfizDncA2hVWUUKdNsuVtc7ugMKdM3SWbRcTJzALsnq7QkRr77p8OOlaDHDJydjfjlViIgl1dD1l/htD23rJwLoJmYuaT6WolBvyPKYqxvyIH+ejgG4euAPN20gDAENcDEEMtJWLpno7yt2eHWMakFAhhBFuSxkPv36aAPoYLWyxHPYZkeC3Lt04dTSVtGqJvwW4EyV2lBhEJ4A+/NYkYfgOVjBZSN8STrakC+ctXXj9fT5wYDgpr7h+EUN6cDnaW8q6dmv4pHEyWzoTaYwDZFPqv/wIAY6QV5wkGVc1ijH2ww+cFa27af2j/ZVdUnuBzhr+QjIsAaBpsoM923YXyQAdWYrFHHYovdsDzKpUquu3VVTawkoRr32W1qq1xJFPtRjWEPCZUnK6RiZiFlpjJj/r/S7SsDjejrAjHRsL1/Ew1DyI9p39UT/di94rIN1rXWdcKCFChdZelS21NO27mb+3pLhuZPotsOdrNvD57TeECLd1rpTtg+6aeUO3HRsHXgEHoguuW6LBWZMQgjcfJglvt74j2CexJ3UvyhWLvxJJLprYalQ8FXKKsQ0MJkZLFRdH5Zf7Gx831e4TrDJAQvps9uoTZDmCwLg7j2+fKXUE1lFrzphrnRrWX7OHcdjTcwQOnMrYoZLp3ynXibqDbH58tep9Tsr2A1Gj9s3MVX6OStUBKRxrYO3Z+rE53ncjRFLnezrmv8tKJd5DomrkoMYVyBhGH5A7aYLMefeCTD+7hJLDKxGailZWCsf1UNGCRHBKHRipSNWP4mdiFFlbqmNz5o6f1fR51zoPDHoBDJeIQuQs3TW8Fsn3MVv7duYKwCNqjMMoyeX71B0P0u6Fo/aQWe+fP6yvqFhu/FqjrImIuVJjhD/lr8iapVDkCXMISPQgp/5yfZJ/VN5F1tp+5F7ZnpHDCv8vQLHbQBTvBpeZxQbi+sdd5v6FsS/Lx20dkmwUdOCGuFCKJbGn0958IPPwrFtgiz6hwdFOmMMWy1r5YTqJ7WayGfRAZ115cvM9812J8ZJjumPznVs9KpJ+AYD+LmI3Jz/O3UlAoYpIRF0rEFt5aTLNZbAZISwOCfjQ9k6vgS8mTAsKsHMeuogd4F1FXL0bF7rdd+DXnvfI8CdPv/7vez7mMXh3A+xPlYquZjprFoo/wL59N7ZLQPN0odogbmr19ABkgNmsnSbhmpNrsxhAdMX44WUIg6wzTTkrCZOuOLhMILFaCON7JsREQzN2eFFPSMDz/4WmQGj6LGG5ItYRDeZDllBRgRpYBwiHQO3F3Tu6V/IwQ3KPsiVfhoA5DH79aKZ+AIt+Udrnm0wUBsFWqQqyY85eXx9lRrfkw2btG9HbQd0D1RF4JO2jc8z1dAAZ2WNefPRZRxE1WOt9+l1AXPU1v1xaNn6cUrZos5l20liz5mXCsqnCBLvDw1/+h6hmQYF0u1cfNvbfruKLgdll86IqV/O/PGL3WmjP2KkVYB9GnvPJL7XGTXglfdQzw9hgCHd1guOBu62MjMds1NvnsjUwHJe2DMUnrHbgo3PwhpY5Z9npEXQHkCjrYpAkBWVvTY0+rB4OVPuaV2a+KngjOp8C9W3muB+rXlUF6CacadMm6xKBnDYvrpBYSpQmTwwHwYyEp2TX3rJ8qsV7T4wY1i+qRe+ds0gytbXU6fYtVJifa3aRBgfKPTwEEHo5bSw6zpeYJ9kGwCvIAOn9aouogzWiCktSN8UJ5K/YPM0NBHpPEi1kVKcEN+lW1jJ97ViZGOsoMxPm9PRvxshkMfkygCdX+pOj5rsNmxKyGrMTuLI4jaQB1ia5KhALDs9W1vVOcQ5m6DNsgRXcUI/8ypS0Q8Wa+Rx6hAOlMWHzM4lfYJuK30PXp1Hlp3xyh42S+TZhWggqZquzznhzVrGJWI0auycb8E1tjctQvDvs2Q7rDrKNb9AR+QGU1QtrELfmnz+phl3qbgO3l13JbM2Cie/O8yslmLn8C1q6K2TFJf0GJwMBBArM+q0+/e8qLGLVwX7wG8D/31KJ14bC4lF5eXT1FVujMIrnNL8EBN2r+fDgtIwxMgFCsV6WSHwX16v2DhWe/svPZWIUZJvL7/dqKpB+LLC08jP6gxcFFLRpN++UR65Br22arATjova6ExPYxO/c4QAUPzhTdILjlIvom6G8NBbL5d2FajSNqE8mn5Q46siiJaz4CsWQL9GgwkQVdb8XK/sSsDvur1+5ypTeu+Cqe1uTsPBcv4/0lNLtF2Hs36MQ/bHays9lH+PtgP7GWRaTULPw+vC4YpNTNMpYBTANcSK2HAlLR6RWbn5MvHiFOjMfX5vV6nv2GczUzz7gofdlNKY7YbZDJlfobKAXUdofcib/HiFryn8xr2rqhGHeXxf0qVviRlQCJSOyCjD5RcWwXH9jbjY31OvjO9020ltRhjEbyKdnNok64BFks2uLxiUmzg4TWHvEajAT843UOrqfYJnMhvEbDVMtWuQJvEUwIvG1taHQRHd13AHiYkRnuLXZVpoyV5q4DYnWltBNoviLHhTHozlGdTubKOab3h+fk1PY6LwrAGpNGo/sLtWzaIva8GUwG2fw6VfASIcnb9AUJAxt2ClSK+XzV8w4OeBD2jfZhE2pXeFzMwvxBoQR0BLIK8xE5Ba2AlyZJirBii1tCUYTXbcLs/q5G+5lF8vlHMwyieMJFQhs5pbxA5jTRTqNMtdHvUovWqJpBhdf+4/oMRY0fsGK4xr9WkECdpwDJIaQr6HAFh8U0SRGx5Rw6DnGetXvKN9htT6jvtzFeYquksmbNFG9eV9syTnUwECqAityf8Ov95BG3MX973yhRP1hBIeLga0Bqfs9CvV0plYZi45EUWL2mAdv3GsmAu3w5GTkdQxhJhXttszYHNpgcIwiUbTnmld/J9n786M3iCPg/Pel2qAN2PfiYGu6vWyum4bRXsUfLeLpG4udSpX4bimrFFayygi/06lN0CDWBle8y2i502YpA/LJGecDDe7SRFLhNHIgukqqXyu+S1IpxMbsMrpV0xIeqO+zl1YwpcTH5/2U/CIrjH2aABQGkxCfadELxr4+HexlgMs80HKXAZjV8rVumaEYddbWOfiA84HecocQntrzsBJI6aF8b0CICRH3yh4wtLJwW47hkBqzLeg8DpR6AvtcLcFIRkT4BQ9rEZXZioBlfuwWUHE//anirFA6X9j+3vFhn/GSjlgcQImJ5ebqbc5T0QZip8b1g52/YEmCEmb/mqGWqxwBY9x0M2mvJvYK3lDykGAkH3g5hM02ICxORHP06Zmhsc+4ZcL9d55T12DDwXbqmy3XCBnts94xXeI+ImpBw3mWpNaEWrtAollZYbsZA/MW7PxrPZa70WxIpoGePDa4Gv+NouI/rz4GvfpPOR5Y00oo8uNGKGdhiC/IY+XhgHqHA0GOcVcv/SsOmos6TC9pOSO5evqMAuRG38FoKqD6aT+WMMMLNyoVZu1OcXzOp9Iemt1i4DLD7Rrz7YKI3JhFlXviXjYw35B69peoBNxIi0bSzyM68/BS6oydrEClxCt4XnD8E9sOE05VT+3weVf19feUEvN6NIpIOpFU5VgqvmEeeqwSxb1Kf+QW5TtLmmYsVFlmc0KTlTnQ65as72gLfZ998DfxfcgdLcYcQoS/4dhLvtrz1iXWTU9qjD3/ELBMlAcY1fKIs8ltbmdvdKkdp1GFaPXXqI6BfMKi74oxKJJ9jqhiyAxDfr7v5w+VHm5BGcqaFAOV0u8t4fx+a/7G4yPiNiwWwyfzV6c99u4ugM+JY0WpkrlRZB9hjaiuvjxiyqociT3sBGVL5BQthAlZJvY7EIhnDUu2QWxlKawcAgG05h+uqr/U8JGM0ykHfc02fQrqojPvzYsj4ZiJ7IGr8uLUBzHF2fHJAlvHXM8WTo1D+GDoZbS6Jntv0Tl1Ox7ina4CyAW0aMFZwLv+mR4TResLddsk79EwkWDbOw2YBcxRFQLGCG7ZHQ2vRYd5awp7NTyWMWZwwJbKAWNrKtiEmKXZlpj784jYqJnKRLKArxNIzy8LuSrngpA+YWmh9wNZaJbGeI0BU5BJahCAEWrFW6zPoJ3MB4RrVVvQ8vAIbn7yUp7KhotF3Uo4Amcw6UWGZ4oLxIrXTSFMoXNK83ZPvPmREKzVr4c4xniUH3elVLAZaYeJfPmd7pgUBP93MHPBNJ4XnEUt61ofKl47bRh5I0hx06GLkkV9rA2oI1vFKjCMo/0K+nakwfhZJ51Pikimn4W+SlpsbCHOFGmY+CKXG9PoxY5Blr2Q67k+SnwH0a96qMRQaejpeeaZ4tzfmVpEbqo4odDDR9Rsto/HgAcVKkcGApyLMxr86zLTQBQnqV+DN7QCEQzjXz0SMZFNKGKJWJQVEm6O3OAMPX3OHPMR1Lx4EmPHrfO8Z8uoaMweZvJY24Oxht1H89m3o9vjoqAGBypTil3b98YUsT0HmBNPKvz8JjtUVxwahHeSrCUvvTud2CA5NgoX4L31SCiuTd1oVWlfa8HtIxV6IJ38cxkxLAjCGlTMamBXjPjgrADTjUaGuXVtHRUXUu4FghwQeCPrsZu78dNk639cZ87psGwJc2RXhBHYkhVf/inaZU983mA2h24Ls8La9iI1odz7rNmv40dsvzeGfMqlvpK7QpvijptVizsMERkjwuMV88Sq9ZwZkYsWIxf1M8aasQHkkj05pZXrqGlH90NKxhAsSH4/V6KlJoxbWO+vF5ORPmZYYu1a2Owqs4aEV1uHm2+4fEmWDRstidz6M0Mx+ZCl3W+XNIIS7DMbeFguidTXU2EZxsVUFAP0BfUv/7hQP6ji/RlYDjAHNoTWDvs7cSVTu8rRD0tqKOHrsv4T34VjNu8iRmosb+iPZtYddbMPR0bbv+EXkGcjDU+6gDyHOdD0+xNVs7bBNltf2gMdIbaczYsaP2XDuSpn2VAIeH3JpLzK6HqVgz58QvcvWL53vn36l0l6IqJJpt5JD8djbZXbhvEvlNdIp9mP22xTUwQ50PoWwGuyuMM5iYriOU+Fea1UAdeAW+n75oAF8Dp4kmg10IRyBLPk0BbW92yJkQueImD3anXRhHgtpgx2Py0sR0U8s0gSs2sScuJGL2myjansO9J0u1WXtGlvlHYLIQKOo6Nfa3eUIMjlcuoqdi7oIyT9pC2cdCuYN78m/J03nPa7SRYGU+LOkyAfCeTxxYPsaQeYZqU+qSo66iI2fbvDymgKDUe+Ba9nLjMUdo/JjR6Ozj4fYUaDqcVEanjyFWk6V8YsxsI3qAo/L0JBHweh332v1wg5Eb288N7OVrLHhd3x5dTcJ+8bOtBOO5tuHnAAOkuruaFxsnlXFO82naav8LpEfiwJaBixdzZ/iPIwdpov/EGQgHQx8lGTRWhRkyCnk18/zA5nToIS4uQJ2XTXnkHyzarhiXwBcrqlKYNJTVWeHWFmKeS8Uwk+Vho3BRMvuIHUdQho4hPvWllcjgb3qDYrkScHbfFYfMghmcJyaeFUTwD2jMFAgEUIA64q/gNRqEcAcVEo/OzEv/xZgHsrWEuMw9tjyNlt+wjptGI6Erhac64CUnMJNWSHI2cKXsqieSqyg2D/KeESVdEQ+CSkZ44pljuMEKE9id8M7UqpCgoPE80GROffTCGPfMEZIU/vPCBXUSW78IL1e6Ax08q9vSqA/CFQRM58Sc/EKKkN65/Tr87toSv3QE9C613uCDjCepthaiOkOyv1DKOGqL+Se+UDWhfTOWATis1VB+7miDg/pLNB+WXpyeIM1KKc8DECu9QG2X9sE5ADAZFDz/NV8us8qMEWCu+WY5mNm5iMwB2oNxaCF9VXEBdca7Pye/Dnbgfj71glGCZnnA2zG/aK7Ujqpy7Rd+YuWj6r5vsQ0yLUMKE49fCwuOGjWsMSKklmtkTlrAT3mQ4WVVMFJtrfsXzjJHXtgxJtknNjjvdds7WgTORW/LmCp9WZn0/tkmRo5RKIui+vSXuM3F2hdbY82Y/e5xukWSDVhBGxhEtEjJD0/MipcKi5NBLxoSvJTR6dmlZ2Itf3tCL9oeZzNhpwRrlC15/Ep8s4+ay8aw9JGPEilVqUdu/65vAHbRrNQ2vX4NO5VfQbBnrrNc4zCRC7/BTRgGapM7y16qLV4rrzGLKmZeYTR8Mgi+sFQxlo5s5xGhL5UrHwel2xdNyYCpprYBSF+ubZdJCSLG1l5uvJg6Ip9vLwCtczClNTrJ4O9/mEKewSrEuDQ+kpKoxQF20avsAW94T0Sv/uj80XD+XDRPymW+cyYACOj0QSeDv8/3PKLSuZ9RmFYXzKqhGyzakKYvLjkASisSpxILjhqV1g6GBHqyZxUUkqAs9Az4LXMh5ZKVU2++3TNG8/LKD1eae6uoa3Slv5vKNZocsuqZB3dGbz+xonh/BYwpGhBiXqaSxpy2o1Xag3ztzOSQg6s7DGx8nthM1sZl+9v8q4U0bo9jHkxE2QodL3BtqVr0b0L7hXAn2qw9a0BsEQHCxSz8TUwDFxFcRd/OsSj0NCZHYhJ5MlmYYV66Sw/eTlJuCxMzeB7uKdS5Zjyrxk/S3sSVZH5BNob9doqSCEmYowegNCxIhVhtbrq3iVYMf16uWFES7Q+wkDdUum8bB5tL0ECaqQRT3Fwjxseo9gkgBgV9yJAs+eSSkATPhmjXxm5iN6WLK8q0E7zN4T4R/gYcyTvpihGP7eWtzb8aiDg71s5TXG7Foza6+rTzhf95GwW/njnkJaU8yEvOsjAPDCQbUDaOkZpL9ZtfemC39zWjQSFPNWHlIy0dkKaF09Jt+lVVXcPKLchnDIm2O+DaZhtmylzoDOzJ1lshCe/P5ZlYNJgRxmvmeaN95f8mWUcW0k2kfhkBR8NuqlaYRRXXv4JY1joLFgLw0hV2i6FTKy7b3Cy79CWyuIXUEJCSsV7/2z1DRv7WC1FdM761ydQNTqXaZQdKKOCZ7QKJFGRs9KN2zJ6KZ9mwf0kAGVfpDADQg4btniGv00Kiial4xk9+H4mp3+NODHWueEQvs3cKLhOGTuHl83FxxwrIcOF/yd231lwxI8oIJDsTe8aNMnC+y8FJhF3jAQMBucOkPaa218ZNPjT8FeOAIZ2bK3U8OZNAO9yiiW/WEnvb/MBEDZjCz7l0JU4ma1siEN6XpYidlpVk+M52OgL25Vi5j+i4lzmx31bQDS5Mdg10dGdpktTkMFccb0QLp6qVgAuC6u9HNwgNAlyq4JiKqpfotVssHyj7PJ8vh3HsakPdU8uK/uRUaoeEtMXyrsAuFq7b1GU2BLbI3FzsufhP4nIQo8ofVNr0NGCi7rxpYpPKl5+y5+4vMsc/K5Kl7GkJSKf1ukiPrECUMOSUOwyB6v+RmEuDFaY5/8FWqTnqG5FREnWZVJhkXMwM0v9b9C6OcHEeJ8bgKRs2jzOD29rrCD1bDX5CxeyyQKrXfD5DSYSKVq0KJNS637wGXhbeBxfTDYani5NxAWsDn+89X9+XAz0outuKV26wNHwpwvXcP8ydW6al5WouWL/YPLuZJMdHCzc+mrx6WRfFA+LR3V/58NGmo7msIF8W0yocrM83lH90cU3Lspeuqfk9rFMXAwCptdXY/enoooTI4RYGrj4L846+yzxdgh9CXswEBMMj4cKAHTCnmX9sQj4rAX2ZCSSXJcVIgsJ6b/ILY+7kXh++fw1T/iCJmOmL45F0DMdnLjTLrNvL9k87iF5poqYmRno2KifOLnF02AoqEgHOp+cNy0JCtAoz6r3ZhA0iVFTlwRKhD3iRmFdzIqbSz5+nTZIt4PNLpb0rW2niHeo6FbDG7Y3rU1sii9EfityONEU5B9TOYmOs8pv/t415bchVeboocWmTQWbGKdInH5puPuyGJGv9vnGuWrHfevMPQoWFTaHgOWWtBof6Mkqea2LKQCf7+XobM6PoJPOKPyovGzexDorZtchw93/lPhIYUalXmHEqFWHtO/cJAdZ+3KWWuhr5HYMcXsI2n1/icgzivY2UeL7jGZC8NvFfd61fzZ2RSXgyQEkjFlpaG2kJuOlKrgwcOXX1el/2d3RLKoIwy3wPHdFg3QU3llTHS8ddtupJil0ZjFJeBf9cKjaXc73ayTZWJBIfeVgZMCfb8fidQO9TX+ThgSOSfDvN2/ii+0MdsdBKc16znPCjrMhEPv5Ws7CgftfjatVCQM1+i6KpqDwmhCiDj29XLyDusy9WJijMFDBWE12e2labIDiZZNDPXlVRorF5AIkBoc3CL9v85IVaD6gwqXgPYDlZYa5k4gWhuaD6yAzdxhUztGQqzqKQP4aHunqp94MrAbTLMMxPXJ+zngClGdaUjzdKVXVN3sQG/to++iTc6CG3S7RcvocyJbNKdS7IdczWhxxkPXAq8o/Cp3ZSCjJ0m8WVFDhOSN2U3qVVAeS5MJgskq/Q8IScPE6wi/9uLhPwVTkXM0PYSW38n4sy3TYFhB/5INBeT4FH+/7P+y0fxmZTP+u5lu+zCGiLb9Iu0sM0Gbci92aR3Pk3OLO0S+7McfGoqey0rRKdrQZokKCUFA/QhOk+RWzTeii9BWRxjdSFzUKPvJ19lRMzwWBcp4xWdqgim+v4DpSO7Qu4j1EbzHD4saQ9EPU5B50nlRkcEuTLsd9egPNthmzf20kshyB1ijXQW8nG6+ljfHxRLNHB6JcTeIGSiCZ6PoyZdwmJ6ecnEmdOp7x/wfZWaUil5thN+XqwJkbUmQ+uAgnHr0CNUFGQGRyVIYaNXrAugK/3HbClTVsnPozD6z0sB/4wZHKtG6Zxm/auPp+TAEJu4g5eq4QfKAQ1d6oQcoEClSA8RTcP2h1vZHIUudhzKuXGgdUuN8dW23oz7wBASJRtHJ6119urPH7mNmLPEukJMezq1Sxbg8QdK1NAcdZbjdoA+aFFBEGcuf+Aqf3k7Q5rIJBy2nPDH7LePdnR2EiyZKVw5fz6hsuh7/7YeFOWYRiS7HKZy6YnKzvbF/nn8E8Bzw/7KXqw025W4W66+n8cIgi2h/CiBaBBpvUQamEGfyUJydyldggdz0FtKJtOebS+Z9vwfhmsKKS+bhoxIyz41CYvClCI3Ye5/G01CQYKGxChniKTX6b/ysHXY4YkUAvHifyisOdimU3JBA1E8of2xQ0vqb7kHWBPStbA1XJl9/gSE4N1YiP6aNnysKbuczxi2U9v/p2ijzSqmIO4UX9GKJD3XPkAiGCe3qmNkl6qzlftQwHKo1apo6oSP0L/sIcYyuieQAhADjDKd69fyiM73/Ex7tCV3fUfq6R+qipLnj3bycPYf3qXfNYVwdI4MnHleptipbmZIF/pOUR+/SB2fKN8K6EWubIhmnFT0aub6jMYkDEXjcy6MuZHZtwVNdSjjhqJX9lSqbKqsvE7c/rolgdungW090+r3+fBPa0MGFSMk67fmJB8J0cdxaNE8ZIFOjSQ/W/tdIVwmEycj73zfz/6JrQ7tok2VOsQOqxVFItFdGaNnfeHUnaTvGyxRIgIRfcJFfJYF8XSJiuOQuymS4ed1ReuRnp8bryXMeHFhRYpDBBRoVfoSIxQuHluXU3Qb8kHj2FlEG43If1qa5NSK2zG0KZp7wF8DRC4ueuV0VSwMoCA6r5IwfYNVaqIlqXq4DHEdk98IaNBwvUWLYr7URWZaatatvP06fGxOKfsaCqbl1XK8RwbFSICa2jIjSX8hSxBsbfWIeACxCIy/rc+9HivJZvSrABiZYdw5QhTrXcCKzdD9hJBbm4ELxEYT6PrMPHoxw6eqNUvKmxXxNwnQ+uvoFp2LXveryhBdd387DMhPKiZlnAXm0yDVf43w+F9OajeMUtFMKzxPWHKMmkiuqVAlvU0DqMRT4Ae3AacpCGNj+yj1Nm8xo9hnZmkQtXW+0oGFow3o97TMzmnIuoExyNohRMZPajAMi7qn8gdGvYyq28w3EkBpfzU7JnuvdA5ViFe2WcbAauWrUAixZm1CI0bzHcuWukVH5fncazExRyGtVrAXYHC8trok73Z95Hs5nHw4hqWLbgCySDiVjle7xyeWU7gDg2lksP6DtWXHMD8g/7gdvy9tsoeJYovbqHgfR4hojZnpL9kCeqEOXE7mR6pZ9ZS3iZygmfxrD+lAlH6U/Yybsq3xfdpJeXhi5cD16I2Zfa0DiJsGSwhzD8STjG9JJFAcvftl92kmZv+gT49FJ2Zq1cfkAZoZQ81LCUrf7VO3R8S3103tLKITQBPV1RBlG5MzmLH+DFe+uz5qjIAaP3xPwF7CQYxK6Wefv0kif1yR6bY292eeS+77byFpvmSl7WZZ/MVm9yKky9Y5bpoRLDHpAcKPWGU36g5Qhqmpzm5UQyOHk89zBXjOSh5NkWvwoFuCbPR5HadGkUON9tPl2W5I9xinqniq+Vm3F/d0YaEdEGGQPZrJUX3Cxe5C3MUdk+j1BB6YWTCkGOcBpLIzsfiMuLGEU29tWRHDzY0A80MS/XppMhTWQqwxHw7Hm3UhJKWU+TM5x/IFJf6PtLlXwc82E4xMNB2KF239uDtVoCn4SDU1bo5mPdbzxtl2h0KX+7rZQ2bW+LhPs4Vm+yxrDDFkHaafV7/aCq8U9Y1pEnvKesAogyIFkmLNBdbHCH4v9XfF8gzgAwFmlGvoBhMT6r7sL7TZLijbG/HwAkAfTWBhe2c6umoyesTzSgzpi0Mx1DtX/5nQfGs8/6jI24VYxK3q3rwpraaleg93fDcwG9hjjcZ0Gh4MdoxWhBWfdJUVLzgHWxHICdEx46zVTQ2V1Zfl0o88n6xtZxkb0X/TU2GM7irHhd+qA8NkLXCf3+Ak7G7YKKzzlO7ivImteM5RzJnpBDtJ7e3mGtAt1fQtQtLd/Zrubke6MMhtykx5XASX3LR1QBX329OeKoff/3XkUgOfZYKc1d/AvgN/UnRLOJfx0U9N4Kc1bFYGOqAEj/RbbQi4fjxptLjf5oByFn4TiJWqezoTOaE9OaTpViQ7+Bx9vdhZXchKBhFCx0XtjGQl3lKTiQkRFj5+R+wJFECCWlvtqx2wf9FHkI2HYYhnjpMkLccPtjcbUtovfzaO+DmmffL73zk0KDmFRjEM7ZJAhYYZ2MruOzr/Oqg7iwPddJTaSrenSCGhe0x0B+uNuFj+mG41aqmyy2dvYKApvJ5Vkh8jowwzWUsRD758KKTOhVRapEbBi0IV7ZvaOh/EI1Qk4p9B2EPEU1sxGLdzSOyszkhwu0nSA7/3D7X3j+pKupg/+e/0Btfi07oTqn7DeLzuPKx0J79IL9bE6+V+P/UlUEb4nMnnr+rrNEJRZCXtSozlVIBlzbtptzupvO5cRwVPDxMpVqTiITA85KRsmKKZHkUzl9eY1LL+Ms8s5WVhfQxpla6gN7QtjNFpwsXs8UZi9f4VrT6IUQJmU3hYfwvE+qOKva+hlMGKSHv9MsXrYqbqjUnRZ+1qVEzLiH/GCESq8TtfIIWRd/SyX04LZUmLMmssI753YcWzPACHZ/nQu+68fGC0MD0O81th94WhjvxQbv+sOz3o1i0Yt0Q37Ov4XkvTNC0Zst4PyuEtavTl0S1A2pACva2GIsu/+iFfz9q7cc9WN8jIRozKihdiL9+GM3mnQV+VXzJHq1UKSmqKNquz6podsna02e+KWGQ+vO5dE59KHedD6n+S8193sN36j0qg99D2E4DQwhKCTbfibMrpdG/Iivsgyy+hX+HEOY5BdLteb+WGmOUZuLscS7HWdevoYWkR2Kyy3VULuvS75A1Lr9SwNM7PHyDj1v7nAzeFFDgZHVf85hKXiafRyANX5PrNbg6hk1IyEOcnfZFTSFyOvfE38NXSL3dD3QskAwOpKYJgrjF++l4FaK+g4F6gJC0RPKLo9WX+JXHKFeznmGbAia6dLLHyUsU2E4j/p8DEUi0ehtzXJvlDhxd1j+HgtoEKrljOo9TOpOGcaRPCqHZh3wjstLozAPXv2EFAdgCA=="</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-347/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-347/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-347/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-347/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-347/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-347/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-347/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">reference</span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Wednesday, October 28, 2026 at 07:23:49 PM">2026-10-28</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">CLI<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-cli">CLI</h1>
+<p>The <code class="inline-code">track</code> command is the source of truth for the vault. Every subcommand that changes note content
+reindexes immediately, so search and links stay current without a separate build step. Commands that
+return data print single-line JSON.</p>
+<h2 id="h-rebuild-the-index-safely">Rebuild the index safely</h2>
+<p><code class="inline-code">track reindex --full</code> rebuilds the disposable search and link index from note files and
+their sidecar metadata. It resets the SQLite schema in place, so a running native or web
+workspace does not lose its database connections. If a read fails during the rebuild,
+wait for the command to finish and use <strong>Retry</strong> in the workspace.</p>
+<p>The cache filename includes its schema version. After an update, Track builds a fresh
+compatible cache automatically; older cache files are left alone so an older CLI cannot
+replace the database used by a newer workspace. This does not copy or rename vault notes.
+Use matching up-to-date native and CLI versions, and restart the workspace after updating.</p>
+<p>Do not delete the vault&#x27;s <code class="inline-code">.track/</code> directory: its sidecars and history are authoritative,
+not a disposable cache. If manually removing old cache files, first stop all Track
+processes that could be using them. See <span class="wiki-link pending">Recovering from a note load error</span>.</p>
+<h2 id="h-stop-the-web-workspace">Stop the web workspace</h2>
+<p><code class="inline-code">track web stop --addr 127.0.0.1:8765</code> stops the managed server at that address and prints
+<code class="inline-code">{&quot;stopped&quot;:true}</code>. An already stopped server or a missing PID record prints <code class="inline-code">{&quot;stopped&quot;:false}</code>.
+Use the same machine configuration and cache location as the server. The command does not restart
+it automatically. In Neovim, <code class="inline-code">:Track webStop</code> uses the same CLI operation; see
+<span class="wiki-link pending">Start, stop, and update the server</span> for
+restarting after an update, address selection, and missing PID records.</p>
+<h2 id="h-preview-an-external-markdown-file">Preview an external Markdown file</h2>
+<p>Start <code class="inline-code">track web</code>, then run <code class="inline-code">track markdown -- &quot;./docs/README.md&quot;</code>. It prints JSON containing a
+one-use viewer URL. Open it in a browser within one minute. From Neovim, <code class="inline-code">:Track markdown</code> opens
+the saved current file and starts or reuses the workspace automatically. Neither command imports
+a vault note. See <span class="wiki-link pending">Markdown viewer</span> for the containing-folder scope, limits and refresh behavior.</p>
+<h2 id="h-creating-and-editing-notes">Creating and editing notes</h2>
+<p>For standalone calendar records, use <code class="inline-code">track event list</code>, <code class="inline-code">track event get</code>, and <code class="inline-code">track event save</code>.
+See <span class="wiki-link pending">Calendar events</span> for JSON examples, revision checks, retries, dates, and restoring trash.
+Event files remain separate from note indexing.</p>
+<table><thead><tr><th>Command</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="inline-code">track new --title &lt;t&gt;</code></td><td>Create a note (fails if the title exists).</td></tr><tr><td><code class="inline-code">track open --title &lt;t&gt;</code></td><td>Open the note with this title, creating it if absent.</td></tr><tr><td><code class="inline-code">track append (--id N | --title S) --body &lt;s&gt;</code></td><td>Append body text and/or merge tags.</td></tr><tr><td><code class="inline-code">track update (--id N | --title S) --body &lt;s&gt;</code></td><td>Replace body text and/or update tags.</td></tr><tr><td><code class="inline-code">track journal [--offset &lt;n&gt;]</code></td><td>Open or create a daily note.</td></tr></tbody></table>
+<p><code class="inline-code">--body</code> is read from piped stdin when the flag is omitted:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>printf<!-- --> <span class="syntax-string">&#x27;本文 [[他ノート]]\n&#x27;</span> <!-- -->|<!-- --> <!-- -->track<!-- --> <!-- -->open<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;メモ&quot;</span></code></pre></div>
+<p>Anything that prints Markdown can therefore create notes — the <span class="wiki-link pending">Web clipper</span> uses this to turn a
+web page into a note in one pipeline:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track-fetch-web<!-- --> <!-- -->-<!-- -->-<!-- -->note<!-- --> <!-- -->https<!-- -->:<span class="syntax-comment">//example.com/essay | track new --title &quot;An essay&quot;</span></code></pre></div>
+<h2 id="h-preserving-source-evidence">Preserving source evidence</h2>
+<p>Save a fixed version of an existing note before using it as evidence:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->source<!-- --> <!-- -->save<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <span class="syntax-number">100</span> <!-- -->-<!-- -->-<!-- -->source<!-- --> <span class="syntax-string">&#x27;https://example.org/article&#x27;</span> <!-- -->\<!-- -->
+<!-- --> <!-- --> <!-- -->-<!-- -->-<!-- -->format<!-- --> <!-- -->text<!-- -->/<!-- -->html<!-- --> <!-- -->-<!-- -->-<!-- -->at<!-- --> <span class="syntax-string">&#x27;2026-09-19T10:30:00+09:00&#x27;</span>
+<!-- -->track<!-- --> <!-- -->source<!-- --> <!-- -->list<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <span class="syntax-number">100</span>
+<!-- -->track<!-- --> <!-- -->cite<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <span class="syntax-number">100</span> <!-- -->-<!-- -->-<!-- -->version<!-- --> <!-- -->SAVED_VERSION<!-- --> <!-- -->-<!-- -->-<!-- -->heading<!-- --> <span class="syntax-string">&#x27;Results&#x27;</span></code></pre></div>
+<p><code class="inline-code">source save</code> returns a record with a <code class="inline-code">version</code> hash and its owning <code class="inline-code">note_id</code>.
+Identical source location, media type, body and original bytes reuse the saved version
+even across note IDs (<code class="inline-code">created:false</code>). Use the returned ID and version for citations
+and inputs. Duplicate working notes are kept unchanged; <code class="inline-code">source list</code> for them may be
+empty. Changed content creates another version. <code class="inline-code">--original /path/to/file.pdf</code> also
+preserves the exact original file. <code class="inline-code">--at</code> records retrieval time, not an inferred publication time.
+The working note remains editable; saved versions survive reindexing and generation
+pruning. Back up <code class="inline-code">.track/sources</code> with the vault. Versions are not automatically deleted.</p>
+<p>Preserve a summary or extraction separately, naming the exact input version:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->source<!-- --> <!-- -->save<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <span class="syntax-number">200</span> <!-- -->-<!-- -->-<!-- -->input<!-- --> <span class="syntax-number">100</span>:<!-- -->SAVED_VERSION<!-- --> <!-- -->\<!-- -->
+<!-- --> <!-- --> <!-- -->-<!-- -->-<!-- -->method<!-- --> <span class="syntax-string">&#x27;summarizer/model-v1&#x27;</span> <!-- -->-<!-- -->-<!-- -->settings<!-- --> <span class="syntax-string">&#x27;prompt-v1&#x27;</span> <!-- -->\<!-- -->
+<!-- --> <!-- --> <!-- -->-<!-- -->-<!-- -->format<!-- --> <!-- -->text<!-- -->/<!-- -->markdown<!-- --> <!-- -->-<!-- -->-<!-- -->at<!-- --> <span class="syntax-string">&#x27;2026-09-19T10:35:00+09:00&#x27;</span></code></pre></div>
+<p>An identical input and recipe across notes reuses the saved result. Changed
+settings produce a separate version. Use <code class="inline-code">--run regeneration-1</code> for an explicit
+regeneration, reusing that key for retries. Deleted owners or corrupt saved records
+return errors instead of silently choosing another note. These commands freeze
+existing notes; they do not fetch documents or generate summaries.</p>
+<p><code class="inline-code">cite</code> returns exact text, note ID, version, content hash and resolved line range as
+JSON. Select an exact <code class="inline-code">--heading</code> (optionally <code class="inline-code">--level 2</code>), <code class="inline-code">--block proof</code>, both
+<code class="inline-code">--start-line 10 --end-line 15</code>, or <code class="inline-code">--page 2</code>. Lines and physical pages are 1-based.
+Pages require form-feed boundaries already captured in the text; printed page numbers
+are not interpreted. No selector returns the full body. Without <code class="inline-code">--version</code>, the
+result reads the current body and reports <code class="inline-code">pinned:false</code>.</p>
+<p>Renaming a note does not break its ID-based citation. Missing or deleted notes,
+missing versions and invalid or ambiguous positions produce errors. Citation IDs are
+local to a vault; moving a note to another vault does not move its saved versions.
+Only the explicitly supplied original file is copied; other attachments and remote
+links are not recursively preserved.</p>
+<h2 id="h-capture-refile-archive">Capture, refile, archive</h2>
+<p>These three commands move text around by heading anchor. A target is written as <code class="inline-code">Note#Heading</code>, the
+same grammar as a <code class="inline-code">[[Note#Heading]]</code> link; add more <code class="inline-code">#</code> to pin a heading level (<code class="inline-code">Note##Sub</code>). They are
+safety-first: an anchor that matches more than one heading is refused rather than guessed, and a move
+writes and verifies the destination before it touches the source, so a failed write never loses text.</p>
+<table><thead><tr><th>Command</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="inline-code">track capture [--target &quot;&lt;note&gt;#&lt;heading&gt;&quot;] [--template &lt;s&gt;] --body &lt;s&gt;</code></td><td>Append a (templated) entry under a heading.</td></tr><tr><td><code class="inline-code">track refile --from &quot;&lt;note&gt;#&lt;heading&gt;&quot; --to &quot;&lt;note&gt;#&lt;heading&gt;&quot; [--line N]</code></td><td>Move a heading subtree (or one list item) to another anchor.</td></tr><tr><td><code class="inline-code">track archive &quot;&lt;note&gt;#&lt;heading&gt;&quot;</code></td><td>Move a subtree into the archive note, stamped with its origin.</td></tr></tbody></table>
+<p><strong>Capture</strong> appends to a heading of a target note, creating the note when it is the configured inbox
+and does not exist yet. With <code class="inline-code">--template</code>, the captured text fills the template&#x27;s <code class="inline-code">{{ title }}</code>
+placeholder, so a one-line note becomes a framed entry. Set the default inbox with <code class="inline-code">capture_inbox</code> in
+the vault config (<code class="inline-code">&lt;vault&gt;/.track/config.yml</code>; it defaults to <code class="inline-code">Inbox</code>).</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-comment"># with a template like:  - [ ] {{ title }}</span>
+<!-- -->track<!-- --> <!-- -->capture<!-- --> <!-- -->-<!-- -->-<!-- -->target<!-- --> <span class="syntax-string">&quot;Projects#Inbox&quot;</span> <!-- -->-<!-- -->-<!-- -->template<!-- --> <!-- -->task<!-- --> <!-- -->-<!-- -->-<!-- -->body<!-- --> <span class="syntax-string">&quot;ship the release&quot;</span></code></pre></div>
+<p>Given this note:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-keyword">## Inbox</span>
+<!-- -->
+<span class="syntax-keyword">## Done</span></code></pre></div>
+<p>the capture packs a task under <code class="inline-code">Inbox</code>:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-keyword">## Inbox</span>
+<span class="syntax-property">- [ ] ship the release</span>
+<!-- -->
+<span class="syntax-keyword">## Done</span></code></pre></div>
+<p><strong>Refile</strong> moves a whole heading subtree (nested headings travel with it) from one anchor to another.
+The <code class="inline-code">--line N</code> variant moves a single list item at line <code class="inline-code">N</code> of the source note instead, carrying its
+nested items. Text moves verbatim, so <code class="inline-code">[[links]]</code> inside it keep resolving; both notes are reindexed so
+backlinks follow the move.</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->refile<!-- --> <!-- -->-<!-- -->-<!-- -->from<!-- --> <span class="syntax-string">&quot;Notes#Draft&quot;</span> <!-- -->-<!-- -->-<!-- -->to<!-- --> <span class="syntax-string">&quot;Archive 2026#Kept&quot;</span> <!-- --> <!-- --> <span class="syntax-comment"># a subtree</span>
+<!-- -->track<!-- --> <!-- -->refile<!-- --> <!-- -->-<!-- -->-<!-- -->from<!-- --> <span class="syntax-string">&quot;Notes&quot;</span> <!-- -->-<!-- -->-<!-- -->line<!-- --> <span class="syntax-number">4</span> <!-- -->-<!-- -->-<!-- -->to<!-- --> <span class="syntax-string">&quot;Notes#Done&quot;</span> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-comment"># one list item</span></code></pre></div>
+<p><strong>Archive</strong> moves a subtree into a dedicated archive note — per year by default (<code class="inline-code">archive_note: &quot;Archive {{year}}&quot;</code> in the vault config <code class="inline-code">&lt;vault&gt;/.track/config.yml</code>) — and records where it came from, so provenance survives the move:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-keyword">## Done</span>
+<!-- -->
+<!-- -->*Archived from [[Projects]] on 2026-07-11.*<!-- -->
+<!-- -->
+<span class="syntax-property">- [ ] review the draft</span></code></pre></div>
+<p>Archiving is a living move, distinct from <code class="inline-code">track rm</code>, which soft-deletes a whole note into the trash.</p>
+<h2 id="h-formatting-notes">Formatting notes</h2>
+<p><code class="inline-code">track fmt</code> rewrites notes into a canonical Markdown style. It is the style counterpart to
+<code class="inline-code">track doctor</code>: doctor reports breakage, <code class="inline-code">fmt</code> fixes style. The rule set is small and idempotent -
+running it twice changes nothing the second time.</p>
+<table><thead><tr><th>Command</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="inline-code">track fmt &lt;path&gt;...</code></td><td>Format the given files or directories in place.</td></tr><tr><td><code class="inline-code">track fmt --all</code></td><td>Format every note and journal file in the vault.</td></tr><tr><td><code class="inline-code">track fmt --check --all</code></td><td>Write nothing; exit non-zero and list files that would change (for CI).</td></tr></tbody></table>
+<p>The rules are: strip trailing whitespace, collapse runs of blank lines (except before headings) and
+drop blank lines at the start and end, put two blank lines before and one after each heading,
+normalize unordered-list bullets to <code class="inline-code">-</code>, and end the file with a single newline. Fenced code blocks
+are never touched, so their contents stay exactly as written.</p>
+<p>Closed ATX headings are stripped of their trailing hashes - <code class="inline-code">## Title ##</code> becomes <code class="inline-code">## Title</code> - and
+<code class="inline-code">track fmt --all</code> additionally reorders each metadata sidecar&#x27;s YAML keys into canonical order.</p>
+<p>A note like this:</p>
+<div class="code-block" data-language="md"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-keyword"># Notes</span>
+<!-- -->first line<!-- -->
+<span class="syntax-property">* apple</span>
+<!-- -->+ pear<!-- -->
+<!-- -->
+<!-- -->
+<!-- -->
+<span class="syntax-keyword">## Details</span>
+<!-- -->done</code></pre></div>
+<p>becomes:</p>
+<div class="code-block" data-language="md"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-keyword"># Notes</span>
+<!-- -->
+<!-- -->first line<!-- -->
+<span class="syntax-property">- apple</span>
+<span class="syntax-property">- pear</span>
+<!-- -->
+<!-- -->
+<span class="syntax-keyword">## Details</span>
+<!-- -->
+<!-- -->done</code></pre></div>
+<p>Code stays verbatim - the bullets and blank lines inside a fence are left alone:</p>
+<div class="code-block" data-language="md"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```text<!-- -->
+<span class="syntax-property">*  this bullet is code, not a list</span>
+<!-- -->
+<!-- -->
+<!-- -->so these blank lines survive<!-- -->
+<!-- -->```</code></pre></div>
+<h2 id="h-finding-notes">Finding notes</h2>
+<table><thead><tr><th>Command</th><th>Purpose</th></tr></thead><tbody><tr><td><code class="inline-code">track search --query &lt;s&gt;</code></td><td>Search notes; <code class="inline-code">--query &#x27;#tag&#x27;</code> filters by tag (hierarchical: <code class="inline-code">#a</code> matches <code class="inline-code">#a/b</code>).</td></tr><tr><td><code class="inline-code">track search --scope body --query &lt;s&gt;</code></td><td>Full-text search of note bodies, ranked by relevance.</td></tr><tr><td><code class="inline-code">track query &#x27;&lt;expr&gt;&#x27;</code></td><td>Run a table <span class="wiki-link pending">Query</span> over notes; <code class="inline-code">--saved &lt;name&gt;</code> runs a named one.</td></tr><tr><td><code class="inline-code">track notes</code></td><td>List every note, newest first.</td></tr><tr><td><code class="inline-code">track notes --untagged</code></td><td>List only the notes that still carry no tags.</td></tr><tr><td><code class="inline-code">track keywords</code></td><td>Print the indexed auto-link dictionary as JSON.</td></tr><tr><td><code class="inline-code">track resolve --term &lt;s&gt;</code></td><td>Resolve a keyword to a note.</td></tr><tr><td><code class="inline-code">track backlinks --id N</code></td><td>List notes that link to a note.</td></tr><tr><td><code class="inline-code">track graph --id N</code></td><td>Show a local link graph.</td></tr><tr><td><code class="inline-code">track graph --orphans</code></td><td>List notes with no inbound link and notes whose title names a missing parent scope.</td></tr></tbody></table>
+<h2 id="h-curating-tags">Curating tags</h2>
+<p><code class="inline-code">track notes --untagged</code> is the pull side of a tagging pass: it returns exactly the notes that still
+need tags, so a person — or an automated helper — can work through them one at a time. Add tags to an
+existing note with <code class="inline-code">track append</code>, which merges them into the sidecar without touching the body:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->notes<!-- --> <!-- -->-<!-- -->-<!-- -->untagged<!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-comment"># {&quot;notes&quot;:[{&quot;note_id&quot;:…,&quot;title&quot;:&quot;Draft&quot;,&quot;tags&quot;:null}, …]}</span>
+<!-- -->track<!-- --> <!-- -->append<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;Draft&quot;</span> <!-- -->-<!-- -->-<!-- -->tag<!-- --> <!-- -->zettel<!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-comment"># merge a tag; the note drops off the untagged list</span></code></pre></div>
+<p>Journals are date-titled and have their own <span class="wiki-link pending">Web workspace</span> surfaces, so they never appear in the
+note listing.</p>
+<h2 id="h-tasks-assets-templates-and-babel">Tasks, assets, templates, and Babel</h2>
+<p>Task lines are edited through the same engine path used by the web board. <code class="inline-code">track task set</code> assigns a
+state, <code class="inline-code">track task cycle</code> advances through the fixed state order, and <code class="inline-code">track task date</code> writes a
+scheduled or due date. <code class="inline-code">track tasks</code> lists indexed tasks with state and deadline filters. See
+<span class="wiki-link pending">Tasks</span> for the notation and board.</p>
+<p><code class="inline-code">track asset import &lt;file&gt;</code> copies an attachment into the vault&#x27;s <code class="inline-code">assets/</code> directory and returns the
+reference to embed; <code class="inline-code">track asset dir --ensure</code> creates that directory when needed. The template
+commands manage reusable note templates: <code class="inline-code">track template new --name &lt;s&gt;</code>,
+<code class="inline-code">track template open --name &lt;s&gt;</code>, and <code class="inline-code">track template list</code>.</p>
+<p><span class="wiki-link pending">Babel</span> source blocks are available through <code class="inline-code">track babel exec</code> or <code class="inline-code">track babel run</code> (execute a
+block), <code class="inline-code">track babel tangle</code> (write <code class="inline-code">:tangle</code> blocks to files), and <code class="inline-code">track babel restore</code> (list stored
+results). These commands return JSON and keep block results in the note sidecar.</p>
+<h2 id="h-named-vaults">Named vaults</h2>
+<p>When the machine config has a <code class="inline-code">vaults:</code> registry, <code class="inline-code">track vault list</code> shows the registered vaults and
+marks the active one, <code class="inline-code">track vault current</code> reports the active name, path, and selection source, and
+<code class="inline-code">track vault which &lt;name&gt;</code> resolves a name to its path. Pass <code class="inline-code">--vault &lt;name&gt;</code> to any command to run
+it against a registered vault; the vault registry is machine configuration, not part of a synced
+vault.</p>
+<h2 id="h-generation-history">Generation history</h2>
+<p>Generation history is a local, note-tree snapshot mechanism. <code class="inline-code">track gen increment [--label &lt;s&gt;]</code>
+saves the working vault, <code class="inline-code">track gen undo</code> and <code class="inline-code">track gen redo</code> move through the linear history,
+<code class="inline-code">track gen list</code> reports the cursor and whether the working tree is dirty, and <code class="inline-code">track gen status</code>
+lists the files behind that dirty state. Use <code class="inline-code">track gen peek [--gen N]</code> with a note selector to read
+an older note without moving the cursor. A vault with <code class="inline-code">gen: false</code> keeps no generations, so all of
+these commands refuse to run.</p>
+<h2 id="h-moving-a-note-between-vaults">Moving a note between vaults</h2>
+<p><code class="inline-code">track mv (--id N | --title S | --path P) --to &lt;vault&gt;</code> moves a note to another registered vault,
+preserving its id and sidecar and updating backlinks. It refuses to leave local links unresolved by
+default. Use <code class="inline-code">--unlink</code> to turn links that would break into plain text, or <code class="inline-code">--qualify</code> to rewrite
+them as links qualified with the source vault&#x27;s name.</p>
+<h2 id="h-maintenance">Maintenance</h2>
+<p><code class="inline-code">track refresh-all</code> runs the whole maintenance pipeline in one idempotent pass: a full reindex followed
+by a read-only <code class="inline-code">doctor</code> health report. It changes no notes, so it is safe to run unattended on a
+schedule (cron or launchd) to keep the index in step with a vault that a cloud sync edits behind
+track&#x27;s back.</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->refresh-all<!-- -->
+<span class="syntax-comment"># {&quot;reindex&quot;:{&quot;indexed&quot;:42,&quot;deleted&quot;:0,&quot;links&quot;:17},&quot;doctor&quot;:{&quot;scanned&quot;:42,&quot;issues&quot;:[],&quot;ok&quot;:true},&quot;took_ms&quot;:12}</span></code></pre></div>
+<p>A crontab line that refreshes every 15 minutes:</p>
+<div class="code-block" data-language="cron"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>*<!-- -->/<span class="syntax-number">15</span> <!-- -->*<!-- --> <!-- -->*<!-- --> <!-- -->*<!-- --> <!-- -->*<!-- --> <!-- -->/<!-- -->usr<!-- -->/<!-- -->local<!-- -->/<!-- -->bin<!-- -->/<!-- -->track<!-- --> <!-- -->refresh-all<!-- --> <!-- -->&gt;<!-- -->/<!-- -->dev<!-- -->/<!-- -->null<!-- --> <span class="syntax-number">2</span>&gt;<!-- -->&amp;<span class="syntax-number">1</span></code></pre></div>
+<h2 id="h-publishing">Publishing</h2>
+<p><code class="inline-code">track export</code> writes a single note out as Markdown. <code class="inline-code">track export-site</code> builds a whole static HTML
+site — see <span class="wiki-link pending">Web workspace</span> for the rendered reading experience it mirrors.</p>
+<p>Static apps under <code class="inline-code">apps/&lt;name&gt;/</code> are separate from note selection and are not published by default.
+Pass repeatable or comma-separated <code class="inline-code">--app</code> names to allowlist them. <code class="inline-code">--apps-base-url</code> changes where
+the published links point when apps are hosted separately; it does not upload them. See
+<span class="wiki-link pending">Static apps</span> for the complete workflow.</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->export-site<!-- --> <!-- -->-<!-- -->-<!-- -->all<!-- --> <!-- -->-<!-- -->-<!-- -->out<!-- --> <!-- -->.<!-- -->/<!-- -->site</code></pre></div>
+<p><code class="inline-code">--all</code> publishes every note in the vault (this help site is built that way); <code class="inline-code">--id</code> publishes a
+selection instead. The landing page comes from the vault config&#x27;s <code class="inline-code">web.home</code>, and each page&#x27;s icon,
+tags, and parent from its sidecar — see <span class="wiki-link pending">Home dashboard</span>. <code class="inline-code">--base-url</code>, <code class="inline-code">--out</code>, and <code class="inline-code">--frontend</code>
+describe one build of the site rather than the site, so they stay flags.</p>
+<p><code class="inline-code">track render</code> turns a declarative View Spec into a chart or article — see <span class="wiki-link pending">Visualization</span>.</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->render<!-- --> <!-- -->-<!-- -->-<!-- -->spec<!-- --> <!-- -->chart<!-- -->.<!-- -->json<!-- --> <!-- -->-<!-- -->-<!-- -->out<!-- --> <!-- -->chart<!-- -->.<!-- -->svg<!-- --> <!-- -->-<!-- -->-<!-- -->renderer<!-- --> <!-- -->svg</code></pre></div>
+<h2 id="h-internal-command">Internal command</h2>
+<p><code class="inline-code">track dump</code> is reserved for internal placeholder state: today it prints only the version and an
+empty <code class="inline-code">entries</code> array. It is not a vault export or a supported way to inspect note data.</p></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-347/tags/help/reference">#<!-- -->help/reference</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-cli">CLI</a><a class="backlink note-toc-entry" href="#h-rebuild-the-index-safely" style="padding-left:2em">Rebuild the index safely</a><a class="backlink note-toc-entry" href="#h-stop-the-web-workspace" style="padding-left:2em">Stop the web workspace</a><a class="backlink note-toc-entry" href="#h-preview-an-external-markdown-file" style="padding-left:2em">Preview an external Markdown file</a><a class="backlink note-toc-entry" href="#h-creating-and-editing-notes" style="padding-left:2em">Creating and editing notes</a><a class="backlink note-toc-entry" href="#h-preserving-source-evidence" style="padding-left:2em">Preserving source evidence</a><a class="backlink note-toc-entry" href="#h-capture-refile-archive" style="padding-left:2em">Capture, refile, archive</a><a class="backlink note-toc-entry" href="#h-formatting-notes" style="padding-left:2em">Formatting notes</a><a class="backlink note-toc-entry" href="#h-finding-notes" style="padding-left:2em">Finding notes</a><a class="backlink note-toc-entry" href="#h-curating-tags" style="padding-left:2em">Curating tags</a><a class="backlink note-toc-entry" href="#h-tasks-assets-templates-and-babel" style="padding-left:2em">Tasks, assets, templates, and Babel</a><a class="backlink note-toc-entry" href="#h-named-vaults" style="padding-left:2em">Named vaults</a><a class="backlink note-toc-entry" href="#h-generation-history" style="padding-left:2em">Generation history</a><a class="backlink note-toc-entry" href="#h-moving-a-note-between-vaults" style="padding-left:2em">Moving a note between vaults</a><a class="backlink note-toc-entry" href="#h-maintenance" style="padding-left:2em">Maintenance</a><a class="backlink note-toc-entry" href="#h-publishing" style="padding-left:2em">Publishing</a><a class="backlink note-toc-entry" href="#h-internal-command" style="padding-left:2em">Internal command</a></div></section><section class="backlinks" aria-labelledby="children-heading"><h3 id="children-heading">Children</h3><div class="backlink-list"><a href="/track-previews/pr-347/notes/1fBExGozUeXAXNB324DsDk" class="backlink">Babel</a><a href="/track-previews/pr-347/notes/6QDiV3ntkwRxXx0cTApZN1" class="backlink">Web clipper</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">12</span></h3><div class="backlink-list"><a href="/track-previews/pr-347/notes/5bBoWd3NKXixIBj7useATQ" class="backlink">Diagrams</a><a href="/track-previews/pr-347/notes/36ukB4V5MfAQePgJsUVhnS" class="backlink">Embeds</a><a href="/track-previews/pr-347/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-347/notes/3eUjhpw6SZX83jXq4rtDpG" class="backlink">Linking notes</a><a href="/track-previews/pr-347/notes/2sNIBTsmREke9vFuCe6TLb" class="backlink">Properties</a><a href="/track-previews/pr-347/notes/2KOlBRK4KsOQ2JVVHeuKuI" class="backlink">Searching notes</a><a href="/track-previews/pr-347/notes/2ttYx8EMEu4moyUaesc1p7" class="backlink">Tasks</a><a href="/track-previews/pr-347/notes/6lkMYz6DB66BiNMLmXjG9e" class="backlink">Visualization</a><a href="/track-previews/pr-347/notes/3eXzsvDeU80xrwTdpnyT2O" class="backlink">Web workspace</a><a href="/track-previews/pr-347/notes/6QDiV3ntkwRxXx0cTApZN1" class="backlink">Web clipper</a><a href="/track-previews/pr-347/notes/3wY11oP23XDXhfwykMsUBZ" class="backlink">Static apps</a><a href="/track-previews/pr-347/notes/3T8lLiHe81g9fzZfvL85pl" class="backlink">Calendar events</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-347/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-347/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
