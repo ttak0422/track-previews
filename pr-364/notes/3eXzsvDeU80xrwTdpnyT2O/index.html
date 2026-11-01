@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-364/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "bblonJGZmtzODe06Gn8vJopNLFk1kH4dr5VefUwI56U=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "715a20afb558b202";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-364/assets/index-Dek1vp9e.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-364/assets/index-CKBeHjIG.css">
+  <title>Web workspace · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Web workspace"><meta property="og:type" content="article"><meta property="og:description" content="track web serves a local browser workspace for reading and navigating the vault. It is a thin frontend over the CLI: it renders note bodies, resolves ... lin…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-364/notes/3eXzsvDeU80xrwTdpnyT2O/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-364/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-364/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-364/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-364/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-364/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-364/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-364/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-364/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>reviewed</dt><dd><span class="note-prop-value note-prop-date">2026-06-18</span></dd></div><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">reference</span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, November 1, 2026 at 04:40:47 AM">2026-11-01</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Web workspace<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-web-workspace">Web workspace</h1>
+<p><code class="inline-code">track web</code> serves a local browser workspace for reading and navigating the vault. It is a thin
+frontend over the <span class="wiki-link pending">CLI</span>: it renders note bodies, resolves <code class="inline-code">[[...]]</code> links into navigable,
+hover-previewable anchors, and draws the note graph.</p>
+<h2 id="h-start-stop-and-update-the-server">Start, stop, and update the server</h2>
+<p>From Neovim, start the workspace with <code class="inline-code">:Track web</code>. Stop it with <code class="inline-code">:Track webStop</code>, then run
+<code class="inline-code">:Track web</code> again when you want to restart. Stopping does not restart automatically. Save any
+unsaved browser edits before stopping; the command does not save browser drafts.</p>
+<p>Both commands accept an address, either as <code class="inline-code">:Track webStop 127.0.0.1:8765</code> or
+<code class="inline-code">:Track webStop --addr 127.0.0.1:8765</code>. Without arguments, webStop targets the server started by
+this Neovim instance, using its launch address and environment even if you changed the plugin&#x27;s
+<code class="inline-code">web_addr</code> setting afterward. With no active launcher job, it uses the current <code class="inline-code">web_addr</code>
+(default <code class="inline-code">127.0.0.1:8765</code>) and current configuration. An explicit address selects that server.</p>
+<p>The command uses the CLI&#x27;s <code class="inline-code">track web stop --addr ADDRESS</code> and its PID record. It can also stop
+a managed server started outside Neovim when the address and cache configuration match. It reports
+an already stopped server without an error. If stopping fails, the launcher keeps its live job so
+you can retry; stopping a different address leaves that job alone. A missing PID record cannot
+identify an old listener, so the command does not kill a process merely because it uses the port.</p>
+<p>Updating Track changes the installed binary, not an already running server. Stop the old server
+before opening the updated workspace. If Neovim itself still has the old plugin and bundled CLI
+loaded, exit and reopen Neovim after updating. From a shell, use <code class="inline-code">track web stop --addr 127.0.0.1:8765</code>, then start <code class="inline-code">track web --addr 127.0.0.1:8765</code> with the updated CLI. See <span class="wiki-link pending">CLI</span>.</p>
+<h2 id="h-workspace-navigation">Workspace navigation</h2>
+<p>The desktop sidebar is vertically centred in the full window. It stays below the tab strip as
+window size or text size changes. In a short window, scroll its navigation controls; Settings
+remains at the foot of the sidebar. At phone width or on a touch-only screen, the floating Track
+button replaces the sidebar.</p>
+<h2 id="h-what-it-offers">What it offers</h2>
+<ul>
+<li>Rendered Markdown reading with GFM tables, task lists, and Mermaid diagrams.</li>
+<li>Hover previews and persistent floating windows for linked notes and media.</li>
+<li>A local link graph you can open per-note or full-screen.</li>
+<li>Follow mode, so the web view tracks the note you are editing in Neovim.</li>
+<li>A <span class="wiki-link pending">Markdown viewer</span> for reading local files or a folder without importing them into a vault.</li>
+<li>A configurable <span class="wiki-link pending">Home dashboard</span> landing note, with recent-notes, journal, and pinned widgets.</li>
+<li><span class="wiki-link pending">Calendar events</span> with single-event registration, time zones, related notes, and recoverable trash;
+alongside today&#x27;s, tomorrow&#x27;s, and this week&#x27;s dated <span class="wiki-link pending">Tasks</span>.</li>
+<li>A metadata editor (the Meta dialog in the note actions menu): dedicated fields for the note&#x27;s
+title, tags, description, cover image, and icon, plus a free-form block for <span class="wiki-link pending">Properties</span>. Built-in
+fields get typed controls — the cover image can be uploaded straight from the browser into the
+vault assets — while props stays free-form YAML. The engine composes and validates the whole edit
+(the same rules as <code class="inline-code">track meta --edit</code>); the frontend never assembles YAML. Changing the title
+renames the note and rewrites its backlinks. The published static site has no editor.</li>
+</ul>
+<h2 id="h-copy-selected-note-lines">Copy selected note lines</h2>
+<p>Select text in a vault note to open the copy popup in the live web workspace or Track.app.
+<strong>Copy range</strong> copies a <code class="inline-code">path:start-end</code> reference, <strong>Copy markdown</strong> copies the selected source
+lines, and <strong>Copy for Confluence</strong> copies formatted content for a rich-text editor. Source ranges
+cover whole Markdown blocks or list items, so selecting part of a paragraph copies its source lines.</p>
+<p>Scrolling closes the popup rather than moving it with the text, including inside a floating note
+window. The text stays selected for ordinary keyboard copy. Select text again to reopen the popup.
+Published pages and the external Markdown viewer do not offer these source-line copy actions.</p>
+<h2 id="h-recovering-from-a-note-load-error">Recovering from a note load error</h2>
+<p>In the live web workspace and Track.app, a failed background refresh leaves the last loaded note
+and any unsaved edits visible. An error explains that the displayed version may be stale. Select
+<strong>Retry</strong> to fetch the note again without reloading the workspace or discarding the draft. A
+successful refresh does not save your edits; use <strong>Save</strong> when ready. If the note changed on disk,
+the existing conflict protection still applies.</p>
+<p>If the note has not loaded yet, <strong>Retry</strong> tries again and <strong>Close tab</strong> closes that failed tab.
+On the configured home note, which is not an ordinary tab, <strong>Go to workspace</strong> leaves the error
+view so you can use the navigation rail. Closing a tab does not repair a server error: other notes
+may fail too until the server recovers. Keep unsaved work in the editor or copy it somewhere safe
+before reloading or quitting.</p>
+<h2 id="h-graph-hover-previews">Graph hover previews</h2>
+<p>In the full graph, rest the pointer on a node to preview its note. Move into the popup to read or
+follow a link; leaving the node and popup closes the preview after a short grace period. Hovering
+another node releases the previous preview. Dragging or resizing a graph preview changes its
+position or size without keeping it open. Panning, zooming, or resetting the graph also releases
+the current node preview.</p>
+<p>Choose <strong>Pin preview</strong> to keep a window, including across page changes; choose <strong>Open as page</strong> or
+click a graph node to navigate to its note. Unpinning a graph preview restores its hover lifetime.
+Ordinary note-link previews keep their existing behavior: dragging or resizing one keeps it open
+until navigation. A link inside a graph preview opens an independent note-link preview; closing
+its source popup does not close that newer window.</p>
+<h2 id="h-voice-input">Voice input</h2>
+<p>Open <strong>Voice input</strong> in the live workspace, then press the microphone to start Japanese
+recognition (<code class="inline-code">ja-JP</code>). Press it again to stop. Interim words remain provisional; confirmed text
+is editable, with the existing copy, clear, search, and journal actions.</p>
+<p>The macOS app defaults to <strong>macOS speech</strong>, using Apple&#x27;s built-in Speech framework on macOS 14
+and later. <strong>Recognition</strong> also offers the existing <strong>Browser speech</strong> backend when Web Speech
+is available. Your explicit choice is remembered in this app; the web client continues to use
+Browser speech and keeps a separate preference. Upgrading changes the native default without
+requiring a provider key or changing other settings.</p>
+<p><strong>Built-in does not mean offline-only:</strong> macOS speech may send audio to Apple servers. Availability
+and offline operation depend on the language, device, system configuration, and network. Track
+checks Japanese support and current availability at start; Apple can also impose service limits.
+The browser backend follows the browser&#x27;s speech service and may also process audio remotely.
+Track never switches services automatically after an error. Choose another available backend
+explicitly if needed.</p>
+<p>Only starting voice input requests Speech Recognition and Microphone permission. If denied, allow
+Track under <strong>System Settings → Privacy &amp; Security → Speech Recognition / Microphone</strong>, then try
+again. Restricted permissions need administrator help. No usable microphone, unavailable Japanese
+recognition, audio input changes, and service errors stop recognition and display an explanation.</p>
+<p>macOS speech stops capturing after 55 seconds to stay below Apple&#x27;s approximately one-minute task
+limit. Start again to continue. Stop releases the microphone immediately and allows up to three
+seconds for a final transcript; if none arrives, unconfirmed words are discarded with an error.
+Leaving the voice view, reloading, closing the app, or changing backend cancels the session and
+discards its provisional words. Only the active session can update the transcript.</p>
+<h2 id="h-published-site-navigation">Published site navigation</h2>
+<p>The published static site&#x27;s sidebar omits <strong>New</strong> (recently created notes) and <strong>Voice input</strong>.
+Both remain available in the live web workspace and desktop app. Published sites keep sidebar
+search, browsing history, the note hierarchy, and the full graph for reading and navigation.</p>
+<h2 id="h-retired-agent-requests">Retired agent requests</h2>
+<p>The built-in Agent requests panel and its explain, research, and update actions have been retired.
+Existing notes and <code class="inline-code">.track/requests/*.json</code> history stay in place. With a loopback <code class="inline-code">track web</code>
+server, <code class="inline-code">GET /api/requests</code> and <code class="inline-code">GET /api/requests/&lt;id&gt;</code> still read that history; add
+<code class="inline-code">?vault=&lt;name&gt;</code> for a registered vault. These endpoints cannot send, retry, save, or apply requests.
+Interrupted updates remain recorded as they were and are never resumed automatically. Existing
+machine <code class="inline-code">agents:</code> settings are accepted but inactive; no credentials are removed or revoked.</p>
+<p>Use the <span class="wiki-link pending">CLI</span> from Codex or Claude for explicit note searches and edits. The Markdown viewer
+can display saved Markdown from an agent session without importing it into the vault.</p>
+<h2 id="h-read-markdown-outside-the-vault">Read Markdown outside the vault</h2>
+<p>Choose <strong>Markdown viewer</strong> in the navigation rail to open <code class="inline-code">/markdown</code>. <strong>Open Markdown files</strong>
+selects local <code class="inline-code">.md</code> or <code class="inline-code">.markdown</code> files; <strong>Open folder</strong> includes nested documents and their local
+images. Browser-selected files stay read-only in browser memory, with no upload, import, or indexing. Follow links
+within the selected source, then return to your vault without losing that selection during the
+page session. A full reload requires selecting the source again.</p>
+<p>From Neovim, save the current Markdown file and run <code class="inline-code">:Track markdown</code> to open it directly. This
+starts or reuses a compatible loopback workspace and briefly transfers a read-only snapshot of
+the containing folder. No note is imported or indexed. Save and repeat the command to refresh.</p>
+<p>See <span class="wiki-link pending">Markdown viewer</span> for local links, rendering limits, refreshing disk edits, and browser support.
+This viewer is a live-workspace feature and is not included in the published static site.</p>
+<h2 id="h-media-embeds-and-diagrams">Media embeds and diagrams</h2>
+<p>In a vault note, a Markdown image link on its own line becomes a rich block embed — YouTube players,
+Twitter/X posts, PDFs, image URLs, Open Graph link cards, and text-file attachments (including Mermaid
+diagrams). Fenced code blocks are syntax highlighted (with a copy button) and a <code class="inline-code">mermaid</code> fence renders inline. See
+<span class="wiki-link pending">Embeds</span> for the full list and syntax, and <span class="wiki-link pending">Charts</span> for <code class="inline-code">.viewspec.json</code> chart embeds.</p>
+<h2 id="h-relationship-to-the-static-export">Relationship to the static export</h2>
+<p>The static site produced by <code class="inline-code">track export-site</code> is the <em>published</em> counterpart of this workspace:
+rendered content only, with no editor, search index, or heatmap top page. It reuses the same Markdown
+and Mermaid rendering so a published note reads the way it does here, while <span class="wiki-link pending">Linking notes</span> explains
+how cross-note links are resolved against the published set.</p>
+<h2 id="h-static-apps">Static apps</h2>
+<p>A vault can keep a browser app at <code class="inline-code">apps/&lt;name&gt;/index.html</code>. A link to <code class="inline-code">/apps/&lt;name&gt;/</code> or
+<code class="inline-code">apps/&lt;name&gt;/</code> opens it as a top-level HTML page on a separate listener, not as a note embed. A link
+from a note in a registered vault opens that vault&#x27;s app; a direct app URL defaults to the workspace
+launch vault. The app listener uses the workspace port plus one, and startup fails if that adjacent
+port is unavailable. See <span class="wiki-link pending">Static apps</span> for setup, multi-vault behavior, trust boundaries, and
+publishing. For HTML displayed inside a note, see <span class="wiki-link pending">Embeds</span>.</p>
+<h2 id="h-searching-from-the-workspace">Searching from the workspace</h2>
+<p>The workspace search box runs the same unscoped search as the <span class="wiki-link pending">CLI</span> as you type: title and <code class="inline-code">#tag</code>
+matches appear first, followed by full-text matches from note <em>bodies</em> in a separate <strong>Full text</strong>
+group. Body matches are ranked by relevance and include code-block and CJK matches. Use
+<code class="inline-code">track search --scope body</code> when you want body-only results from the CLI; the workspace already
+combines both scopes. See <span class="wiki-link pending">Searching notes</span> for the query rules it shares.</p>
+<h2 id="h-find-and-navigation-in-the-macos-app">Find and navigation in the macOS app</h2>
+<p>Track.app uses Track&#x27;s white <code class="inline-code">t</code> on a dark rounded square in Finder, the Dock, and the <strong>Cmd+Tab</strong>
+app switcher. This app icon stays the same when you change the workspace&#x27;s light/dark theme.
+Build and open the <code class="inline-code">.app</code> bundle to see it; running the standalone executable is not an icon check.</p>
+<p>In Track.app, <strong>Cmd+F</strong> opens a compact in-page Find panel below the tabs. Opening or closing it
+keeps the tab bar and reading viewport in place. Type a word or Japanese text from the rendered
+note: every match receives a soft highlight, and the current match uses the workspace&#x27;s accent
+color. The counter shows the current match and total. <strong>Cmd+G</strong> or <strong>Enter</strong> moves to the next
+match; <strong>Shift+Cmd+G</strong> or <strong>Shift+Enter</strong> moves to the previous one, wrapping at either end and
+scrolling the current match into view. <strong>Escape</strong> or <strong>Done</strong> closes the panel and removes the
+highlights; clearing the query also removes them. Ordinary text selections and links remain intact.</p>
+<p>Find is literal and case-insensitive, not a regular-expression search. It searches rendered text
+in the current reader, including text split by inline formatting and line breaks, and refreshes
+when you navigate or rendered content changes. Hidden text, editor drafts, embedded pages, images,
+and diagram canvases are excluded. The workspace search above searches across notes. On older
+WebKit versions without CSS Highlights (before Safari 17.2), Find retains its previous single-match
+selection behavior without the all-match counter.</p>
+<p>Selecting a <strong>Contents</strong> heading moves within the current note without discarding edits or asking
+whether to leave. Moving away from an unchanged note also does not show an unsaved-edits warning.
+For edits to the note body, navigation that replaces the page (including Reload) still asks before
+discarding the draft. Cancel keeps the draft. Save first if you want to retain it; a failed save or
+a save still in progress does not count as saved. Uncommitted input from an input method is protected
+as well.</p>
+<p>Window Close, <strong>Cmd+Q</strong>, and a macOS request to quit also check the current workspace. Unchanged
+or successfully saved notes and an empty tab strip close without an unsaved-edits warning. If a
+note has unsaved changes, choose <strong>Cancel</strong> to keep editing and <strong>Save</strong> before quitting, or
+<strong>Continue</strong> to discard them. Pending or failed saves and uncommitted input-method text remain
+protected. The app keeps the window open until its own local server has stopped.</p>
+<p>In Track.app, <strong>Cmd+W</strong> (<strong>File → Close Tab</strong>) closes the current tab. Closing the last tab leaves
+the workspace open; press <strong>Cmd+Q</strong> (<strong>Quit Track</strong>) to exit the application. Unsaved note edits,
+pending saves, and input-method composition ask before closing a tab. Cancel keeps both the tab
+and its draft; unchanged and successfully saved notes close without a warning.</p>
+<p>The mouse <strong>Back</strong> and <strong>Forward</strong> side buttons select the previous and next open tabs, including
+tabs in the overflow menu and Graph, Calendar, and Markdown viewer tabs. The ends wrap. Repeated
+presses follow the order at the start of the sequence even though the selected tab moves to the
+front. Clicking or opening/closing a tab starts a fresh order. Switching away from an unsaved note
+uses the same discard confirmation. These buttons switch tabs inside Track.app; the <strong>View → Back</strong>
+and <strong>View → Forward</strong> menu commands and trackpad history gestures retain their page navigation.
+Mouse software must send the standard side-button events (buttons 4 and 5), rather than remapping
+them to other shortcuts. Browser workspaces and published sites retain their existing controls.</p>
+<p>For pages whose editing state Track cannot inspect, including static apps, voice input, focused
+embedded pages, and open dialogs, the app keeps its conservative warning. A failed or unresponsive
+state check also asks before discarding anything; it never treats a timeout as a successful save.</p>
+<h2 id="h-reading-keys-in-the-macos-app">Reading keys in the macOS app</h2>
+<p>In Track.app, click ordinary text or an empty margin in a note&#x27;s <strong>Preview</strong> view, or use normal
+keyboard focus navigation to reach the <strong>Note reading area</strong>. While that reading area has focus:</p>
+<ul>
+<li><strong>j</strong> scrolls down and <strong>k</strong> scrolls up, three lines at a time. Holding either key keeps scrolling.</li>
+<li><strong>Tab</strong> opens the next note tab; <strong>Shift+Tab</strong> opens the previous one. The ends wrap. Hidden note
+tabs in the overflow menu participate too; Graph, Calendar, and Markdown viewer tabs are skipped.</li>
+<li><strong>Escape</strong> releases the reading keys. The next <strong>Tab</strong> or <strong>Shift+Tab</strong> moves keyboard focus normally,
+so links, controls, and the navigation rail remain reachable. Click the reading text or return
+focus to the reading area to enable the keys again.</li>
+</ul>
+<p>Closing workspace search with Escape or choosing a result returns focus to the note Preview so
+you can keep scrolling without another click. Closing the native in-page Find bar with Escape or
+Done also resumes reading after removing its match highlights. An input, editable control, or open
+dialog that still owns focus keeps it; dismissing search opened from a text field returns to that
+field instead. Choosing a result resumes reading. Edit and Split mode do not acquire reading focus.</p>
+<p>The first Tab uses the current tab-strip order. Continuing with Tab or Shift+Tab follows that same
+order even though the selected tab moves to the front of the strip. Clicking, leaving and returning
+focus, opening/closing a tab, or navigating another way starts a fresh order. Holding Tab does not
+rapidly switch tabs. With fewer than two note tabs, Tab keeps its normal focus behavior.</p>
+<p>These keys apply only to note Preview mode in the macOS app. Edit and Split mode, text fields,
+editable content, links, buttons, embedded pages, search, open menus, dialogs, and input-method
+composition keep their existing keys. Selected text and its copy controls keep normal keyboard
+behavior; selecting text does not move focus. The native Find field
+keeps its text input and focus navigation. Ordinary browser workspaces and published sites are
+unchanged. A configured home note can be scrolled, but does not become an open note tab just by
+using these keys.</p>
+<p>If a preview still contains unsaved edits, switching notes uses the existing discard confirmation;
+Cancel keeps the draft and current tab. Save first to retain the edits. Key customization through a
+configuration file is not available yet.</p>
+<h2 id="h-editing-drawio-diagrams">Editing draw.io diagrams</h2>
+<p>In Preview or Split, select <strong>Edit draw.io diagram</strong> above a <code class="inline-code">drawio</code> diagram, then
+<strong>Open online editor</strong>. This opens the official editor at <strong><span class="md-link-url-wrap"><a class="md-link" href="https://embed.diagrams.net" target="_blank" rel="noreferrer noopener">https://embed.diagrams.net</a></span></strong>.
+It requires internet access and passes the selected diagram&#x27;s XML to third-party code from
+diagrams.net. Track does not send the rest of the note. Do not open confidential diagrams in the
+online editor unless you accept that boundary. Reading diagrams still uses the bundled local viewer.</p>
+<p>The open editor uses about 90% of the window&#x27;s width and height and follows window resizing.
+In short windows, scroll the dialog to reach all controls.
+Drag shapes, connection endpoints, and edge waypoints in the editor to refine an architecture figure.
+Select <strong>Apply to draft</strong>, or <strong>Save</strong> inside the online editor, to return the full XML to the note.
+Track switches to Split so you can inspect the source and preview, then select Track&#x27;s <strong>Save</strong> to
+persist it. Apply alone does not save the note. A failed or conflicting Track Save keeps the draft;
+resolve the disk conflict before saving again.</p>
+<p><strong>Cancel</strong>, <strong>Close</strong>, or Escape closes the diagram editor. After the online editor has opened,
+Track asks before discarding the session, including when no change has been reported yet. Leaving
+the note, closing its tab, reloading, or quitting also protects unapplied diagram edits. Canceling
+a discard confirmation keeps the editor open. Apply or cancel before opening another diagram.
+Use the visible buttons when an iframe consumes a keyboard shortcut.</p>
+<p>Only complete, unindented backtick <code class="inline-code">drawio</code> fences in the current note are editable. Attachments
+(including <code class="inline-code">.drawio.svg</code> and <code class="inline-code">.drawio.png</code>), included notes, query results, external Markdown files,
+and published pages stay read-only. Editing note text uses the existing source editor.
+If the preview belongs to an older draft, its editing buttons disappear until it catches up.
+If a draft changes during diagram editing, Apply is rejected; cancel and reopen the diagram.
+Disk updates do not replace a draft while its diagram editor is open.</p>
+<p>The editor receives and returns the entire XML document, including compressed pages and layers.
+The inline viewer displays only the first page. Returned XML must be valid draw.io XML, no larger
+than 4 MiB of text, and cannot contain a line that would close its surrounding Markdown fence.
+Loading or Apply timeouts leave the draft unchanged; check connectivity, cancel, and reopen.
+The online editor is provided by diagrams.net and may change independently of Track. Its iframe
+cannot open popups, navigate Track, download files, or save directly to the vault. Diagram media
+and editor resources may use the network. Track&#x27;s Apply/Save flow needs no new account or service.</p></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-364/tags/help/reference">#<!-- -->help/reference</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-web-workspace">Web workspace</a><a class="backlink note-toc-entry" href="#h-start-stop-and-update-the-server" style="padding-left:2em">Start, stop, and update the server</a><a class="backlink note-toc-entry" href="#h-workspace-navigation" style="padding-left:2em">Workspace navigation</a><a class="backlink note-toc-entry" href="#h-what-it-offers" style="padding-left:2em">What it offers</a><a class="backlink note-toc-entry" href="#h-copy-selected-note-lines" style="padding-left:2em">Copy selected note lines</a><a class="backlink note-toc-entry" href="#h-recovering-from-a-note-load-error" style="padding-left:2em">Recovering from a note load error</a><a class="backlink note-toc-entry" href="#h-graph-hover-previews" style="padding-left:2em">Graph hover previews</a><a class="backlink note-toc-entry" href="#h-voice-input" style="padding-left:2em">Voice input</a><a class="backlink note-toc-entry" href="#h-published-site-navigation" style="padding-left:2em">Published site navigation</a><a class="backlink note-toc-entry" href="#h-retired-agent-requests" style="padding-left:2em">Retired agent requests</a><a class="backlink note-toc-entry" href="#h-read-markdown-outside-the-vault" style="padding-left:2em">Read Markdown outside the vault</a><a class="backlink note-toc-entry" href="#h-media-embeds-and-diagrams" style="padding-left:2em">Media embeds and diagrams</a><a class="backlink note-toc-entry" href="#h-relationship-to-the-static-export" style="padding-left:2em">Relationship to the static export</a><a class="backlink note-toc-entry" href="#h-static-apps" style="padding-left:2em">Static apps</a><a class="backlink note-toc-entry" href="#h-searching-from-the-workspace" style="padding-left:2em">Searching from the workspace</a><a class="backlink note-toc-entry" href="#h-find-and-navigation-in-the-macos-app" style="padding-left:2em">Find and navigation in the macOS app</a><a class="backlink note-toc-entry" href="#h-reading-keys-in-the-macos-app" style="padding-left:2em">Reading keys in the macOS app</a><a class="backlink note-toc-entry" href="#h-editing-drawio-diagrams" style="padding-left:2em">Editing draw.io diagrams</a></div></section><section class="backlinks" aria-labelledby="children-heading"><h3 id="children-heading">Children</h3><div class="backlink-list"><a href="/track-previews/pr-364/notes/6Xgzgy44LKYysmaRlzVScf" class="backlink">Home dashboard</a><a href="/track-previews/pr-364/notes/4xQY6DFHWGHYniC17E01IT" class="backlink">Markdown viewer</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">19</span></h3><div class="backlink-list"><a href="/track-previews/pr-364/notes/1fBExGozUeXAXNB324DsDk" class="backlink">Babel</a><a href="/track-previews/pr-364/notes/3qspHppxZXmxlO0h1KAPMJ" class="backlink">Block links</a><a href="/track-previews/pr-364/notes/5bsKWpzrLcdY0SkLtwsCr9" class="backlink">CLI</a><a href="/track-previews/pr-364/notes/6Xgzgy44LKYysmaRlzVScf" class="backlink">Home dashboard</a><a href="/track-previews/pr-364/notes/5bBoWd3NKXixIBj7useATQ" class="backlink">Diagrams</a><a href="/track-previews/pr-364/notes/36ukB4V5MfAQePgJsUVhnS" class="backlink">Embeds</a><a href="/track-previews/pr-364/notes/5TjZrtnIp272Pu1vDOoFTI" class="backlink">Hierarchy</a><a href="/track-previews/pr-364/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-364/notes/3eUjhpw6SZX83jXq4rtDpG" class="backlink">Linking notes</a><a href="/track-previews/pr-364/notes/2sNIBTsmREke9vFuCe6TLb" class="backlink">Properties</a><a href="/track-previews/pr-364/notes/3wprWYHB4uc1XstTDDjile" class="backlink">Query</a><a href="/track-previews/pr-364/notes/2KOlBRK4KsOQ2JVVHeuKuI" class="backlink">Searching notes</a><a href="/track-previews/pr-364/notes/6RVpp0kGC9SPIhxkcDM93m" class="backlink">Syntax</a><a href="/track-previews/pr-364/notes/2ttYx8EMEu4moyUaesc1p7" class="backlink">Tasks</a><a href="/track-previews/pr-364/notes/6lkMYz6DB66BiNMLmXjG9e" class="backlink">Visualization</a><a href="/track-previews/pr-364/notes/6nlndTCAVT8yIkSqAD6dVL" class="backlink">A deprecated note<span class="note-flag-badge note-flag-badge-deprecated">DEPRECATED</span></a><a href="/track-previews/pr-364/notes/3wY11oP23XDXhfwykMsUBZ" class="backlink">Static apps</a><a href="/track-previews/pr-364/notes/4xQY6DFHWGHYniC17E01IT" class="backlink">Markdown viewer</a><a href="/track-previews/pr-364/notes/3T8lLiHe81g9fzZfvL85pl" class="backlink">Calendar events</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-364/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-364/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
