@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-374/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "+2DDHY6uDzAwEZunYbbg66YIwq7e2h5cm8yhEaYTuSE=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "e9367c38f3fc4116";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-374/assets/index-qlYsHwfF.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-374/assets/index-3MI2notm.css">
+  <title>Diagrams · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Diagrams"><meta property="og:type" content="article"><meta property="og:description" content="track renders diagrams as a first class part of Visualization — not only statistical Charts. Five diagram formats are built in, each triggered by its fence l…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-374/notes/5bBoWd3NKXixIBj7useATQ/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-374/assets/5NpJZIGH575uYNPT68Ymr3.svg"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-374/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-374/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-374/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-374/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-374/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-374/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"><div class="tabbar" role="list" aria-label="Open notes"></div></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-374/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span><span class="note-crumb"><a href="/track-previews/pr-374/notes/6lkMYz6DB66BiNMLmXjG9e">Visualization</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">visualization</span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Monday, November 2, 2026 at 08:19:10 AM">2026-11-02</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="note-surface"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Diagrams<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-diagrams">Diagrams</h1>
+<p>track renders diagrams as a first-class part of <span class="wiki-link pending">Visualization</span> — not only statistical <span class="wiki-link pending">Charts</span>.
+Five diagram formats are built in, each triggered by its fence language:</p>
+<ul>
+<li><strong><span class="md-link-url-wrap"><a class="md-link" href="https://mermaid.js.org/" target="_blank" rel="noreferrer noopener">Mermaid syntax</a></span></strong> (<code class="inline-code">```mermaid</code>) — rendered with
+<strong><span class="md-link-url-wrap"><a class="md-link" href="https://github.com/obsidianmd/pele" target="_blank" rel="noreferrer noopener">Pele</a></span></strong> by default, with the original Mermaid engine retained
+for unsupported features or rendering failures: flowcharts, sequence, class, state,
+entity-relationship, Gantt, pie, user-journey, gitgraph, and the rest.</li>
+<li><strong><span class="md-link-url-wrap"><a class="md-link" href="https://graphviz.org/" target="_blank" rel="noreferrer noopener">Graphviz</a></span></strong> (<code class="inline-code">```dot</code>) — the DOT language with Graphviz&#x27;s own layout
+engine, for arbitrary graphs where you say <em>what connects to what</em> and let the layout be computed.</li>
+<li><strong><span class="md-link-url-wrap"><a class="md-link" href="https://d2lang.com/" target="_blank" rel="noreferrer noopener">D2</a></span></strong> (<code class="inline-code">```d2</code>) — a modern diagram language with its own themes and
+layout, when you prefer D2&#x27;s syntax or aesthetics over Mermaid&#x27;s for the same kind of diagram.</li>
+<li><strong><span class="md-link-url-wrap"><a class="md-link" href="https://likec4.dev/" target="_blank" rel="noreferrer noopener">LikeC4</a></span></strong> (<code class="inline-code">```likec4</code>) — one architecture model with multiple
+selectable views, such as a system overview and internal components.</li>
+<li><strong><span class="md-link-url-wrap"><a class="md-link" href="https://www.drawio.com/" target="_blank" rel="noreferrer noopener">draw.io</a></span></strong> (<code class="inline-code">```drawio</code>) — not a text language but a drawing tool&#x27;s
+file format: paste what draw.io saves (or attach the <code class="inline-code">.drawio</code> file) and track renders it with
+draw.io&#x27;s own viewer, every built-in shape included.</li>
+</ul>
+<p>See also <span class="wiki-link pending">Charts</span>, <span class="wiki-link pending">Mindmaps</span>, and <span class="wiki-link pending">Embeds</span>.</p>
+<h2 id="h-writing-a-diagram">Writing a diagram</h2>
+<p>Fence a block with <code class="inline-code">mermaid</code> and write Mermaid syntax. It renders inline; if the syntax is wrong, the
+original source is shown instead of a broken image, so a typo never hides your text.</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```mermaid<!-- -->
+<!-- -->flowchart TD<!-- -->
+<!-- -->  idea([New idea or source]) --&gt; capture[&quot;Capture a note&quot;]<!-- -->
+<!-- -->  capture --&gt; link[&quot;Link related notes with wiki links&quot;]<!-- -->
+<!-- -->  link --&gt; explore{&quot;Explore the local graph&quot;}<!-- -->
+<!-- -->  explore --&gt;|gap found| capture<!-- -->
+<!-- -->  explore --&gt;|ready| write[&quot;Synthesize a write-up&quot;]<!-- -->
+<!-- -->  write --&gt; embed[&quot;Embed charts, media, and diagrams&quot;]<!-- -->
+<!-- -->  embed --&gt; publish[&quot;Publish with track export-site&quot;]<!-- -->
+<!-- -->  publish --&gt; review([Review and revisit])<!-- -->
+<!-- -->  review --&gt; idea<!-- -->
+<!-- -->```</code></pre></div>
+<p>It renders as:</p>
+<div class="mermaid-diagram pele-diagram mermaid-diagram-loading">Rendering diagram...</div>
+<p>Leave the colors to track. Pele inherits the current theme&#x27;s tokens through CSS, keeping the
+same SVG when you switch between light and dark. The Mermaid fallback uses those tokens too, but
+regenerates its SVG on a theme change. Colors explicitly written into the source remain fixed and
+can become unreadable in another theme. Where a distinction matters, carry it with shape, label,
+or layout rather than a fixed color.</p>
+<h2 id="h-pele-rendering-and-compatibility">Pele rendering and compatibility</h2>
+<p>Pele is the default renderer for supported Mermaid syntax, both in <code class="inline-code">mermaid</code> fences and attached
+<code class="inline-code">.mmd</code> / <code class="inline-code">.mermaid</code> files. No renderer selection is needed. Your source and fence language stay
+unchanged, and <strong>Copy source</strong> copies the original text. Fold, pan, zoom, reset, and popup controls
+are shared with the other diagram engines.</p>
+<p>Pele is bundled locally and loaded only when a diagram approaches the viewport, including in the
+native app and published site. Ordinary supported diagrams do not load the Mermaid engine. Diagram
+text is not sent to pele.run or another rendering service. Image loading and diagram links are
+disabled in the Pele path, and its SVG is sanitized before display. Pele uses its own layout, so
+positions, spacing, and edge paths can differ from Mermaid. The source&#x27;s direction is preserved
+even in a narrow frame; zoom or open the popup for details.</p>
+<p>Pele&#x27;s colors inherit Track&#x27;s theme through CSS variables, without redrawing the diagram on a
+light/dark switch. Font changes still require new label measurements. Styles can be scoped to a
+diagram, for example <code class="inline-code">.pele-diagram .pele-node[data-id=&quot;idea&quot;] .pele-label { fill: var(--mark); }</code>.
+Variables such as <code class="inline-code">--pele-surface</code>, <code class="inline-code">--pele-line</code>, and <code class="inline-code">--pele-border</code> follow Track&#x27;s tokens.
+The current palette and CSS hooks remain in place so colors can be revised separately later;
+this does not add a CSS editor.</p>
+<p><strong>Math labels, custom icons/images, HTML labels, frontmatter, and Mermaid directives</strong> still use
+the original Mermaid renderer, loaded lazily with a visible explanation. This preserves the local
+Logos pack, KaTeX, and existing Mermaid configuration rather than silently changing them. If Pele
+rejects other source, Track also shows the reason and uses Mermaid. If both engines fail, the
+original source and error remain visible. Editing the source starts a fresh Pele attempt where
+supported. Existing notes need no migration; important diagrams may still have different geometry.</p>
+<p>Pele limits source to 50,000 characters, SVG output to 4,000,000 characters, and flowchart edges to
+5,000. A source that exceeds a Pele limit uses the explained Mermaid fallback. Its advertised
+benchmark timings are not a measurement of Track&#x27;s initial page load or interaction speed. The
+existing off-screen loading policy applies to both renderers.</p>
+<h2 id="h-mermaid-architecture">Mermaid architecture</h2>
+<p>Use <code class="inline-code">architecture-beta</code> inside a <code class="inline-code">mermaid</code> fence to describe services, their deployment groups, and
+the sides their connections leave or enter. It works with the bundled Mermaid version; no separate
+renderer or account is needed. Declare a group before its services, and services before their edges:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```mermaid<!-- -->
+<!-- -->architecture-beta<!-- -->
+<!-- -->  group backend(cloud)[Backend]<!-- -->
+<!-- -->  service api(logos:aws-lambda)[API] in backend<!-- -->
+<!-- -->  service db(logos:postgresql)[Database] in backend<!-- -->
+<!-- -->  service cache(logos:redis)[Cache] in backend<!-- -->
+<!-- -->  db:R --&gt; L:api<!-- -->
+<!-- -->  cache:R --&gt; L:api<!-- -->
+<!-- -->  align column db cache<!-- -->
+<!-- -->```</code></pre></div>
+<p>It renders as:</p>
+<div class="mermaid-diagram mermaid-diagram-loading"><p class="diagram-renderer-notice" role="status">Using Mermaid: <!-- -->Custom icons and images retain their original renderer.</p>Rendering diagram...</div>
+<p><code class="inline-code">R</code>, <code class="inline-code">L</code>, <code class="inline-code">T</code>, and <code class="inline-code">B</code> choose the right, left, top, and bottom of a service. <code class="inline-code">--&gt;</code> adds an arrow;
+<code class="inline-code">--</code> connects without one. Connect services, not group IDs. To connect at a containing group&#x27;s
+boundary, use a service endpoint such as <code class="inline-code">api{group}:R</code>. <code class="inline-code">junction</code> adds a branching point.</p>
+<p>The built-in icon names are <code class="inline-code">cloud</code>, <code class="inline-code">database</code>, <code class="inline-code">disk</code>, <code class="inline-code">internet</code>, and <code class="inline-code">server</code>. Track also bundles
+the <span class="md-link-url-wrap"><a class="md-link" href="https://icon-sets.iconify.design/logos/" target="_blank" rel="noreferrer noopener">Iconify Logos pack</a></span>: names such as <code class="inline-code">logos:aws-lambda</code>,
+<code class="inline-code">logos:postgresql</code>, and <code class="inline-code">logos:redis</code> work without fetching an icon from an external service. The pack
+loads only when a diagram uses it. Other packs, custom pack registration, and icon URLs are not
+supported; an unknown pack or icon appears as Mermaid&#x27;s <code class="inline-code">?</code> placeholder. Logos keep their original
+brand colors in both themes.</p>
+<p>Architecture syntax is still named <code class="inline-code">architecture-beta</code>. Layout depends on connection directions,
+and siblings with the same connections can overlap. <code class="inline-code">align column db cache</code> gives these two services
+one column; use <code class="inline-code">align row</code> for one row. Put alignment after the services, and keep its order
+consistent with their edge directions. Syntax or layout errors show the error and original source,
+so the note remains editable. See the <span class="md-link-url-wrap"><a class="md-link" href="https://mermaid.js.org/syntax/architecture.html" target="_blank" rel="noreferrer noopener">Mermaid architecture reference</a></span>
+for the full grammar.</p>
+<p>The web workspace, native app&#x27;s note view, and published site all use this bundled renderer. Source
+text is rendered on the device, with strict security and no external rendering service. The usual
+diagram controls fit the first view to the text column, then let you pan, zoom, reset, or open a popup.</p>
+<h2 id="h-graphviz">Graphviz</h2>
+<p>Fence a block with <code class="inline-code">dot</code> (or <code class="inline-code">graphviz</code>) and write plain <span class="md-link-url-wrap"><a class="md-link" href="https://graphviz.org/doc/info/lang.html" target="_blank" rel="noreferrer noopener">DOT</a></span>.
+Graphviz runs compiled to WebAssembly, right in the browser — nothing to install — and a syntax error
+falls back to the message plus your source, the same as Mermaid:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```dot<!-- -->
+<!-- -->digraph publish_workflow {<!-- -->
+<!-- -->  rankdir=TB;<!-- -->
+<!-- -->  node [shape=box, style=rounded];<!-- -->
+<!-- -->  capture [label=&quot;Capture a note&quot;];<!-- -->
+<!-- -->  clarify [label=&quot;Clarify the idea&quot;];<!-- -->
+<!-- -->  link [label=&quot;Link related notes&quot;];<!-- -->
+<!-- -->  draft [label=&quot;Draft a write-up&quot;];<!-- -->
+<!-- -->  review [label=&quot;Review and revise&quot;];<!-- -->
+<!-- -->  publish [label=&quot;Publish&quot;];<!-- -->
+<!-- -->  archive [label=&quot;Archive source material&quot;];<!-- -->
+<!-- -->
+<!-- -->  capture -&gt; clarify -&gt; link -&gt; draft -&gt; review -&gt; publish;<!-- -->
+<!-- -->  review -&gt; draft [label=&quot;revise&quot;];<!-- -->
+<!-- -->  publish -&gt; archive;<!-- -->
+<!-- -->}<!-- -->
+<!-- -->```</code></pre></div>
+<p>It renders as:</p>
+<div class="mermaid-diagram graphviz-diagram mermaid-diagram-loading">Rendering diagram...</div>
+<p>The graph background defaults to transparent so it sits on the page in both themes; set <code class="inline-code">bgcolor</code>
+yourself to override it.</p>
+<h2 id="h-d2">D2</h2>
+<p>Fence a block with <code class="inline-code">d2</code> and write <span class="md-link-url-wrap"><a class="md-link" href="https://d2lang.com/tour/intro" target="_blank" rel="noreferrer noopener">D2</a></span>. Like Graphviz, D2 runs
+compiled to WebAssembly in the browser, and a syntax error falls back to the message plus your
+source. D2 brings its own themes: track picks a light or dark one to match the app theme, and a
+theme set inside the diagram (<code class="inline-code">vars.d2-config</code>) still wins:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```d2<!-- -->
+<!-- -->capture: Capture a note<!-- -->
+<!-- -->relate: Link related notes<!-- -->
+<!-- -->draft: Draft a write-up<!-- -->
+<!-- -->publish: Publish<!-- -->
+<!-- -->
+<!-- -->capture -&gt; relate -&gt; draft -&gt; publish<!-- -->
+<!-- -->draft -&gt; capture: gap found<!-- -->
+<!-- -->```</code></pre></div>
+<p>It renders as:</p>
+<div class="mermaid-diagram mermaid-diagram-loading">Rendering diagram...</div>
+<h3 id="h-architecture-layouts-with-tala">Architecture layouts with TALA</h3>
+<p>The bundled D2 0.9 renderer supports <strong>Dagre</strong> (the default), <strong>ELK</strong>, and <strong>TALA</strong>. TALA is useful
+for software architecture with nested containers and connections that are not a simple hierarchy.
+It runs on your device, including in the native app and published site: no plugin, license key,
+account, or external rendering service is needed. Select it inside the diagram:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```d2<!-- -->
+<!-- -->vars: {<!-- -->
+<!-- -->  d2-config: {<!-- -->
+<!-- -->    layout-engine: tala<!-- -->
+<!-- -->  }<!-- -->
+<!-- -->}<!-- -->
+<!-- -->direction: right<!-- -->
+<!-- -->user: User<!-- -->
+<!-- -->backend: Backend {<!-- -->
+<!-- -->  api: API<!-- -->
+<!-- -->  db: Database { shape: cylinder }<!-- -->
+<!-- -->  api -&gt; db: reads and writes<!-- -->
+<!-- -->}<!-- -->
+<!-- -->user -&gt; backend.api: HTTPS<!-- -->
+<!-- -->```</code></pre></div>
+<p>It renders as:</p>
+<div class="mermaid-diagram mermaid-diagram-loading">Rendering diagram...</div>
+<p>Replace <code class="inline-code">tala</code> with <code class="inline-code">dagre</code> or <code class="inline-code">elk</code> to compare layouts. TALA can reposition much of a diagram after
+a small edit; its result is not a fixed drawing. A misspelled layout name or invalid syntax shows an
+error with the original source. The first visible D2 block loads the bundled WASM engine; later
+blocks reuse it, with layouts processed in order. Large diagrams can take time.</p>
+<p>Each fence or <code class="inline-code">.d2</code> attachment is a single source file: imports cannot read other attachments or
+local files. Only the root board is shown. For safe inline rendering, active links, image icons,
+foreign HTML, and externally loaded CSS are omitted. D2&#x27;s generated styles and embedded fonts are
+kept, so ordinary text, Markdown labels, shapes, and light/dark themes still render locally.
+See the <span class="md-link-url-wrap"><a class="md-link" href="https://d2lang.com/tour/tala/" target="_blank" rel="noreferrer noopener">D2 TALA guide</a></span> for layout-specific options.</p>
+<h2 id="h-likec4">LikeC4</h2>
+<p>Use a <code class="inline-code">likec4</code> fence to describe one architecture model and derive several views from it. Change an
+element or relationship once in <code class="inline-code">model</code>, then choose the view name above the drawing to inspect a
+system overview or its internal components. Track bundles the <span class="md-link-url-wrap"><a class="md-link" href="https://likec4.dev/" target="_blank" rel="noreferrer noopener">LikeC4</a></span> parser
+and Graphviz renderer; the source stays in your browser, including in the native app and published
+Web site.</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```likec4<!-- -->
+<!-- -->specification {<!-- -->
+<!-- -->  element person<!-- -->
+<!-- -->  element system<!-- -->
+<!-- -->  element component<!-- -->
+<!-- -->}<!-- -->
+<!-- -->model {<!-- -->
+<!-- -->  user = person &#x27;User&#x27;<!-- -->
+<!-- -->  service = system &#x27;Order service&#x27; {<!-- -->
+<!-- -->    web = component &#x27;Web UI&#x27;<!-- -->
+<!-- -->    api = component &#x27;Order API&#x27;<!-- -->
+<!-- -->    db = component &#x27;Database&#x27; {<!-- -->
+<!-- -->      style { shape cylinder }<!-- -->
+<!-- -->    }<!-- -->
+<!-- -->  }<!-- -->
+<!-- -->  user -&gt; service.web &#x27;Places orders&#x27;<!-- -->
+<!-- -->  service.web -&gt; service.api &#x27;HTTPS&#x27;<!-- -->
+<!-- -->  service.api -&gt; service.db &#x27;Reads and writes&#x27;<!-- -->
+<!-- -->}<!-- -->
+<!-- -->views {<!-- -->
+<!-- -->  view overview {<!-- -->
+<!-- -->    title &#x27;System overview&#x27;<!-- -->
+<!-- -->    include *<!-- -->
+<!-- -->    autoLayout LeftRight<!-- -->
+<!-- -->  }<!-- -->
+<!-- -->  view components {<!-- -->
+<!-- -->    title &#x27;Internal components&#x27;<!-- -->
+<!-- -->    include user, service.*<!-- -->
+<!-- -->    autoLayout LeftRight<!-- -->
+<!-- -->  }<!-- -->
+<!-- -->}<!-- -->
+<!-- -->```</code></pre></div>
+<p>It renders as:</p>
+<div class="likec4-diagram"><div class="mermaid-diagram graphviz-diagram mermaid-diagram-loading">Rendering diagram...</div></div>
+<p><code class="inline-code">specification</code> names the element kinds, <code class="inline-code">model</code> defines nested elements and their relationships,
+and <code class="inline-code">views</code> selects what each diagram includes. <code class="inline-code">include *</code> shows the top-level overview;
+<code class="inline-code">include user, service.*</code> expands the service&#x27;s immediate children. Each view should have a distinct
+name; <code class="inline-code">title</code> is the text shown in the view selector. Without a title, the view name is used. Track
+shows explicitly declared views, so include at least one <code class="inline-code">view</code> in the source.</p>
+<p>Switching views fits the newly selected diagram to the text column. Zoom, drag, Reset, popup and
+Copy source use the same controls as the other SVG diagrams. Copy source copies the complete model
+and all of its views. A <code class="inline-code">.c4</code> or <code class="inline-code">.likec4</code> attachment can be embedded with
+<code class="inline-code">![](assets/architecture.c4)</code> and uses the same renderer.</p>
+<p>The first visible LikeC4 block loads its parser and WebAssembly renderer. Off-screen blocks wait
+until they approach the viewport. Each block is independent: it cannot import definitions from a
+different fence, another note, or a project directory. Project configuration files, manual layout
+files, the LikeC4 application, and its editor are not loaded. For those workflows, use LikeC4&#x27;s own
+tools and export a finished diagram.</p>
+<p>The drawing is LikeC4&#x27;s Graphviz SVG export. Its shapes and layout can differ from LikeC4&#x27;s full
+interactive viewer. External icons/images, interactive links, node-to-view navigation, animations,
+HTML labels and custom CSS are omitted. Plain labels, relationships, nesting and supported Graphviz
+shapes remain visible. No external rendering service or icon service receives the source.</p>
+<p>A block supports up to 100,000 characters, 24 declared views, and 500 elements in each view. Parsing
+and drawing run in an isolated worker and stop after 30 seconds. Invalid syntax, unresolved names,
+missing views, size limits and rendering failures show an error with the original source; syntax
+and reference errors include the source line. Reduce a large model or split it into self-contained
+blocks when a limit is reached.</p>
+<h2 id="h-drawio">draw.io</h2>
+<p>In the live <span class="wiki-link pending">Web workspace</span>, <strong>Edit draw.io diagram</strong> opens a
+modal editor for an existing, complete, unindented <code class="inline-code">drawio</code> fence. It supports manual connection
+positions and edge waypoints. Select <strong>Open online editor</strong> to share only that diagram&#x27;s XML with
+<span class="md-link-url-wrap"><a class="md-link" href="https://embed.diagrams.net" target="_blank" rel="noreferrer noopener">https://embed.diagrams.net</a></span>, then <strong>Apply to draft</strong> and Track&#x27;s <strong>Save</strong>. Internet access is required
+for editing; the bundled reading viewer remains local. Cancel discards unapplied edits after a
+confirmation. Attachments and published diagrams remain read-only.</p>
+<p>The text engines above describe diagrams you write; draw.io is a diagram you <em>draw</em> in
+<span class="md-link-url-wrap"><a class="md-link" href="https://www.drawio.com/" target="_blank" rel="noreferrer noopener">draw.io / diagrams.net</a></span> and keep in the note as-is. Fence a block with
+<code class="inline-code">drawio</code> and paste the file draw.io saves — the <code class="inline-code">&lt;mxfile&gt;</code> XML, compressed or not; both decode —
+or attach the <code class="inline-code">.drawio</code> file itself. track bundles draw.io&#x27;s own static viewer, so shapes beyond
+the basics (AWS and UML sets, mockups, all the stencils) render exactly as the editor shows them,
+offline. The first page of a multi-page file is shown. A <code class="inline-code">.drawio.svg</code> / <code class="inline-code">.drawio.png</code> export is
+an ordinary image to track — it embeds like any picture, and keeps its source for round-tripping
+back into the editor.</p>
+<p>The reading viewer fits the complete diagram inside the surrounding text column and follows changes
+to the window, split pane, or content width automatically. It keeps the drawing&#x27;s proportions and
+does not enlarge a small diagram beyond its natural size. Very wide diagrams can have small labels.
+Frames and colored outlines drawn in the source remain part of the diagram.</p>
+<div class="drawio-diagram" role="img" aria-label="draw.io diagram"><div class="mermaid-diagram mermaid-diagram-loading">Rendering diagram...</div><div></div></div>
+<h2 id="h-diagrams-as-attachments">Diagrams as attachments</h2>
+<p>Prefer to keep a diagram in its own file? A <code class="inline-code">.mmd</code> / <code class="inline-code">.mermaid</code> attachment uses Pele with the same Mermaid
+compatibility fallback described above, a <code class="inline-code">.dot</code> / <code class="inline-code">.gv</code> attachment with Graphviz, a <code class="inline-code">.d2</code> attachment with D2, a <code class="inline-code">.c4</code> / <code class="inline-code">.likec4</code>
+attachment with LikeC4, and a <code class="inline-code">.drawio</code>
+attachment with the draw.io viewer — see <span class="wiki-link pending">Embeds</span> for the standalone <code class="inline-code">![](assets/diagram.mmd)</code>
+syntax. A diagram kept as a separate file looks identical to one written inline.</p>
+<h2 id="h-viewing">Viewing</h2>
+<p>In the <span class="wiki-link pending">Web workspace</span> and the published static export (<span class="wiki-link pending">CLI</span> <code class="inline-code">export-site</code>), Mermaid,
+Graphviz, D2, and LikeC4 diagrams initially fit their whole width inside the same text column as the
+surrounding paragraphs. The controls and drawing stay within that column, including with a right
+sidebar, in split panes, in included notes, and on narrow screens. The popup provides more room
+without widening the inline diagram.</p>
+<p>A very wide diagram may initially have small labels. Use <strong>+</strong> / <strong>−</strong> to zoom, <strong>Shift+wheel</strong> or a
+trackpad pinch to zoom toward the cursor, and drag to pan. A horizontal trackpad swipe pans when the
+zoomed drawing is wider than its viewport; an ordinary vertical wheel scrolls the page. <strong>Open diagram
+in popup</strong> gives the drawing its own larger window, with the same controls and an explicit close button.</p>
+<p><strong>Reset diagram view</strong> returns to the fitted overview. Changing the window or content width refits
+an untouched diagram automatically. After you pan or zoom, your view stays put; Reset fits it to the
+new space. Tall diagrams can be collapsed to a short preview and expanded again, and track remembers
+your fold choice for that diagram&#x27;s source.</p></div></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-374/tags/help/visualization/diagrams">#<!-- -->help/visualization/diagrams</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-diagrams">Diagrams</a><a class="backlink note-toc-entry" href="#h-writing-a-diagram" style="padding-left:2em">Writing a diagram</a><a class="backlink note-toc-entry" href="#h-pele-rendering-and-compatibility" style="padding-left:2em">Pele rendering and compatibility</a><a class="backlink note-toc-entry" href="#h-mermaid-architecture" style="padding-left:2em">Mermaid architecture</a><a class="backlink note-toc-entry" href="#h-graphviz" style="padding-left:2em">Graphviz</a><a class="backlink note-toc-entry" href="#h-d2" style="padding-left:2em">D2</a><a class="backlink note-toc-entry" href="#h-architecture-layouts-with-tala" style="padding-left:4em">Architecture layouts with TALA</a><a class="backlink note-toc-entry" href="#h-likec4" style="padding-left:2em">LikeC4</a><a class="backlink note-toc-entry" href="#h-drawio" style="padding-left:2em">draw.io</a><a class="backlink note-toc-entry" href="#h-diagrams-as-attachments" style="padding-left:2em">Diagrams as attachments</a><a class="backlink note-toc-entry" href="#h-viewing" style="padding-left:2em">Viewing</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">07</span></h3><div class="backlink-list"><a href="/track-previews/pr-374/notes/4cyRC8BKwFIIo92KY1wPvF" class="backlink">Charts</a><a href="/track-previews/pr-374/notes/36ukB4V5MfAQePgJsUVhnS" class="backlink">Embeds</a><a href="/track-previews/pr-374/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-374/notes/2j6WEM15dAYyfQohkQti7H" class="backlink">Mindmaps</a><a href="/track-previews/pr-374/notes/3wprWYHB4uc1XstTDDjile" class="backlink">Query</a><a href="/track-previews/pr-374/notes/6RVpp0kGC9SPIhxkcDM93m" class="backlink">Syntax</a><a href="/track-previews/pr-374/notes/6lkMYz6DB66BiNMLmXjG9e" class="backlink">Visualization</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-374/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-374/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
