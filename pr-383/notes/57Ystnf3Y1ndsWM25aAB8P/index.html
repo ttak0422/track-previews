@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-383/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "a8yz71Cg795dC0gdNsUqrFteHjY80+h0q73MHE6qjR4=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "5cb5e9d6ed093172";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-383/assets/index-rR8Puqqy.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-383/assets/index-CX4RcCDB.css">
+  <title>Agent timelines · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Agent timelines"><meta property="og:type" content="article"><meta property="og:description" content="An agent timeline records explicit project work: stable task IDs, weighted progress, authored reports, discussions and cooperative control receipts. It is se…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-383/notes/57Ystnf3Y1ndsWM25aAB8P/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-383/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-383/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-383/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-383/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-383/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-383/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-383/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"><div class="tabbar" role="list" aria-label="Open notes"></div></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-383/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, November 15, 2026">2026-11-15</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, November 15, 2026 at 06:58:00 AM">2026-11-15</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="note-surface"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Agent timelines<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-agent-timelines">Agent timelines</h1>
+<p>An agent timeline records explicit project work: stable task IDs, weighted progress, authored
+reports, discussions and cooperative control receipts. It is separate from the Markdown
+checkbox <span class="wiki-link pending">Tasks</span> timeline. Moving a checkbox line does not move or rename an agent task.
+An optional <code class="inline-code">note_id</code> links a project to a note in the same vault without modifying that note.</p>
+<p>Back to <span class="wiki-link pending">track</span>. See <span class="wiki-link pending">CLI</span> for vault selection.</p>
+<h2 id="h-start-a-project">Start a project</h2>
+<p>Select the intended vault before writing. Every apply command reads one JSON request from stdin:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->apply<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->demo<!-- --> <!-- -->&lt;<!-- -->&lt;<span class="syntax-string">&#x27;JSON&#x27;</span>
+<!-- -->{<span class="syntax-string">&quot;source&quot;</span>:<span class="syntax-string">&quot;example&quot;</span>,<span class="syntax-string">&quot;event_id&quot;</span>:<span class="syntax-string">&quot;create-demo&quot;</span>,<span class="syntax-string">&quot;expected_revision&quot;</span>:<span class="syntax-number">0</span>,<span class="syntax-string">&quot;kind&quot;</span>:<span class="syntax-string">&quot;project.create&quot;</span>,<span class="syntax-string">&quot;payload&quot;</span>:<!-- -->{<span class="syntax-string">&quot;title&quot;</span>:<span class="syntax-string">&quot;Demo project&quot;</span>,<span class="syntax-string">&quot;mode&quot;</span>:<span class="syntax-string">&quot;serial&quot;</span>}<!-- -->}<!-- -->
+<!-- -->JSON<!-- -->
+<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->apply<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->demo<!-- --> <!-- -->&lt;<!-- -->&lt;<span class="syntax-string">&#x27;JSON&#x27;</span>
+<!-- -->{<span class="syntax-string">&quot;source&quot;</span>:<span class="syntax-string">&quot;example&quot;</span>,<span class="syntax-string">&quot;event_id&quot;</span>:<span class="syntax-string">&quot;add-task&quot;</span>,<span class="syntax-string">&quot;expected_revision&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;kind&quot;</span>:<span class="syntax-string">&quot;task.upsert&quot;</span>,<span class="syntax-string">&quot;payload&quot;</span>:<!-- -->{<span class="syntax-string">&quot;id&quot;</span>:<span class="syntax-string">&quot;implement&quot;</span>,<span class="syntax-string">&quot;title&quot;</span>:<span class="syntax-string">&quot;Implement the feature&quot;</span>,<span class="syntax-string">&quot;status&quot;</span>:<span class="syntax-string">&quot;active&quot;</span>,<span class="syntax-string">&quot;owner&quot;</span>:<span class="syntax-string">&quot;example&quot;</span>,<span class="syntax-string">&quot;weight&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;done_minutes&quot;</span>:<span class="syntax-number">15</span>,<span class="syntax-string">&quot;remaining_minutes&quot;</span>:<span class="syntax-number">45</span>,<span class="syntax-string">&quot;mode&quot;</span>:<span class="syntax-string">&quot;serial&quot;</span>}<!-- -->}<!-- -->
+<!-- -->JSON<!-- -->
+<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->list<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->get<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->demo</code></pre></div>
+<p><code class="inline-code">project.update</code> and <code class="inline-code">task.upsert</code> accept complete replacement records, not partial patches.
+Read the current snapshot before editing. Tasks may specify <code class="inline-code">parent_id</code>, <code class="inline-code">detail</code>, and <code class="inline-code">priority</code>
+(P0–P3 as integers 0–3). The parent must already exist, and cycles are refused. IDs contain ASCII
+letters, digits, hyphens and underscores, start with a letter or digit, and are at most 96 characters.</p>
+<p>Task states are <code class="inline-code">pending</code>, <code class="inline-code">active</code>, <code class="inline-code">paused</code>, <code class="inline-code">blocked</code>, <code class="inline-code">done</code>, and <code class="inline-code">retired</code>. Children determine
+a parent&#x27;s calculated progress, so parent effort is not counted twice. Leaves use
+<code class="inline-code">done_minutes / (done_minutes + remaining_minutes)</code>; done leaves are complete. Sibling fractions
+are weighted; omitted or zero weight means one. Retired subtrees are excluded from progress.
+Remaining estimates sum in serial groups and take the maximum in parallel groups. They are
+estimates, not a promise about elapsed wall time or actual agent scheduling.</p>
+<h2 id="h-reports-and-discussion">Reports and discussion</h2>
+<p>Use <code class="inline-code">report.add</code> with a unique <code class="inline-code">id</code>, <code class="inline-code">author</code>, RFC3339 <code class="inline-code">period_start</code>/<code class="inline-code">period_end</code>, <code class="inline-code">summary</code>, and
+nonempty <code class="inline-code">event_sequences</code> referencing existing events. Optional <code class="inline-code">task_id</code>, <code class="inline-code">uncertainty</code>, and
+<code class="inline-code">user_action</code> retain the distinctions between progress, unresolved questions and required decisions.
+Reports are explicitly supplied text: Track does not call a model or collect a transcript.</p>
+<p>Use <code class="inline-code">discussion.add</code> with <code class="inline-code">id</code>, <code class="inline-code">author</code>, <code class="inline-code">text</code>, <code class="inline-code">target_type</code> (<code class="inline-code">project</code>, <code class="inline-code">task</code>, or <code class="inline-code">report</code>),
+and the corresponding <code class="inline-code">target_id</code>. Reports and discussion entries are append-only; existing IDs
+cannot be overwritten. Submit a new entry to correct or follow up on earlier text.</p>
+<h2 id="h-cooperative-control-not-process-control">Cooperative control, not process control</h2>
+<p><code class="inline-code">control.request</code> records <code class="inline-code">id</code>, <code class="inline-code">task_id</code>, the task&#x27;s <code class="inline-code">owner</code>, <code class="inline-code">action</code> (<code class="inline-code">pause</code> or <code class="inline-code">resume</code>), and
+<code class="inline-code">status: &quot;requested&quot;</code>. The responsible integration can send <code class="inline-code">control.update</code> with <code class="inline-code">id</code>, <code class="inline-code">status</code>
+and <code class="inline-code">result</code>. Allowed receipts are <code class="inline-code">acknowledged</code>, <code class="inline-code">completed</code>, <code class="inline-code">rejected</code>, and <code class="inline-code">failed</code>;
+completion requires acknowledgement first. A receipt&#x27;s request source must match the routed owner.</p>
+<p>Track does not launch, message, stop or resume a process. A request does not change task status,
+and a completion receipt is the integration&#x27;s report, not independent verification. Source/owner
+labels are routing and provenance, <strong>not authentication</strong>. The local CLI and existing protected
+loopback Web API remain the trust boundary; do not expose them as a remote agent service.</p>
+<h2 id="h-conflicts-and-retries">Conflicts and retries</h2>
+<p>Every request has <code class="inline-code">source</code>, <code class="inline-code">event_id</code>, <code class="inline-code">expected_revision</code>, <code class="inline-code">kind</code>, and <code class="inline-code">payload</code>. Use a fresh
+source/event identity for each new action. A stale revision fails rather than overwriting another
+writer. Read the newer snapshot and review the intended change before sending a new action.</p>
+<p>If a response was lost, resend the <em>identical</em> request with the same source/event identity. It is
+applied at most once, even when the expected revision is now old. Reusing that identity for different
+content fails. Never generate a new event ID merely because a write timed out.</p>
+<h2 id="h-api-and-storage">API and storage</h2>
+<ul>
+<li><code class="inline-code">GET /api/timeline/projects</code> lists projects.</li>
+<li><code class="inline-code">GET /api/timeline/project?id=demo</code> reads one snapshot.</li>
+<li><code class="inline-code">POST /api/timeline/project?id=demo</code> accepts the same explicit request as the CLI.</li>
+<li>Use the normal vault query selector and local Web write protections.</li>
+</ul>
+<p>Versioned event journals live in <code class="inline-code">.track/timelines/&lt;project-id&gt;.json</code>; snapshots are reconstructed
+from those records, not a disposable index. Back them up with the vault. Standard static publication
+does not export them. No automatic conversation, credentials, environment, or shell-history capture
+is performed. Content submitted explicitly is retained locally, so do not submit secrets.</p>
+<p>Linux and macOS are supported. Cross-process writers use a bounded lock and atomic replacement;
+corrupt or unsupported files fail without being reset. A project is limited to 1,000 tasks,
+10,000 events and an 8 MiB journal; each payload is limited to 64 KiB. Limits reject writes instead
+of silently deleting history. Rotation, selective retention and automatic agent adapters are not
+provided; a new project can be started explicitly when needed.</p>
+<h2 id="h-web-and-neovim-views">Web and Neovim views</h2>
+<p>In the live Web workspace, choose <strong>Agent timeline</strong> in the navigation rail or mobile dock.
+Create or select a project, then use <strong>Edit project</strong>, task titles, <strong>Add authored report</strong>,
+<strong>Add discussion</strong>, or <strong>Request pause or resume</strong>. <strong>Recorded events</strong> shows source records.
+These are explicit actions, not background agent dispatch. Unsaved form edits remain separate
+from polling results. Revision conflicts require review and explicit retry; uncertain network
+retries keep their original event identity. Static published sites do not provide this workspace.</p>
+<p>In Neovim, run <code class="inline-code">:Track timeline</code> to choose or create a project, or <code class="inline-code">:Track timeline demo</code> to open
+one. The ordinary Neovim split shows tasks, estimates, reports, discussions, receipts and events.
+Press <code class="inline-code">r</code> to refresh, <code class="inline-code">a</code> to prepare an explicit record, and <code class="inline-code">q</code> to close. The record opens as a
+JSON draft: edit its payload and <code class="inline-code">:write</code> to submit, or <code class="inline-code">:bd!</code> to discard without sending. For an
+existing task, use its stable ID and complete fields in <code class="inline-code">task.upsert</code>. Drafts are locked during
+submission; a write receipt never silently discards newer edits. Closing a view does not cancel
+an already submitted write. There is no interactive terminal TUI.</p>
+<p>For a custom Neovim or komado presentation:</p>
+<div class="code-block" data-language="lua"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-keyword">local</span> <!-- -->view<!-- --> <!-- -->=<!-- --> <span class="syntax-function">require</span>(<span class="syntax-string">&#x27;track.agent_timeline&#x27;</span>)<!-- -->.<span class="syntax-function">new</span>(<span class="syntax-string">&#x27;demo&#x27;</span>,<!-- --> <!-- -->{<!-- --> <!-- -->vault<!-- --> <!-- -->=<!-- --> <span class="syntax-string">&#x27;work&#x27;</span> <!-- -->}<!-- -->)<!-- -->
+<!-- -->view<!-- -->.<span class="syntax-function">refresh</span>(<span class="syntax-keyword">function</span>(<!-- -->err<!-- -->)<!-- -->
+<!-- --> <!-- --> <span class="syntax-keyword">if</span> <!-- -->err<!-- --> <span class="syntax-keyword">then</span> <!-- -->vim<!-- -->.<span class="syntax-function">notify</span>(<!-- -->err<!-- -->,<!-- --> <!-- -->vim<!-- -->.<!-- -->log<!-- -->.<!-- -->levels<!-- -->.<!-- -->WARN<!-- -->)<!-- --> <span class="syntax-keyword">end</span>
+<span class="syntax-keyword">end</span>)<!-- -->
+<span class="syntax-comment">-- Add view.komado_component() to your existing komado root.</span>
+<span class="syntax-comment">-- Or read view.rows() / view.snapshot from another cached provider.</span></code></pre></div>
+<p>The adapter emits <code class="inline-code">User TrackTimelineChanged</code> after results. Rendering does not run a subprocess;
+refresh is explicit, and stale data is marked after a failed read. The component uses komado&#x27;s
+existing API without requiring it for other views. <code class="inline-code">view.request(kind, payload)</code> prepares an
+idempotent request; <code class="inline-code">view.apply(request, callback)</code> submits it once. Keep that request for an
+uncertain retry, and do not refresh during an outstanding write. The default <code class="inline-code">:Track timeline</code>
+view uses the configured vault; custom adapters can pass a named <code class="inline-code">vault</code> or <code class="inline-code">vault_dir</code>.</p>
+<h2 id="h-connecting-an-external-worker">Connecting an external worker</h2>
+<p>Track supplies a recording protocol, not an agent runner. An external worker can opt in by
+submitting progress and authored reports through <code class="inline-code">timeline-project apply</code> and polling <code class="inline-code">get</code>
+for control requests addressed to its task and owner. Acknowledge accepted requests, then
+record completion only after reaching the corresponding safe state. Continue polling while
+paused. A crash may leave an acknowledged request incomplete; reconcile it explicitly instead
+of assuming that the earlier process completed it. Use a distinct owner label per worker.</p>
+<p>The repository&#x27;s <code class="inline-code">examples/timeline-worker/</code> contains an executable Python-standard-library
+reference adapter and disposable-vault instructions. It performs finite sleep-only steps,
+records a report with event references and demonstrates actual safe-point pause/resume.
+It never starts another agent, invokes a model, runs supplied commands or collects private
+context. Revision conflicts stop visibly rather than overwriting another writer. Existing
+tasks are not taken over; use a new task ID for each demonstration.</p></div></div></section></div><div class="note-aside"><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-agent-timelines">Agent timelines</a><a class="backlink note-toc-entry" href="#h-start-a-project" style="padding-left:2em">Start a project</a><a class="backlink note-toc-entry" href="#h-reports-and-discussion" style="padding-left:2em">Reports and discussion</a><a class="backlink note-toc-entry" href="#h-cooperative-control-not-process-control" style="padding-left:2em">Cooperative control, not process control</a><a class="backlink note-toc-entry" href="#h-conflicts-and-retries" style="padding-left:2em">Conflicts and retries</a><a class="backlink note-toc-entry" href="#h-api-and-storage" style="padding-left:2em">API and storage</a><a class="backlink note-toc-entry" href="#h-web-and-neovim-views" style="padding-left:2em">Web and Neovim views</a><a class="backlink note-toc-entry" href="#h-connecting-an-external-worker" style="padding-left:2em">Connecting an external worker</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">01</span></h3><div class="backlink-list"><a href="/track-previews/pr-383/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-383/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-383/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
