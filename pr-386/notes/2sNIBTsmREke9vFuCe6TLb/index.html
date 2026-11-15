@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-386/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "K7u5UU3UI/7bx5yFAkervLn5GF/MWBv6G4rUfRGfxmI=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "f7eac3e95746370f";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-386/assets/index-BlLVPTeI.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-386/assets/index-CX4RcCDB.css">
+  <title>Properties · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Properties"><meta property="og:type" content="article"><meta property="og:description" content="Properties are typed key value metadata on a note: a status, a rating, a due date, an owner. Their home is the note's metadata sidecar, next to its tags and …"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-386/notes/2sNIBTsmREke9vFuCe6TLb/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-386/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-386/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-386/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-386/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-386/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-386/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-386/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"><div class="tabbar" role="list" aria-label="Open notes"></div></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-386/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>reviewed</dt><dd><span class="note-prop-value note-prop-date">2026-07-02</span></dd></div><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">authoring</span></dd></div><div class="note-prop"><dt>status</dt><dd><span class="note-prop-value note-prop-string">example</span></dd></div><div class="note-prop"><dt>rating</dt><dd><span class="note-prop-value note-prop-number">8</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date">2026-07-11</span></dd></div><div class="note-prop"><dt>related</dt><dd><span class="note-prop-value note-prop-link"><span class="wiki-link pending">Linking notes</span></span></dd></div><div class="note-prop"><dt>demo</dt><dd><span class="note-prop-value note-prop-link"><span class="wiki-link pending">CLI</span></span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, November 15, 2026 at 07:31:13 AM">2026-11-15</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="note-surface"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Properties<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-properties">Properties</h1>
+<p>Properties are typed key-value metadata on a note: a status, a rating, a due date, an owner. Their
+home is the note&#x27;s metadata sidecar, next to its tags and description — out of your prose — and the
+engine indexes them with the rest of the vault, so they are queryable and visible wherever the note
+is shown. When a data point belongs <em>in</em> the prose, a small inline <code class="inline-code">key:: value</code> field embeds it
+there. If you know Obsidian&#x27;s properties or org-mode&#x27;s property drawers, this is the same idea.</p>
+<p>This page is its own demo: the four lines below are inline fields in its source, and the property strip
+at the top of this page is rendered from them. They stay in the prose, because that is what an inline
+field is <em>for</em> — a <code class="inline-code">weight:: 68.2</code> line in a journal is a line of the journal, not a hidden attribute.
+What is <em>not</em> here is this page&#x27;s icon: that is note-level metadata, and it lives outside the body — in a
+vault note&#x27;s sidecar, and for a published page like this one in the site&#x27;s own config (see
+<span class="wiki-link pending">Home dashboard</span>).</p>
+<p>status:: example
+rating:: 8
+updated:: 2026-07-11
+related:: <span class="wiki-link pending">Linking notes</span></p>
+<h2 id="h-where-properties-live">Where properties live</h2>
+<p>track keeps note metadata (title, tags, description) in a per-note sidecar file, not in YAML
+frontmatter — the body stays plain Markdown. Properties follow the same rule: note-level properties
+live under <code class="inline-code">props</code> in the sidecar, and every frontend edits them there through the same validated
+engine path:</p>
+<ul>
+<li><strong>The metadata editor</strong> edits the note&#x27;s whole editable metadata: title, tags, description, cover
+image, icon, flags, and props. The <span class="wiki-link pending">Web workspace</span> Meta dialog gives each built-in field a dedicated
+control — a title box (a rename on change), a tags box, a description box, a cover image you can
+upload straight from the browser into the vault assets, an icon box, and checkboxes for the note
+flags — and keeps props as the one free-form YAML block.
+The Neovim <code class="inline-code">:Track meta</code> popup edits the same metadata as one YAML document. Either way the engine
+validates and applies the edit atomically, and a changed title renames the note.</li>
+<li><strong>The CLI</strong>, for scripts and point edits:</li>
+</ul>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->meta<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;My note&quot;</span> <!-- -->-<!-- -->-<!-- -->set<!-- --> <!-- -->status<!-- -->=<!-- -->draft<!-- --> <!-- -->-<!-- -->-<!-- -->set<!-- --> <!-- -->rating<!-- -->=<span class="syntax-number">8</span>
+<!-- -->track<!-- --> <!-- -->meta<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;My note&quot;</span> <!-- -->-<!-- -->-<!-- -->set<!-- --> <span class="syntax-string">&quot;authors=[[Ada Lovelace]], [[Alan Turing]]&quot;</span>
+<!-- -->track<!-- --> <!-- -->meta<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;My note&quot;</span> <!-- -->-<!-- -->-<!-- -->unset<!-- --> <!-- -->rating<!-- -->
+<!-- -->track<!-- --> <!-- -->meta<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;My note&quot;</span> <!-- -->-<!-- -->-<!-- -->flag<!-- --> <!-- -->DEPRECATED<!-- -->
+<!-- -->track<!-- --> <!-- -->meta<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;My note&quot;</span> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-comment"># prints metadata incl. props, flags, and the editable doc (JSON)</span>
+<!-- -->track<!-- --> <!-- -->meta<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;My note&quot;</span> <!-- -->-<!-- -->-<!-- -->edit<!-- --> <!-- -->-<!-- --> <span class="syntax-comment"># apply a full metadata document from stdin</span></code></pre></div>
+<p>A comma-separated value becomes a list. <code class="inline-code">--unset</code> removes a key, and a plain <code class="inline-code">track meta</code> call
+prints the current properties along with the rest of the note&#x27;s metadata.</p>
+<h2 id="h-note-flags">Note flags</h2>
+<p>Flags are a second kind of note-level marker, distinct from properties. A property is a typed
+key-value fact (<code class="inline-code">status: draft</code>); a flag is a whole-note judgment from a small, closed set — today
+<code class="inline-code">DEPRECATED</code> and <code class="inline-code">CONFIDENTIAL</code> — that renders as a large, translucent watermark behind the note body
+and as a badge beside it in lists. The <code class="inline-code">DEPRECATED</code> watermark is red and the <code class="inline-code">CONFIDENTIAL</code> watermark is blue in both light and
+dark themes; their words remain distinct even without color. Watermarks repeat down long articles and appear behind both the editor and
+preview in split mode. Both flags remain readable together; they do not block text selection,
+copying, links, or editing. Short notes scale the watermark to fit both flags. <code class="inline-code">DEPRECATED</code> also
+pushes the note down in search results, so an old note stops crowding out its replacement.</p>
+<p>Flags live in the sidecar beside tags, and <code class="inline-code">track meta</code> edits them the same way it edits properties:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->meta<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&quot;Old design doc&quot;</span> <!-- -->-<!-- -->-<!-- -->flag<!-- --> <!-- -->DEPRECATED</code></pre></div>
+<p>The note now carries the flag, visible in <code class="inline-code">track meta</code> output and in its sidecar:</p>
+<div class="code-block" data-language="json"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>{<span class="syntax-string">&quot;title&quot;</span>:<span class="syntax-string">&quot;Old design doc&quot;</span>,<span class="syntax-string">&quot;flags&quot;</span>:<!-- -->[<span class="syntax-string">&quot;DEPRECATED&quot;</span>]<!-- -->,<span class="syntax-string">&quot;updated&quot;</span>:<span class="syntax-keyword">true</span>}</code></pre></div>
+<div class="code-block" data-language="yaml"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-property">flags</span>:<!-- -->
+<!-- --> <!-- --> <!-- --> <!-- --> <!-- -->-<!-- --> <!-- -->DEPRECATED</code></pre></div>
+<p><code class="inline-code">--flag</code> is repeatable — a note can be both <code class="inline-code">DEPRECATED</code> and <code class="inline-code">CONFIDENTIAL</code> — and <code class="inline-code">--unflag</code> removes
+one. The set is closed and implementation-defined: a value outside <code class="inline-code">DEPRECATED</code>/<code class="inline-code">CONFIDENTIAL</code> is
+rejected at write time, so a new flag is a deliberate product change, never an ad-hoc string.</p>
+<p>Each flag carries a page of its own, stamped with the flag it describes: <span class="wiki-link pending">A deprecated note</span> and
+<span class="wiki-link pending">A confidential note</span>.</p>
+<h2 id="h-inline-fields">Inline fields</h2>
+<p>The sidecar is the home for note-level facts; when a data point belongs in the prose itself, write
+it directly in the body, anywhere prose flows, as <code class="inline-code">key:: value</code>:</p>
+<div class="code-block" data-language="text"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>status<!-- -->:<!-- -->:<!-- --> <!-- -->draft<!-- -->
+<!-- -->-<!-- --> <!-- -->rating<!-- -->:<!-- -->:<!-- --> <span class="syntax-number">8</span>
+<!-- -->Met<!-- --> <!-- -->with<!-- --> <!-- -->[<!-- -->owner<!-- -->:<!-- -->:<!-- --> <!-- -->[<!-- -->[<!-- -->Ada<!-- --> <!-- -->Lovelace<!-- -->]<!-- -->]<!-- -->]<!-- --> <!-- -->about<!-- --> <!-- -->the<!-- --> <!-- -->plan<!-- -->.</code></pre></div>
+<p>Three placements work:</p>
+<ul>
+<li><strong>A whole line</strong> — <code class="inline-code">status:: draft</code> on its own line.</li>
+<li><strong>A list item</strong> — <code class="inline-code">- rating:: 8</code>, numbered items included.</li>
+<li><strong>Bracketed, mid-sentence</strong> — <code class="inline-code">[owner:: [[Ada Lovelace]]]</code> inside a paragraph.</li>
+</ul>
+<p>Inline fields are scanned at index time into the same property index as sidecar values, each with
+the body line it came from — and they keep rendering as the text you wrote, wherever you put them: a
+whole line reads as its own line, a bracketed field stays inside its sentence. They are data <em>and</em> prose
+at once, which is the whole point of them; a fact that is not prose (a title, a tag, an icon) is not an
+inline field at all — it belongs outside the body, in the note&#x27;s sidecar. Code is never scanned: <code class="inline-code">std::vector</code> in a fenced block
+stays code, and a <code class="inline-code">[key:: value]</code> example in inline code (like the ones on this page) never becomes
+data.</p>
+<p>For example, this very sentence carries a live bracketed field, [demo:: <span class="wiki-link pending">CLI</span>], and that is why
+<code class="inline-code">demo</code> appears in this page&#x27;s property strip above — as a link, because its value is a wiki link.</p>
+<h2 id="h-typing-rules">Typing rules</h2>
+<p>A value&#x27;s type is detected from its text, with the same rules everywhere (sidecar, inline, CLI):</p>
+<table><thead><tr><th>Value text</th><th>Type</th></tr></thead><tbody><tr><td><code class="inline-code">true</code>, <code class="inline-code">false</code></td><td>boolean</td></tr><tr><td><code class="inline-code">8</code>, <code class="inline-code">-3.5</code></td><td>number</td></tr><tr><td><code class="inline-code">2026-07-11</code> (a real calendar date)</td><td>date</td></tr><tr><td><code class="inline-code">[[Title]]</code></td><td>link</td></tr><tr><td><code class="inline-code">go, lua</code> (top-level commas)</td><td>list — each item typed on its own</td></tr><tr><td>anything else</td><td>string</td></tr></tbody></table>
+<p>A link value keeps its resolution key (<code class="inline-code">[[Ada Lovelace|Ada]]</code> stores <code class="inline-code">Ada Lovelace</code>), so it resolves
+and navigates like any other wiki link — you can see that in the <code class="inline-code">related</code> entry of this page&#x27;s
+strip. Commas inside <code class="inline-code">[[...]]</code> do not split a list.</p>
+<h2 id="h-schema-and-completion">Schema and completion</h2>
+<p>Optionally, declare a schema for the keys you care about in the vault config (<code class="inline-code">&lt;vault&gt;/.track/config.yml</code>):</p>
+<div class="code-block" data-language="yaml"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-property">properties</span>:<!-- -->
+<!-- -->  <span class="syntax-property">status</span>:<!-- -->
+<!-- -->    <span class="syntax-property">type</span>:<!-- --> <!-- -->string<!-- -->
+<!-- -->    <span class="syntax-property">values</span>:<!-- --> <!-- -->[<!-- -->draft<!-- -->,<!-- --> <!-- -->review<!-- -->,<!-- --> <!-- -->done<!-- -->]<!-- -->
+<!-- -->  <span class="syntax-property">rating</span>:<!-- -->
+<!-- -->    <span class="syntax-property">type</span>:<!-- --> <!-- -->number<!-- -->
+<!-- -->  <span class="syntax-property">due</span>:<!-- -->
+<!-- -->    <span class="syntax-property">type</span>:<!-- --> <!-- -->date</code></pre></div>
+<ul>
+<li><code class="inline-code">type</code> is one of <code class="inline-code">string</code>, <code class="inline-code">number</code>, <code class="inline-code">boolean</code>, <code class="inline-code">date</code>, <code class="inline-code">link</code>; <code class="inline-code">values</code> is an optional enum.
+Keys not listed stay unconstrained.</li>
+<li><code class="inline-code">track doctor</code> reports every value that breaks the schema — wrong type, or a value outside the
+enum — with the note and body line it came from.</li>
+<li>The editor LSP completes declared keys while you type a field, and completes <code class="inline-code">values</code> (or
+<code class="inline-code">true</code>/<code class="inline-code">false</code> for a boolean) after <code class="inline-code">key:: </code>.</li>
+</ul>
+<h2 id="h-where-properties-show-up">Where properties show up</h2>
+<ul>
+<li>The <span class="wiki-link pending">Web workspace</span> note view (and this published site) shows a note&#x27;s properties above the
+body — sidecar values first, then inline fields in body order. In the live workspace the Meta
+dialog edits the sidecar values; the published site stays read-only.</li>
+<li><code class="inline-code">track meta</code> prints them as JSON for scripts.</li>
+<li>The index stores every value typed and with line provenance, and <span class="wiki-link pending">Query</span> filters, sorts, and
+tabulates notes by these values — from the CLI or an embedded <code class="inline-code">track-query</code> block.</li>
+</ul></div></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-386/tags/help/authoring">#<!-- -->help/authoring</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-properties">Properties</a><a class="backlink note-toc-entry" href="#h-where-properties-live" style="padding-left:2em">Where properties live</a><a class="backlink note-toc-entry" href="#h-note-flags" style="padding-left:2em">Note flags</a><a class="backlink note-toc-entry" href="#h-inline-fields" style="padding-left:2em">Inline fields</a><a class="backlink note-toc-entry" href="#h-typing-rules" style="padding-left:2em">Typing rules</a><a class="backlink note-toc-entry" href="#h-schema-and-completion" style="padding-left:2em">Schema and completion</a><a class="backlink note-toc-entry" href="#h-where-properties-show-up" style="padding-left:2em">Where properties show up</a></div></section><section class="backlinks" aria-labelledby="children-heading"><h3 id="children-heading">Children</h3><div class="backlink-list"><a href="/track-previews/pr-386/notes/6nlndTCAVT8yIkSqAD6dVL" class="backlink">A deprecated note</a><a href="/track-previews/pr-386/notes/0k2ZGVNfDvFjWxQcgP0ddw" class="backlink">A confidential note</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">06</span></h3><div class="backlink-list"><a href="/track-previews/pr-386/notes/5TjZrtnIp272Pu1vDOoFTI" class="backlink">Hierarchy</a><a href="/track-previews/pr-386/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-386/notes/3wprWYHB4uc1XstTDDjile" class="backlink">Query</a><a href="/track-previews/pr-386/notes/3eXzsvDeU80xrwTdpnyT2O" class="backlink">Web workspace</a><a href="/track-previews/pr-386/notes/6nlndTCAVT8yIkSqAD6dVL" class="backlink">A deprecated note<span class="note-flag-badge note-flag-badge-deprecated">DEPRECATED</span></a><a href="/track-previews/pr-386/notes/0k2ZGVNfDvFjWxQcgP0ddw" class="backlink">A confidential note<span class="note-flag-badge note-flag-badge-confidential">CONFIDENTIAL</span></a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-386/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-386/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
