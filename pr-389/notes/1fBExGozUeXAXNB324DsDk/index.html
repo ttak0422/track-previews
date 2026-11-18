@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-389/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "yeHIpeBgnd3zcbqfEmU5x6Xm04OC3KkDUnTcO3sqHZU=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "13f5612416f6c29f";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-389/assets/index-D3PdjmFV.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-389/assets/index-CX4RcCDB.css">
+  <title>Babel · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Babel"><meta property="og:type" content="article"><meta property="og:description" content="Babel runs the fenced code blocks in a note and keeps their results, so a note can be executed , not just read — track's take on Org Babel, in plain Markdown…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-389/notes/1fBExGozUeXAXNB324DsDk/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-389/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-389/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-389/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-389/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-389/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-389/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-389/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"><div class="tabbar" role="list" aria-label="Open notes"></div></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-389/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span><span class="note-crumb"><a href="/track-previews/pr-389/notes/5bsKWpzrLcdY0SkLtwsCr9">CLI</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>section</dt><dd><span class="note-prop-value note-prop-string">authoring</span></dd></div><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, July 26, 2026">2026-07-26</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Wednesday, November 18, 2026 at 05:41:26 PM">2026-11-18</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="note-surface"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Babel<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-babel">Babel</h1>
+<p>Babel runs the fenced code blocks in a note and keeps their results, so a note can be <em>executed</em>, not
+just read — track&#x27;s take on Org Babel, in plain Markdown. Results are stored in the note&#x27;s sidecar
+metadata, never written back into the Markdown body, so the source stays exactly as you typed it.</p>
+<h2 id="h-a-runnable-block">A runnable block</h2>
+<p>Any fenced code block whose info string starts with a language is a Babel block. Options follow the
+language as Org-style <code class="inline-code">:key value</code> header arguments, keeping the fence a valid Markdown code block:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```lua :name hello :results output<!-- -->
+<!-- -->print(&quot;hi from a note&quot;)<!-- -->
+<!-- -->```</code></pre></div>
+<h2 id="h-running-it">Running it</h2>
+<p>Execute a block with the CLI, choosing one by <code class="inline-code">:name</code>, position, or cursor line:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->babel<!-- --> <!-- -->exec<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->&lt;<!-- -->note-id<!-- -->&gt;<!-- --> <!-- -->-<!-- -->-<!-- -->name<!-- --> <!-- -->hello<!-- -->
+<!-- -->track<!-- --> <!-- -->babel<!-- --> <!-- -->exec<!-- --> <!-- -->-<!-- -->-<!-- -->path<!-- --> <!-- -->note<!-- -->.<!-- -->md<!-- --> <!-- -->-<!-- -->-<!-- -->ordinal<!-- --> <span class="syntax-number">0</span> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-comment"># 0-based block index</span>
+<!-- -->track<!-- --> <!-- -->babel<!-- --> <!-- -->exec<!-- --> <!-- -->-<!-- -->-<!-- -->path<!-- --> <!-- -->note<!-- -->.<!-- -->md<!-- --> <!-- -->-<!-- -->-<!-- -->line<!-- --> <span class="syntax-number">12</span> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <!-- --> <span class="syntax-comment"># block containing this 0-based line</span></code></pre></div>
+<p>Execution is opt-in and never happens on its own. A block is subject to its <code class="inline-code">:eval</code> policy:</p>
+<ul>
+<li><code class="inline-code">:eval yes</code> (default) — runs when you invoke it.</li>
+<li><code class="inline-code">:eval query</code> — refuses unless you pass <code class="inline-code">--yes</code>.</li>
+<li><code class="inline-code">:eval no</code> — never runs.</li>
+</ul>
+<p><code class="inline-code">--timeout</code> caps each run (30s by default), and <code class="inline-code">:dir</code> runs the block relative to another directory
+(constrained to the vault).</p>
+<h2 id="h-results">Results</h2>
+<p><code class="inline-code">:results</code> decides what is captured and kept, as a set of tokens (default <code class="inline-code">output replace</code>):</p>
+<ul>
+<li><code class="inline-code">output</code> — captured stdout/stderr and exit status.</li>
+<li><code class="inline-code">verbatim</code> — the raw value, stored as text.</li>
+<li><code class="inline-code">replace</code> — keep only the latest result; <code class="inline-code">silent</code> runs without storing; <code class="inline-code">none</code> / <code class="inline-code">discard</code> throw
+the result away.</li>
+</ul>
+<p>Stored results live in the sidecar keyed by the block. List what a note has kept with:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->babel<!-- --> <!-- -->restore<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->&lt;<!-- -->note-id<!-- -->&gt;</code></pre></div>
+<p>Markdown export (<code class="inline-code">track export</code>) selects source and matching stored results with
+<code class="inline-code">:exports code|results|both|none</code>. The <span class="wiki-link pending">Web workspace</span> and static <code class="inline-code">export-site</code> currently preserve
+source blocks and do not apply these headers or render stored results. In Neovim results appear as
+virtual lines below the block; <code class="inline-code">none</code> and <code class="inline-code">discard</code> suppress them.</p>
+<p><code class="inline-code">:cache yes</code> reuses successful results when source, headers, noweb expansion, variables, executor
+configuration, and working directory match. The default is <code class="inline-code">no</code>: external files and ambient environment
+are not tracked. Old results without input hashes need one rerun. Header/dependency changes and runs
+with different CLI inputs are not restored as if they matched the written block.</p>
+<p>Preview source and inputs without running or saving anything:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->babel<!-- --> <!-- -->run<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->&lt;<!-- -->note-id<!-- -->&gt;<!-- --> <!-- -->-<!-- -->-<!-- -->name<!-- --> <!-- -->hello<!-- --> <!-- -->-<!-- -->-<!-- -->dry-run</code></pre></div>
+<p>Preview also works with <code class="inline-code">:eval no</code> and without an executor. Neovim restores against the current buffer;
+CLI integrations can use <code class="inline-code">babel restore --body-stdin</code> for unsaved content.</p>
+<h2 id="h-composing-blocks-noweb-references">Composing blocks: noweb references</h2>
+<p>A block can pull in other named blocks with Org&#x27;s noweb syntax: <code class="inline-code">&lt;&lt;name&gt;&gt;</code> is replaced by the body of
+the block named <code class="inline-code">name</code>, recursively, before the code runs. Expansion is opt-in per block through
+<code class="inline-code">:noweb</code>:</p>
+<ul>
+<li><code class="inline-code">:noweb no</code> (default) — <code class="inline-code">&lt;&lt;...&gt;&gt;</code> is left as literal text.</li>
+<li><code class="inline-code">:noweb yes</code> — expand before executing <em>and</em> before tangling.</li>
+<li><code class="inline-code">:noweb eval</code> / <code class="inline-code">:noweb tangle</code> — expand only in that phase.</li>
+</ul>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```sh :name greeting<!-- -->
+<!-- -->echo track<!-- -->
+<!-- -->```<!-- -->
+<!-- -->
+<!-- -->```sh :name main :noweb yes<!-- -->
+<!-- -->&lt;&lt;greeting&gt;&gt;<!-- -->
+<!-- -->echo compiling<!-- -->
+<!-- -->```</code></pre></div>
+<p>Running <code class="inline-code">main</code> executes both lines. A reference standing alone on a line keeps its indentation (every
+expanded line is re-indented to match), an unknown name is an error, and a reference cycle is refused
+with the chain spelled out, e.g. <code class="inline-code">noweb cycle: a -&gt; b -&gt; a</code>.</p>
+<h2 id="h-calling-blocks-with-variables">Calling blocks with variables</h2>
+<p><code class="inline-code">track babel run</code> calls a named block with parameters:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->babel<!-- --> <!-- -->run<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->&lt;<!-- -->note-id<!-- -->&gt;<!-- --> <!-- -->-<!-- -->-<!-- -->name<!-- --> <!-- -->shout<!-- --> <!-- -->-<!-- -->-<!-- -->var<!-- --> <!-- -->excitement<!-- -->=<span class="syntax-number">5</span></code></pre></div>
+<p>A block can also declare its own inputs with <code class="inline-code">:var</code> header arguments. A value that names another
+block in the note feeds in that block&#x27;s <em>stored result</em> — run the dependency once with <code class="inline-code">exec</code>, and
+its output becomes the variable:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```sh :name shout :var name=greeting :var excitement=3<!-- -->
+<!-- -->printf &#x27;%s%s\n&#x27; &quot;$name&quot; &quot;$(printf &#x27;!%.0s&#x27; $(seq &quot;$excitement&quot;))&quot;<!-- -->
+<!-- -->```</code></pre></div>
+<p>With <code class="inline-code">greeting</code>&#x27;s stored result being <code class="inline-code">track</code>, calling <code class="inline-code">shout</code> prints (real output):</p>
+<div class="code-block" data-language="json"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>{<span class="syntax-string">&quot;id&quot;</span>:<span class="syntax-string">&quot;shout&quot;</span>,<span class="syntax-string">&quot;status&quot;</span>:<span class="syntax-string">&quot;success&quot;</span>,<span class="syntax-string">&quot;stdout&quot;</span>:<span class="syntax-string">&quot;track!!!\n&quot;</span>,<span class="syntax-string">&quot;exit_code&quot;</span>:<span class="syntax-number">0</span>,<span class="syntax-string">&quot;stored&quot;</span>:<span class="syntax-keyword">true</span>}</code></pre></div>
+<p>Variables reach the block as <strong>environment variables</strong>, the one mechanism every configured language
+shares. That sets the limits:</p>
+<ul>
+<li>Values are always strings; numbers arrive as their decimal text (<code class="inline-code">--var n=42</code> gives <code class="inline-code">$n</code> = <code class="inline-code">42</code>).</li>
+<li>Keys must be valid environment names (<code class="inline-code">[A-Za-z_][A-Za-z0-9_]*</code>).</li>
+<li>A <code class="inline-code">:var</code> value in the fence info string cannot contain spaces (the info string splits on
+whitespace); pass spacey values from the CLI, where <code class="inline-code">--var msg=&quot;hello world&quot;</code> works.</li>
+<li><code class="inline-code">--var</code> overrides a <code class="inline-code">:var</code> of the same name; a dependency with no stored result is an error telling
+you which block to <code class="inline-code">exec</code> first. Dependencies are never executed automatically.</li>
+</ul>
+<p><code class="inline-code">track babel run</code> and <code class="inline-code">track babel exec</code> are the same command under two names, so <code class="inline-code">:var</code> and <code class="inline-code">--var</code>
+work with either.</p>
+<h2 id="h-tangling-source-to-files">Tangling source to files</h2>
+<p>A block carrying <code class="inline-code">:tangle &lt;path&gt;</code> supplies the complete file content. If multiple blocks in one
+note resolve to the same file, the last block wins, replacing the entire content. The JSON plan
+reports the winning <code class="inline-code">source</code> and earlier <code class="inline-code">overridden</code> locations; <code class="inline-code">blocks</code> includes both. Locations
+contain a source path, 1-based fence line, 0-based block ordinal, and optional name.</p>
+<p>Compose fragments explicitly with textual noweb references:</p>
+<div class="code-block" data-language="markdown"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>```sh :name prelude :tangle no<!-- -->
+<!-- -->set -eu<!-- -->
+<!-- -->```<!-- -->
+<!-- -->
+<!-- -->```sh :name compile :tangle scripts/build.sh :noweb tangle<!-- -->
+<!-- -->&lt;&lt;prelude&gt;&gt;<!-- -->
+<!-- -->echo compiling<!-- -->
+<!-- -->```</code></pre></div>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->babel<!-- --> <!-- -->tangle<!-- --> <!-- -->-<!-- -->-<!-- -->file<!-- --> <!-- -->setup<!-- -->.<!-- -->md<!-- --> <!-- -->-<!-- -->-<!-- -->out-dir<!-- --> <!-- -->.<!-- -->/<!-- -->output<!-- --> <!-- -->-<!-- -->-<!-- -->dry-run<!-- -->
+<!-- -->track<!-- --> <!-- -->babel<!-- --> <!-- -->tangle<!-- --> <!-- -->-<!-- -->-<!-- -->file<!-- --> <!-- -->setup<!-- -->.<!-- -->md<!-- --> <!-- -->-<!-- -->-<!-- -->out-dir<!-- --> <!-- -->.<!-- -->/<!-- -->output<!-- -->
+<!-- -->
+<span class="syntax-comment"># Plan several source files together; shared output paths across files are errors.</span>
+<!-- -->track<!-- --> <!-- -->babel<!-- --> <!-- -->tangle<!-- --> <!-- -->-<!-- -->-<!-- -->file<!-- --> <!-- -->shell<!-- -->.<!-- -->md<!-- --> <!-- -->-<!-- -->-<!-- -->file<!-- --> <!-- -->git<!-- -->.<!-- -->md<!-- --> <!-- -->-<!-- -->-<!-- -->out-dir<!-- --> <!-- -->.<!-- -->/<!-- -->output<!-- -->
+<!-- -->
+<span class="syntax-comment"># Without --out-dir, return a new temporary output directory.</span>
+<!-- -->track<!-- --> <!-- -->babel<!-- --> <!-- -->tangle<!-- --> <!-- -->-<!-- -->-<!-- -->path<!-- --> <!-- -->setup<!-- -->.<!-- -->md<!-- -->
+<!-- -->
+<span class="syntax-comment"># A configured vault note can use the same output-root options.</span>
+<!-- -->track<!-- --> <!-- -->babel<!-- --> <!-- -->tangle<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->&lt;<!-- -->note-id<!-- -->&gt;<!-- --> <!-- -->-<!-- -->-<!-- -->out-dir<!-- --> <!-- -->.<!-- -->/<!-- -->output</code></pre></div>
+<p>With <code class="inline-code">--out-dir ./output</code>, the resulting <code class="inline-code">output/scripts/build.sh</code> contains:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>set<!-- --> <!-- -->-<!-- -->eu<!-- -->
+<!-- -->echo<!-- --> <!-- -->compiling</code></pre></div>
+<p>Choose one selector: repeatable <code class="inline-code">--file</code>, single-file <code class="inline-code">--path</code>, or vault-note <code class="inline-code">--id</code>. They cannot be
+mixed. <code class="inline-code">--file</code> and <code class="inline-code">--path</code> read Markdown directly without configuration, a vault, a database, or
+<code class="inline-code">HOME</code>. Input symlink aliases are canonicalized; the same input file is processed only once.</p>
+<p><code class="inline-code">--out-dir</code> selects the output root; a relative directory is resolved against the current working
+directory. <code class="inline-code">:tangle</code> targets are relative to that root, and missing parent directories are created.
+Absolute targets must also stay inside the output root. Without <code class="inline-code">--out-dir</code>, track creates a unique
+<code class="inline-code">track-tangle-*</code> directory under the system temporary directory. The JSON response contains its
+absolute <code class="inline-code">output_dir</code>, <code class="inline-code">temporary: true</code>, <code class="inline-code">dry_run</code>, and <code class="inline-code">targets</code>. After a successful real run, the
+caller owns cleanup. A failure or dry-run removes a temporary root; the preview path returned by
+dry-run therefore no longer exists. An explicit root has <code class="inline-code">temporary: false</code> and is never removed
+by this cleanup.</p>
+<p>All destinations are validated before output files are written, including symlink resolution.
+Targets outside the output root are refused. When writing inside an existing vault, track metadata
+and managed note files remain protected. Aliases to one output count as the same target. Within one
+source file the last block wins, including during a multi-file invocation; different source files
+sharing a target cause the entire plan to fail, regardless of input order. A planned file cannot
+also be a directory for another output. An I/O failure during writing can leave earlier files updated.</p>
+<p><code class="inline-code">:tangle yes</code> is not supported; name the file explicitly. Omitted <code class="inline-code">:tangle</code> and <code class="inline-code">:tangle no</code> produce
+no file. Tangling never runs blocks or reads their stored results; noweb expansion composes source
+text within each input file, with no cross-file lookup or automatic dependency execution.</p>
+<p>For a complete shell-and-Git configuration note with tangle and static-site instructions, see
+<span class="md-link-url-wrap"><a class="md-link" href="https://github.com/ttak0422/track/tree/main/examples/literate-dotfiles" target="_blank" rel="noreferrer noopener">the literate dotfiles example</a></span>.
+It generates files in a caller-selected directory; home-directory installation and Nix integration remain separate.</p>
+<h2 id="h-languages">Languages</h2>
+<p><code class="inline-code">lua</code> and <code class="inline-code">viml</code> ship as ready-to-run sample executors. Add any other language by pointing an
+environment variable at its interpreter — <code class="inline-code">TRACK_BABEL_&lt;LANG&gt;</code> — for example:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>export<!-- --> <!-- -->TRACK_BABEL_PYTHON<!-- -->=<span class="syntax-string">&quot;python3&quot;</span>
+<!-- -->export<!-- --> <!-- -->TRACK_BABEL_SH<!-- -->=<span class="syntax-string">&quot;bash&quot;</span></code></pre></div>
+<p>A block whose language has no executor configured is left unrun with a clear error, so nothing executes
+by surprise.</p></div></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-389/tags/help/authoring">#<!-- -->help/authoring</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-babel">Babel</a><a class="backlink note-toc-entry" href="#h-a-runnable-block" style="padding-left:2em">A runnable block</a><a class="backlink note-toc-entry" href="#h-running-it" style="padding-left:2em">Running it</a><a class="backlink note-toc-entry" href="#h-results" style="padding-left:2em">Results</a><a class="backlink note-toc-entry" href="#h-composing-blocks-noweb-references" style="padding-left:2em">Composing blocks: noweb references</a><a class="backlink note-toc-entry" href="#h-calling-blocks-with-variables" style="padding-left:2em">Calling blocks with variables</a><a class="backlink note-toc-entry" href="#h-tangling-source-to-files" style="padding-left:2em">Tangling source to files</a><a class="backlink note-toc-entry" href="#h-languages" style="padding-left:2em">Languages</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">05</span></h3><div class="backlink-list"><a href="/track-previews/pr-389/notes/5bsKWpzrLcdY0SkLtwsCr9" class="backlink">CLI</a><a href="/track-previews/pr-389/notes/36ukB4V5MfAQePgJsUVhnS" class="backlink">Embeds</a><a href="/track-previews/pr-389/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-389/notes/3wprWYHB4uc1XstTDDjile" class="backlink">Query</a><a href="/track-previews/pr-389/notes/6RVpp0kGC9SPIhxkcDM93m" class="backlink">Syntax</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-389/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-389/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
