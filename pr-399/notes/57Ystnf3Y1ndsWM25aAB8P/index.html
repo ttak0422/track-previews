@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-399/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "73cW6v8ZMpa0CCx6FIJV9+sPfyut1prxrKVeeSa2ZdQ=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "5a245600a042b984";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-399/assets/index-CE4Y_dAH.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-399/assets/index-CX4RcCDB.css">
+  <title>Agent timelines · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Agent timelines"><meta property="og:type" content="article"><meta property="og:description" content="An agent timeline records explicit project work: stable task IDs, weighted progress, authored reports, discussions and cooperative control receipts. It is se…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-399/notes/57Ystnf3Y1ndsWM25aAB8P/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-399/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-399/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-399/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-399/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-399/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-399/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-399/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"><div class="tabbar" role="list" aria-label="Open notes"></div></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><nav class="note-breadcrumbs" aria-label="Breadcrumbs"><span class="note-crumb"><a href="/track-previews/pr-399/notes/4natsB9HePrQdC0vJQKsvv">track</a><span class="note-crumb-sep" aria-hidden="true">›</span></span></nav><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Sunday, November 15, 2026">2026-11-15</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Monday, November 23, 2026 at 12:07:25 PM">2026-11-23</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="note-surface"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Agent timelines<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-agent-timelines">Agent timelines</h1>
+<p>An agent timeline records explicit project work: stable task IDs, weighted progress, authored
+reports, discussions and cooperative control receipts. It is separate from the Markdown
+checkbox <span class="wiki-link pending">Tasks</span> timeline. Moving a checkbox line does not move or rename an agent task.
+An optional <code class="inline-code">note_id</code> links a project to a note in the same vault without modifying that note.
+The Web client currently rejects note IDs above JavaScript’s safe-integer range rather than
+rounding them or saving a changed link. Use the exact-integer CLI for those projects; do not
+clear the link merely to make an edit succeed. A future lossless Web wire format is needed
+to support the full int64 range in that client.</p>
+<p>Back to <span class="wiki-link pending">track</span>. See <span class="wiki-link pending">CLI</span> for vault selection.</p>
+<h2 id="h-normal-claude-and-codex-sessions">Normal Claude and Codex sessions</h2>
+<p>Use <code class="inline-code">timeline-session</code> for a simpler, opt-in workflow without piping the agent&#x27;s
+stdout. Select an existing vault and explicit project before writing:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>export<!-- --> <!-- -->TRACK_VAULT<!-- -->=<!-- -->/<!-- -->absolute<!-- -->/<!-- -->path<!-- -->/<!-- -->to<!-- -->/<!-- -->vault<!-- -->
+<!-- -->export<!-- --> <!-- -->TRACK_TIMELINE_PROJECT<!-- -->=<!-- -->demo<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-session<!-- --> <!-- -->init<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&#x27;Demo project&#x27;</span>
+<!-- -->track<!-- --> <!-- -->timeline-session<!-- --> <!-- -->start<!-- --> <!-- -->-<!-- -->-<!-- -->agent<!-- --> <!-- -->codex<!-- --> <!-- -->-<!-- -->-<!-- -->session<!-- --> <!-- -->stable-session-label<!-- -->
+<span class="syntax-comment"># Use the returned run ID below, not the literal placeholder.</span>
+<!-- -->track<!-- --> <!-- -->timeline-session<!-- --> <!-- -->task<!-- --> <!-- -->-<!-- -->-<!-- -->run<!-- --> <!-- -->RUN<!-- --> <!-- -->-<!-- -->-<!-- -->task<!-- --> <!-- -->implement<!-- --> <!-- -->-<!-- -->-<!-- -->title<!-- --> <span class="syntax-string">&#x27;Implement feature&#x27;</span> <!-- -->-<!-- -->-<!-- -->status<!-- --> <!-- -->active<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-session<!-- --> <!-- -->task<!-- --> <!-- -->-<!-- -->-<!-- -->run<!-- --> <!-- -->RUN<!-- --> <!-- -->-<!-- -->-<!-- -->task<!-- --> <!-- -->implement<!-- --> <!-- -->-<!-- -->-<span class="syntax-keyword">done</span> <span class="syntax-number">15</span> <!-- -->-<!-- -->-<!-- -->remaining<!-- --> <span class="syntax-number">10</span>
+<!-- -->track<!-- --> <!-- -->timeline-session<!-- --> <!-- -->show<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-session<!-- --> <!-- -->report<!-- --> <!-- -->-<!-- -->-<!-- -->run<!-- --> <!-- -->RUN<!-- --> <!-- -->-<!-- -->-<!-- -->event<!-- --> <!-- -->milestone-1<!-- --> <!-- -->-<!-- -->-<!-- -->summary<!-- --> <span class="syntax-string">&#x27;Focused tests passed&#x27;</span></code></pre></div>
+<p>Choose <code class="inline-code">--agent claude</code> for Claude. Keep the session label/run across resume and
+compaction; choose a new label for an independent or forked session. Task IDs are
+local to that run. Updates preserve omitted fields, including title and effort.
+Use <code class="inline-code">--parent</code> for hierarchy, <code class="inline-code">--detail</code> for explicit context, and <code class="inline-code">--status done</code>
+only after verifying the outcome. A repeated identical task update does not add
+an event. On revision conflict, reread and reconcile before retrying. Reports
+require a stable <code class="inline-code">--event</code>: repeat it only with identical summary/uncertainty.</p>
+<p>The repository&#x27;s <span class="md-link-url-wrap"><a class="md-link" href="https://github.com/ttak0422/track/tree/main/examples/session-timeline" target="_blank" rel="noreferrer noopener">session integration guide</a></span>
+contains a shared skill, persistent project-instruction template, and
+Claude/Codex SessionStart command-hook examples. After one-time reviewed setup,
+the startup policy asks the agent to track substantive work automatically; no
+per-conversation Timeline request or skill invocation is needed. Without a
+successful hook context, automatic tracking skips instead of asking for a label. Installation is manual and requires reviewing the destination and
+client permissions; no settings are changed by Track. The hook requires
+<code class="inline-code">TRACK_TIMELINE_ENABLED=1</code>, obtains a stable run from the client session ID, and
+restores context after resume/compact. It ignores transcript paths and prompts.
+Without opt-in it does nothing; failures do not block normal work. Disable the
+hook with <code class="inline-code">TRACK_TIMELINE_ENABLED=0</code>; explicit CLI writes remain available.</p>
+<p>Skills ask the agent to write meaningful milestones, not every tool call. They
+cannot guarantee model compliance. Stop/End never completes tasks automatically.
+Only deliberately supplied text is saved; it is not automatically redacted.
+Do not submit credentials, private transcripts, or sensitive user data. Reports
+are optional authored summaries, not timers or extra model calls. Client hook
+and skill support must be checked on the installed version; live interactive
+Claude/Codex integration has not been verified by the fixture tests.</p>
+<h2 id="h-start-a-project">Start a project</h2>
+<p>Select the intended vault before writing. Every apply command reads one JSON request from stdin:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->apply<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->demo<!-- --> <!-- -->&lt;<!-- -->&lt;<span class="syntax-string">&#x27;JSON&#x27;</span>
+<!-- -->{<span class="syntax-string">&quot;source&quot;</span>:<span class="syntax-string">&quot;example&quot;</span>,<span class="syntax-string">&quot;event_id&quot;</span>:<span class="syntax-string">&quot;create-demo&quot;</span>,<span class="syntax-string">&quot;expected_revision&quot;</span>:<span class="syntax-number">0</span>,<span class="syntax-string">&quot;kind&quot;</span>:<span class="syntax-string">&quot;project.create&quot;</span>,<span class="syntax-string">&quot;payload&quot;</span>:<!-- -->{<span class="syntax-string">&quot;title&quot;</span>:<span class="syntax-string">&quot;Demo project&quot;</span>,<span class="syntax-string">&quot;mode&quot;</span>:<span class="syntax-string">&quot;serial&quot;</span>}<!-- -->}<!-- -->
+<!-- -->JSON<!-- -->
+<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->apply<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->demo<!-- --> <!-- -->&lt;<!-- -->&lt;<span class="syntax-string">&#x27;JSON&#x27;</span>
+<!-- -->{<span class="syntax-string">&quot;source&quot;</span>:<span class="syntax-string">&quot;example&quot;</span>,<span class="syntax-string">&quot;event_id&quot;</span>:<span class="syntax-string">&quot;add-task&quot;</span>,<span class="syntax-string">&quot;expected_revision&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;kind&quot;</span>:<span class="syntax-string">&quot;task.upsert&quot;</span>,<span class="syntax-string">&quot;payload&quot;</span>:<!-- -->{<span class="syntax-string">&quot;id&quot;</span>:<span class="syntax-string">&quot;implement&quot;</span>,<span class="syntax-string">&quot;title&quot;</span>:<span class="syntax-string">&quot;Implement the feature&quot;</span>,<span class="syntax-string">&quot;status&quot;</span>:<span class="syntax-string">&quot;active&quot;</span>,<span class="syntax-string">&quot;owner&quot;</span>:<span class="syntax-string">&quot;example&quot;</span>,<span class="syntax-string">&quot;weight&quot;</span>:<span class="syntax-number">1</span>,<span class="syntax-string">&quot;done_minutes&quot;</span>:<span class="syntax-number">15</span>,<span class="syntax-string">&quot;remaining_minutes&quot;</span>:<span class="syntax-number">45</span>,<span class="syntax-string">&quot;mode&quot;</span>:<span class="syntax-string">&quot;serial&quot;</span>}<!-- -->}<!-- -->
+<!-- -->JSON<!-- -->
+<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->list<!-- -->
+<!-- -->track<!-- --> <!-- -->timeline-project<!-- --> <!-- -->get<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->demo</code></pre></div>
+<p><code class="inline-code">project.update</code> and <code class="inline-code">task.upsert</code> accept complete replacement records, not partial patches.
+Read the current snapshot before editing. Tasks may specify <code class="inline-code">parent_id</code>, <code class="inline-code">detail</code>, and <code class="inline-code">priority</code>
+(P0–P3 as integers 0–3). The parent must already exist, and cycles are refused. IDs contain ASCII
+letters, digits, hyphens and underscores, start with a letter or digit, and are at most 96 characters.</p>
+<p>Task states are <code class="inline-code">pending</code>, <code class="inline-code">active</code>, <code class="inline-code">paused</code>, <code class="inline-code">blocked</code>, <code class="inline-code">done</code>, and <code class="inline-code">retired</code>. Children determine
+a parent&#x27;s calculated progress, so parent effort is not counted twice. Leaves use
+<code class="inline-code">done_minutes / (done_minutes + remaining_minutes)</code>; done leaves are complete. Sibling fractions
+are weighted; omitted or zero weight means one. Retired subtrees are excluded from progress.
+The snapshot includes <code class="inline-code">task_progress</code> for each task’s own subtree, using the same formula
+as the project total. Retired subtrees contribute no completion or effort to their ancestors;
+individual descendants remain inspectable in their own projections. Counts retain explicit task
+statuses even when a subtree is excluded. Remaining estimates sum in serial groups and take
+the maximum in parallel groups. They are
+estimates, not a promise about elapsed wall time or actual agent scheduling.</p>
+<h2 id="h-reports-and-discussion">Reports and discussion</h2>
+<p>Use <code class="inline-code">report.add</code> with a unique <code class="inline-code">id</code>, <code class="inline-code">author</code>, RFC3339 <code class="inline-code">period_start</code>/<code class="inline-code">period_end</code>, <code class="inline-code">summary</code>, and
+nonempty <code class="inline-code">event_sequences</code> referencing existing events. Optional <code class="inline-code">task_id</code>, <code class="inline-code">uncertainty</code>, and
+<code class="inline-code">user_action</code> retain the distinctions between progress, unresolved questions and required decisions.
+Reports are explicitly supplied text: Track does not call a model or collect a transcript.</p>
+<p>Use <code class="inline-code">discussion.add</code> with <code class="inline-code">id</code>, <code class="inline-code">author</code>, <code class="inline-code">text</code>, <code class="inline-code">target_type</code> (<code class="inline-code">project</code>, <code class="inline-code">task</code>, or <code class="inline-code">report</code>),
+and the corresponding <code class="inline-code">target_id</code>. Reports and discussion entries are append-only; existing IDs
+cannot be overwritten. Submit a new entry to correct or follow up on earlier text.</p>
+<h2 id="h-cooperative-control-not-process-control">Cooperative control, not process control</h2>
+<p><code class="inline-code">control.request</code> records <code class="inline-code">id</code>, <code class="inline-code">task_id</code>, the task&#x27;s <code class="inline-code">owner</code>, <code class="inline-code">action</code> (<code class="inline-code">pause</code> or <code class="inline-code">resume</code>), and
+<code class="inline-code">status: &quot;requested&quot;</code>. The responsible integration can send <code class="inline-code">control.update</code> with <code class="inline-code">id</code>, <code class="inline-code">status</code>
+and <code class="inline-code">result</code>. Allowed receipts are <code class="inline-code">acknowledged</code>, <code class="inline-code">completed</code>, <code class="inline-code">rejected</code>, and <code class="inline-code">failed</code>;
+completion requires acknowledgement first. A receipt&#x27;s request source must match the routed owner.</p>
+<p>Track does not launch, message, stop or resume a process. A request does not change task status,
+and a completion receipt is the integration&#x27;s report, not independent verification. Source/owner
+labels are routing and provenance, <strong>not authentication</strong>. The local CLI and existing protected
+loopback Web API remain the trust boundary; do not expose them as a remote agent service.</p>
+<h2 id="h-conflicts-and-retries">Conflicts and retries</h2>
+<p>Every request has <code class="inline-code">source</code>, <code class="inline-code">event_id</code>, <code class="inline-code">expected_revision</code>, <code class="inline-code">kind</code>, and <code class="inline-code">payload</code>. Use a fresh
+source/event identity for each new action. A stale revision fails rather than overwriting another
+writer. Read the newer snapshot and review the intended change before sending a new action.</p>
+<p>If a response was lost, resend the <em>identical</em> request with the same source/event identity. It is
+applied at most once, even when the expected revision is now old. Reusing that identity for different
+content fails. Never generate a new event ID merely because a write timed out.</p>
+<h2 id="h-recorded-state-and-interrupted-workers">Recorded state and interrupted workers</h2>
+<p>Task states are the latest submitted records, not process heartbeats. A successful refresh
+confirms that Track was read; it does not confirm that the responsible worker is still alive.
+An <code class="inline-code">active</code> task may remain after an importer is killed or rejects malformed input.</p>
+<p>Before correcting an interrupted run, stop or confirm the end of its writer outside Track.
+Inspect its latest events and reports, then edit the complete task record through the Web
+or Neovim view with the current revision. Use <code class="inline-code">blocked</code> when the outcome is unknown;
+do not mark it <code class="inline-code">done</code> without evidence. Preserve its ID, parent, owner and other fields.
+Correct each affected child as well as the execution parent, because parent progress is
+calculated from children. A concurrent revision change requires another review, not a
+blind retry. Add an authored discussion explaining the correction if useful, without
+including private transcript contents.</p>
+<p>This correction records your assessment; it does not stop a process. The Codex importer
+refuses new writes over a task edited outside its run. Start any later invocation with a
+new run ID rather than treating a manual correction as permission to resume the old stream.</p>
+<h2 id="h-api-and-storage">API and storage</h2>
+<ul>
+<li><code class="inline-code">GET /api/timeline/projects</code> lists projects.</li>
+<li><code class="inline-code">GET /api/timeline/project?id=demo</code> reads one snapshot.</li>
+<li><code class="inline-code">POST /api/timeline/project?id=demo</code> accepts the same explicit request as the CLI.</li>
+<li>Use the normal vault query selector and local Web write protections.</li>
+</ul>
+<p>Versioned event journals live in <code class="inline-code">.track/timelines/&lt;project-id&gt;.json</code>; snapshots are reconstructed
+from those records, not a disposable index. Back them up with the vault. Standard static publication
+does not export them. No automatic conversation, credentials, environment, or shell-history capture
+is performed. Content submitted explicitly is retained locally, so do not submit secrets.</p>
+<p>Linux and macOS are supported. Cross-process writers use a bounded lock and atomic replacement;
+corrupt or unsupported files fail without being reset. A project is limited to 1,000 tasks,
+10,000 events and an 8 MiB journal; each payload is limited to 64 KiB. Limits reject writes instead
+of silently deleting history. Rotation, selective retention and automatic agent adapters are not
+provided; a new project can be started explicitly when needed.</p>
+<h2 id="h-web-and-neovim-views">Web and Neovim views</h2>
+<p>In the live Web workspace, choose <strong>Agent timeline</strong> in the navigation rail or mobile dock.
+Create or select a project, then use <strong>Edit project</strong>, task titles, <strong>Add authored report</strong>,
+<strong>Add discussion</strong>, or <strong>Request pause or resume</strong>. <strong>Recorded events</strong> shows source records.
+These are explicit actions, not background agent dispatch. Unsaved form edits remain separate
+from polling results. Revision conflicts require review and explicit retry; uncertain network
+retries keep their original event identity. Static published sites do not provide this workspace.</p>
+<p>In Neovim, run <code class="inline-code">:Track timeline</code> to choose or create a project, or <code class="inline-code">:Track timeline demo</code> to open
+one. The ordinary Neovim split shows tasks, estimates, reports, discussions, receipts and events.
+The split refreshes every five seconds while open, without overlapping pending writes.
+Press <code class="inline-code">r</code> to refresh immediately, <code class="inline-code">a</code> to prepare an explicit record, and <code class="inline-code">q</code> to close. The record opens as a
+JSON draft: edit its payload and <code class="inline-code">:write</code> to submit, or <code class="inline-code">:bd!</code> to discard without sending. For <code class="inline-code">task.upsert</code>, choose a new task or select an existing task to prefill its complete saved
+record. The draft keeps the revision captured with that record; later polling cannot silently
+rebase it. Drafts are locked during
+submission; a write receipt never silently discards newer edits. Closing a view does not cancel
+an already submitted write. There is no interactive terminal TUI.</p>
+<p>For a custom Neovim or komado presentation:</p>
+<div class="code-block" data-language="lua"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code><span class="syntax-keyword">local</span> <!-- -->view<!-- --> <!-- -->=<!-- --> <span class="syntax-function">require</span>(<span class="syntax-string">&#x27;track.agent_timeline&#x27;</span>)<!-- -->.<span class="syntax-function">new</span>(<span class="syntax-string">&#x27;demo&#x27;</span>,<!-- --> <!-- -->{<!-- --> <!-- -->vault<!-- --> <!-- -->=<!-- --> <span class="syntax-string">&#x27;work&#x27;</span> <!-- -->}<!-- -->)<!-- -->
+<!-- -->view<!-- -->.<span class="syntax-function">refresh</span>(<span class="syntax-keyword">function</span>(<!-- -->err<!-- -->)<!-- -->
+<!-- --> <!-- --> <span class="syntax-keyword">if</span> <!-- -->err<!-- --> <span class="syntax-keyword">then</span> <!-- -->vim<!-- -->.<span class="syntax-function">notify</span>(<!-- -->err<!-- -->,<!-- --> <!-- -->vim<!-- -->.<!-- -->log<!-- -->.<!-- -->levels<!-- -->.<!-- -->WARN<!-- -->)<!-- --> <span class="syntax-keyword">end</span>
+<span class="syntax-keyword">end</span>)<!-- -->
+<span class="syntax-keyword">local</span> <!-- -->stop<!-- --> <!-- -->=<!-- --> <!-- -->view<!-- -->.<span class="syntax-function">watch</span>(<span class="syntax-number">5000</span>)<!-- -->
+<span class="syntax-comment">-- Call view.dispose() when your owning UI is removed (or stop() to stop polling only).</span>
+<span class="syntax-comment">-- Add view.komado_component() to your existing komado root.</span>
+<span class="syntax-comment">-- Or read view.rows() / view.snapshot from another cached provider.</span></code></pre></div>
+<p>The adapter emits <code class="inline-code">User TrackTimelineChanged</code> after results. Rendering does not run a subprocess;
+custom monitoring is opt-in and lifecycle-owned, and stale data is marked after a failed read.
+The compact component includes recent reports, discussion and control receipts as well as
+task/subtree progress; open <code class="inline-code">:Track timeline</code> for full history and event payloads. The component uses komado&#x27;s
+existing API without requiring it for other views. <code class="inline-code">view.request(kind, payload)</code> prepares an
+idempotent request; <code class="inline-code">view.apply(request, callback)</code> submits it once. Keep that request for an
+uncertain retry, and do not refresh during an outstanding write. The default <code class="inline-code">:Track timeline</code>
+view uses the configured vault; custom adapters can pass a named <code class="inline-code">vault</code> or <code class="inline-code">vault_dir</code>.</p>
+<h2 id="h-connecting-an-external-worker">Connecting an external worker</h2>
+<p>Track supplies a recording protocol, not an agent runner. An external worker can opt in by
+submitting progress and authored reports through <code class="inline-code">timeline-project apply</code> and polling <code class="inline-code">get</code>
+for control requests addressed to its task and owner. Acknowledge accepted requests, then
+record completion only after reaching the corresponding safe state. Continue polling while
+paused. A crash may leave an acknowledged request incomplete; reconcile it explicitly instead
+of assuming that the earlier process completed it. Use a distinct owner label per worker.</p>
+<p>The repository&#x27;s <code class="inline-code">examples/timeline-worker/</code> contains an executable Python-standard-library
+reference adapter and disposable-vault instructions. It performs finite sleep-only steps,
+records a report with event references and demonstrates actual safe-point pause/resume.
+It never starts another agent, invokes a model, runs supplied commands or collects private
+context. After a definite revision rejection, the example retries at most three times only when its
+affected task, controls and report evidence are unchanged. Actual target changes stop visibly;
+uncertain timeouts retain the identical request rather than rebasing. Existing
+tasks are not taken over; use a new task ID for each demonstration.</p>
+<h2 id="h-local-offline-snapshot">Local offline snapshot</h2>
+<p><code class="inline-code">track timeline-project get --id demo &gt; timeline.json</code> writes a self-contained read snapshot
+including recorded events, task/subtree projections, reports and discussion. Choose a private
+local destination: this explicit export contains the records you submitted and is not redacted.
+It is useful for offline inspection, but is not a restore command. Use the ordinary vault backup
+for authoritative recovery. Static site publication still excludes timeline journals.</p>
+<h2 id="h-codex-cli-event-integration">Codex CLI event integration</h2>
+<p>The repository&#x27;s <code class="inline-code">examples/codex-timeline/</code> adapter connects an explicitly piped
+<code class="inline-code">codex exec --json</code> invocation to an existing Track project. It reads standard input;
+it does not start Codex, read session files, call a model or contact a remote service.
+The required vault, project, owner and run ID make the destination and provenance explicit.
+Use a new run ID for a different invocation; replay only the same stream with the same ID.</p>
+<p>The default allowlist records turn lifecycle, fixed item-type/status counts and plan completion
+counts. It excludes prompts, agent messages, reasoning, commands, file paths, tool names/output
+and upstream error text. Plan steps do not have stable IDs in this event API, so the adapter
+does not invent persistent identities for individual steps or copy their text. Recorded progress
+means observed lifecycle, not a time estimate or proof that the agent&#x27;s work is correct.
+Non-fatal warning items are ignored even before a turn starts; declined commands are counted
+as declined, not as completed work. If independent writers exhaust the bounded conflict retries,
+wait for contention to settle and replay the identical stream with the same owner and run ID.
+Actual edits to the affected records still require explicit reconciliation.</p>
+<p>This event stream is one-way. It cannot pause or resume Codex, and never acknowledges a control
+request as if it could. An interrupted or failed stream does not produce a successful completion.
+See the adapter README for the verified event schema, limits and pipeline setup. The integration
+is tested with documented event fixtures and the actual Track executable; a live model/account
+session is a separate operational check, not something Track runs automatically.</p></div></div></section></div><div class="note-aside"><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-agent-timelines">Agent timelines</a><a class="backlink note-toc-entry" href="#h-normal-claude-and-codex-sessions" style="padding-left:2em">Normal Claude and Codex sessions</a><a class="backlink note-toc-entry" href="#h-start-a-project" style="padding-left:2em">Start a project</a><a class="backlink note-toc-entry" href="#h-reports-and-discussion" style="padding-left:2em">Reports and discussion</a><a class="backlink note-toc-entry" href="#h-cooperative-control-not-process-control" style="padding-left:2em">Cooperative control, not process control</a><a class="backlink note-toc-entry" href="#h-conflicts-and-retries" style="padding-left:2em">Conflicts and retries</a><a class="backlink note-toc-entry" href="#h-recorded-state-and-interrupted-workers" style="padding-left:2em">Recorded state and interrupted workers</a><a class="backlink note-toc-entry" href="#h-api-and-storage" style="padding-left:2em">API and storage</a><a class="backlink note-toc-entry" href="#h-web-and-neovim-views" style="padding-left:2em">Web and Neovim views</a><a class="backlink note-toc-entry" href="#h-connecting-an-external-worker" style="padding-left:2em">Connecting an external worker</a><a class="backlink note-toc-entry" href="#h-local-offline-snapshot" style="padding-left:2em">Local offline snapshot</a><a class="backlink note-toc-entry" href="#h-codex-cli-event-integration" style="padding-left:2em">Codex CLI event integration</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">01</span></h3><div class="backlink-list"><a href="/track-previews/pr-399/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-399/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-399/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
