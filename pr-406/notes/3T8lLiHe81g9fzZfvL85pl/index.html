@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="track is a linked Markdown knowledge base: wiki links, backlinks, charts, diagrams, and a local web workspace."
+    />
+    <link rel="icon" type="image/svg+xml" href="/track-previews/pr-406/track-icon.svg" data-track-favicon />
+    <!-- The font stylesheet is injected after first paint by src/main.tsx: requested from the head it
+         would put a third-party round trip inside the metrics' critical path while changing nothing
+         about what the first paint draws. Preconnects stay here so the injection reuses warm
+         connections; noscript keeps a synchronous fallback for no-JS readers. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    
+    <script>
+      // The Go server replaces system with the configured default before serving this
+      // file, so the saved theme is applied before first paint and there is no flash of the wrong theme.
+      (function () {
+        var serverDefault = "system";
+        window.__trackDefaultTheme = serverDefault;
+        var theme = localStorage.getItem("track.theme") || serverDefault;
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+        // Keep the built-in favicon aligned with the same explicit/system theme cascade as the app
+        // marks. A configured site icon removes this data attribute during export and is left alone.
+        function updateFavicon() {
+          var link = document.querySelector('link[data-track-favicon]');
+          if (!link) return;
+          var explicitTheme = document.documentElement.dataset.theme;
+          var dark =
+            explicitTheme === "dark" ||
+            (explicitTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var href = link.getAttribute("href") || "";
+          link.setAttribute("href", href.replace(/track-icon(?:-dark)?\.svg$/, dark ? "track-icon-dark.svg" : "track-icon.svg"));
+        }
+        updateFavicon();
+        new MutationObserver(updateFavicon).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+        var colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        colorScheme.addEventListener?.("change", updateFavicon);
+        // The saved content width is applied before first paint for the same reason: it moves the
+        // reading column AND gates the docked aside (html[data-content-width], see the .note-aside
+        // rail rules), so applying it only after React mounts would dock then undock the rail.
+        var contentWidth = localStorage.getItem("track.contentWidth");
+        if (contentWidth === "1280px" || contentWidth === "none") {
+          document.documentElement.style.setProperty("--content-width", contentWidth);
+          document.documentElement.dataset.contentWidth = contentWidth;
+        }
+        // The static export replaces 4natsB9HePrQdC0vJQKsvv with the root note's published id, so the app
+        // redirects straight to the start page on launch without first fetching site.json. The live
+        // server replaces it with empty (it uses the heatmap home, not a start-page redirect).
+        window.__trackStartPage = "4natsB9HePrQdC0vJQKsvv";
+        // The static export fills this in with the key that opens its locked data bundle (base64; see
+        // internal/track/site/lock.go and web/src/lock.ts). The live server empties it: it serves the
+        // API, not a locked bundle. (The placeholder is spelled only once here — the dev server
+        // substitutes the first occurrence.)
+        window.__trackLock = "zFnCE2Y8WGv2b6GFOuDtAdCgfS+7/yGjhQu8oenC6tU=";
+        // The static export fills this in with the fingerprint its data bundle was published under, so
+        // this page reads data/<generation>/… — the data of its own deploy. A page the CDN still serves
+        // from an earlier deploy therefore never mixes with data from a later one. Empty on the live
+        // server. (Spelled once: the dev server substitutes the first occurrence.)
+        window.__trackData = "abf7e9a755edb928";
+      })();
+    </script>
+    <style>html,body,#root{min-height:100dvh;margin:0}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light dark}@media (prefers-color-scheme:dark){:root{--lightningcss-light: ;--lightningcss-dark:initial}}:root[data-theme=dark]{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}:root[data-theme=light]{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}body{background:var(--lightningcss-light,#fbfaf8)var(--lightningcss-dark,#141618)}</style>
+    
+    <script type="module" crossorigin src="/track-previews/pr-406/assets/index-BpyXywUb.js"></script>
+    <link rel="stylesheet" crossorigin href="/track-previews/pr-406/assets/index-CX4RcCDB.css">
+  <title>Calendar events · track</title><meta property="og:site_name" content="track"><meta property="og:title" content="Calendar events"><meta property="og:type" content="article"><meta property="og:description" content="Use events for something happening over a date range or time interval. Use Tasks for work with a completion state, scheduled day, or deadline. Creating an ev…"><meta property="og:url" content="https://ttak0422.github.io/track-previews/pr-406/notes/3T8lLiHe81g9fzZfvL85pl/"><meta property="og:image" content="https://ttak0422.github.io/track-previews/pr-406/ogp-default.png"><meta name="twitter:card" content="summary_large_image"><script>window.__TRACK_STATE__="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"</script></head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/track-previews/pr-406/track-icon.svg"/><link rel="preload" as="image" href="/track-previews/pr-406/track-icon-dark.svg"/><main class="workspace"><aside class="sidebar"><nav class="activity-rail" aria-label="Workspace views"><div class="rail-scroll"><div><a aria-label="Start page" href="/track-previews/pr-406/" class="rail-button rail-brand"><img class="rail-mark theme-asset-light" src="/track-previews/pr-406/track-icon.svg" alt=""/><img class="rail-mark theme-asset-dark" src="/track-previews/pr-406/track-icon-dark.svg" alt=""/></a></div><div class="rail-search"><button class="rail-button" type="button" aria-label="Search notes" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-search rail-icon-svg" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg></button></div><div class="rail-history"><button class="rail-button" type="button" aria-label="Recently opened notes" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-history rail-icon-svg" aria-hidden="true"><path d="M12 8l0 4l2 2"></path><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path></svg></button></div><div class="hierarchy-menu"><button class="rail-button" type="button" aria-label="Hierarchy" aria-haspopup="menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-sitemap rail-icon-svg" aria-hidden="true"><path d="M3 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M15 17a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"></path><path d="M6 15v-1a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v1"></path><path d="M12 9l0 3"></path></svg></button></div><div><a aria-label="Full graph" href="/track-previews/pr-406/graph" class="rail-button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-affiliate rail-icon-svg" aria-hidden="true"><path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275"></path><path d="M11.683 12.317l5.759 -5.759"></path><path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0"></path><path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"></path></svg></a></div></div><div class="app-menu"><button class="rail-button" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-settings rail-icon-svg" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path></svg></button></div></nav></aside><div class="reader-pane"><div class="tabstrip"><div class="tabbar" role="list" aria-label="Open notes"></div></div><section class="reader"><!--$--><article class="note-reader"><div class="note-layout"><div class="note-main"><dl class="note-props" aria-label="Note properties"><div class="note-prop"><dt>created</dt><dd><span class="note-prop-value note-prop-date" title="Thursday, October 29, 2026">2026-10-29</span></dd></div><div class="note-prop"><dt>updated</dt><dd><span class="note-prop-value note-prop-date" title="Wednesday, November 25, 2026 at 01:32:04 PM">2026-11-25</span></dd></div></dl><section class="note-preview" aria-label="Rendered note"><div class="note-surface"><div class="line-hint" aria-hidden="true"></div><div class="markdown-view"><h1 class="note-title">Calendar events<button type="button" class="note-title-copy" aria-label="Copy title" title="Copy title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy rail-icon-svg" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button></h1><h1 id="h-calendar-events">Calendar events</h1>
+<p>Use events for something happening over a date range or time interval. Use <span class="wiki-link pending">Tasks</span> for work
+with a completion state, scheduled day, or deadline. Creating an event does not convert an
+existing note or task.</p>
+<p>Back to <span class="wiki-link pending">Web workspace</span> and <span class="wiki-link pending">track</span>.</p>
+<h2 id="h-register-and-edit">Register and edit</h2>
+<p>In the live Calendar, choose Month, Today, Tomorrow, or This week, then <strong>New event</strong> in the
+Events section. A day page also offers New event for that date. The selected vault determines
+where the event is saved; related-note choices come from that same vault.</p>
+<p>In Today, Tomorrow, This week, and a day page, <strong>Show: All / Events / Tasks</strong> controls which
+agenda sections are visible. Choose Events to focus on appointments, Tasks for dated work,
+or All for both. The check mark and pressed state identify the choice; Tab and Enter or Space
+operate the buttons. On macOS, use Option-Tab when keyboard navigation skips buttons.
+The choice stays while moving dates or periods in that Calendar screen;
+opening another screen or reloading starts with All. Switching the filter does not save or
+delete anything. Day pages continue to show activity notes and the Journal action. Published
+calendars keep their read-only task snapshot and do not offer the live event filter.</p>
+<h2 id="h-calendar-display">Calendar display</h2>
+<p>Open <strong>Calendar display</strong> in the live Calendar or a day page. Choose Sunday or Monday for
+<strong>Week starts on</strong>, enter a supported IANA <strong>Display time zone</strong> such as <code class="inline-code">America/New_York</code>,
+<code class="inline-code">Asia/Tokyo</code>, or <code class="inline-code">UTC</code>, then choose <strong>Apply display</strong>. An empty zone follows your device.
+<strong>Use defaults</strong> restores Sunday and the device zone, including any unsaved fields in the form.
+A successful Apply shows the accepted value in the fields. Invalid input stays in the form; a save
+failure leaves the current display unchanged so you can retry.</p>
+<p>The saved choice is shared across vaults in this browser profile and server address. Reloading,
+opening another Calendar screen, or reopening the same address restores it. Another browser,
+profile, or server port has its own choice. The desktop app uses its persistent browser store at
+its usual address. Preferences do not sync with a vault or change OS settings. Unreadable or
+unsupported saved settings fall back to Sunday/device with an explanation in Calendar display.</p>
+<p>Today, Tomorrow, the current week, month weekday columns, event membership, and time-grid labels
+use the selected display zone and week start. <strong>Current month</strong> returns to that zone&#x27;s current
+month; changing the display zone keeps the month you are browsing. All-day dates, task scheduled
+and due dates, and note activity dates stay as written. “Today” and overdue reminders use the
+selected display zone. Published calendars retain their read-only Sunday/device defaults.</p>
+<p>Changing display preferences does not rewrite events or an open editor. Existing timed events
+keep their authored zone in the editor and detailed Agenda labels; a new timed event starts with
+the selected display zone. An already-open draft keeps its current values.</p>
+<h2 id="h-day-and-week-time-grid">Day and week time grid</h2>
+<p>In Today, Tomorrow, This week, or a day page, choose <strong>Time grid</strong> in the Events section.
+<strong>Agenda</strong> returns to the detailed list. The layout stays while moving dates in the same
+screen; the Month view keeps its list. Show: Events / Tasks / All still controls the sections.</p>
+<p>All-day events appear above the hours on every included civil date. Timed events are split
+at midnight in the selected display zone, with “Continues” at the clipped ends. Overlapping intervals
+use separate columns so every event can be selected. Short entries keep a minimum target;
+very dense periods widen the grid rather than covering another event. Cancelled entries are
+labelled; deleted entries stay in Show trash. Open an event to read all its details and edit
+its original date range and event time zone.</p>
+<p>The grid labels the selected display zone (the device zone by default). Each day follows actual elapsed time from local
+midnight in that zone: a daylight-saving transition can have 23 or 25 hours, and transition-day labels
+include UTC offsets so repeated clock times remain distinct. Adjacent columns can therefore
+show different wall-clock hours at the same height on transition days. A skipped civil date
+has no local hours. When a date begins at 01:00 after a clock change, its end still uses the
+following date&#x27;s own midnight; events after that boundary appear only on the following date.
+The grid does not change saved timestamps or event time zones.</p>
+<p>Scroll the grid vertically for later hours and horizontally for more days or overlapping
+events, including on narrow windows. Tab (Option-Tab on macOS when needed) reaches the scroll
+region and event buttons; use arrow keys to scroll the focused region and Enter or Space to
+open an event. The event editor retains the same save and unsaved-input protection as Agenda.
+Date-only tasks stay in the task agenda; the grid does not invent a time for them. Use the time-change controls below for eligible entries; other intervals remain editable in the regular event form.</p>
+<h2 id="h-change-times-from-the-grid">Change times from the grid</h2>
+<p>For a confirmed timed event that fits inside one ordinary 24-hour display-zone day, drag the
+event to move both ends, or drag its <strong>↕ Change time</strong> handle to resize the end. Proposals snap
+to 15-minute steps, stay in the same day, and keep at least 15 minutes when resizing. A dashed
+preview appears during a drag. Dropping opens <strong>Review time change</strong>; the grid&#x27;s saved times
+stay in place until you confirm <strong>Apply time change</strong>.</p>
+<p>The same handle opens four actions: <strong>Move earlier 15 minutes</strong>, <strong>Move later 15 minutes</strong>,
+<strong>End earlier 15 minutes</strong>, and <strong>End later 15 minutes</strong>. Tab to Change time and use Enter or
+Space, then Tab to an available action and activate it. These actions create the same proposals
+as dragging. Escape closes the action list and returns focus. Touch scrolling keeps its normal
+behavior; use the action buttons or regular editor on a touch device.</p>
+<p>Review shows the original schedule and proposed fields in the event&#x27;s authored time zone. Its
+identity, revision, other details, and authored zone are retained; seconds and fractional precision
+are preserved by grid adjustments. Nothing is saved merely by opening the review. Choose Apply
+to save, or Cancel/Escape to discard. An untouched proposal already has unsaved-input protection.
+An in-flight Apply must finish or time out before the editor&#x27;s Cancel/Escape becomes available.</p>
+<p>Escape during a drag, pointer cancellation, losing capture or window focus, changing period/zone,
+or dropping outside the original day cancels the gesture. A failed save or revision conflict
+keeps the form and does not optimistically move the saved grid entry. Another editor&#x27;s confirmed
+changes can still update the grid. An uncertain response may mean the save completed: use the
+same unchanged retry behavior described below. After success, reopen the event to adjust it again;
+there is no separate post-save Undo for time changes in this version.</p>
+<p>All-day entries, events crossing a display-zone day boundary, cancelled and deleted entries, clock-change/skipped days in the display zone, and
+authored zones unavailable in the browser have no grid adjustment handle. Continue using their
+regular editor. Moving to another day, resizing the start edge, recurring series, and converting
+tasks are not part of these grid controls. The regular editor&#x27;s existing date/time capabilities
+remain available. Deletion and its Undo stay in the regular event workflow.</p>
+<h2 id="h-dates-and-details">Dates and details</h2>
+<p>Month cells list events on every day they overlap. A date with events opens its day agenda,
+including when a journal exists; the day&#x27;s Journal action still opens that journal separately.</p>
+<p>Enter a title and dates. <strong>All day</strong> uses a first day and a <strong>Last day</strong>, both inclusive in the
+form. For a three-day event from October 28 through October 30, enter those two dates. Without
+All day, enter start/end dates, times, and an IANA time zone such as <code class="inline-code">Asia/Tokyo</code>,
+<code class="inline-code">America/New_York</code>, or <code class="inline-code">Europe/London</code>. Standard IANA aliases such as <code class="inline-code">US/Eastern</code>
+are also accepted. Host-only names such as <code class="inline-code">localtime</code>, <code class="inline-code">posixrules</code>, and the <code class="inline-code">Factory</code>
+placeholder are refused. If this browser does not recognize a zone, choose a supported
+zone before changing an event&#x27;s dates or times. Existing timestamps remain visible with
+their saved offsets, so an unsupported zone does not break the calendar.</p>
+<p>Location, description, a source URL, and a related note are optional. Source URLs must use HTTP
+or HTTPS. Use <strong>Cancelled</strong> to retain a cancelled event visibly; a cancelled event is different
+from a completed task. Event rows open their editor, while Related note and Source open their
+references.</p>
+<p>Save waits for confirmation. Failed input stays in the editor, and repeated clicks do not create
+another event. If confirmation times out, a save may already have completed: retry without
+changing the input to check the same operation safely. After an editing conflict, keep a copy
+of any draft text you need, then close and reopen the event to read the latest revision. Cancel
+or Escape leaves saved data unchanged and returns focus to the invoking control. Those editor
+actions wait for an in-flight save to finish or time out.</p>
+<p>The desktop app asks before quitting, closing its window, or reloading/navigating the native
+window while an event editor is open, even before its first edit. Cancel that native warning
+to keep the form, then save or cancel the event editor before retrying. Closing the editor
+after a successful save removes that extra warning.</p>
+<p>In the browser, Back, Forward, and navigation to another page ask before discarding changed
+input, a pending save, or a failed save. Cancel that navigation to retain the form. Reload and
+closing the browser tab use the browser&#x27;s own unsaved-changes warning, including after a
+cancelled Back. An untouched form does not need a browser warning. A successful save, or
+intentionally choosing the event editor&#x27;s Cancel or Escape, removes its protection; those
+editor actions still wait for an in-flight save to finish or time out. If you approve leaving
+while a save is pending, it can still finish: check the agenda before registering it again.</p>
+<h2 id="h-dates-and-clock-changes">Dates and clock changes</h2>
+<p>All-day dates stay on their authored dates regardless of the display time zone. Internally the
+end is the following, excluded day; the form and event label show the inclusive last day.
+Timed events belong to the day or days they overlap in the selected display zone, and Agenda
+labels use each event&#x27;s authored time zone. A midnight ending does not add the next day. A week
+starts Sunday by default; Calendar display can switch it to Monday.</p>
+<p>A local time skipped by a clock change is refused. A repeated local time is also refused until
+you choose its UTC offset in <strong>UTC offsets for repeated times</strong>. For example, the New York fall
+clock change can repeat <code class="inline-code">01:30</code>: <code class="inline-code">-04:00</code> and <code class="inline-code">-05:00</code> select different instants. An offset must
+match the named zone at that instant. No time is invented for an unknown event date/time.</p>
+<h2 id="h-trash-and-restore">Trash and restore</h2>
+<p><strong>Move to trash</strong> keeps the saved event and its identity. <strong>Undo</strong> restores that deletion, and
+<strong>Show trash</strong> lists deleted events in the selected vault even when their dates are outside the
+visible period. Restore brings back the stored title, dates, description, references, and status;
+edit it afterward to make further changes. There is no permanent purge operation in this slice.
+Moving an event to trash discards unapplied form edits and preserves the last saved content.</p>
+<h2 id="h-cli">CLI</h2>
+<p>The <span class="wiki-link pending">CLI</span> uses the same validation, revision checks, and retry rules as the editor. Supply a
+UUID for the event and a different UUID for each distinct operation. Keep both IDs and the
+payload unchanged when retrying an uncertain response.</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>cat<!-- --> <!-- -->&gt;<!-- --> <!-- -->/<!-- -->tmp<!-- -->/<!-- -->track-event-example<!-- -->.<!-- -->json<!-- --> <!-- -->&lt;<!-- -->&lt;<span class="syntax-string">&#x27;JSON&#x27;</span>
+<!-- -->{<span class="syntax-string">&quot;title&quot;</span>:<span class="syntax-string">&quot;Review&quot;</span>,<span class="syntax-string">&quot;all_day&quot;</span>:<!-- -->true<!-- -->,<span class="syntax-string">&quot;start&quot;</span>:<span class="syntax-string">&quot;2026-10-28&quot;</span>,<span class="syntax-string">&quot;end&quot;</span>:<span class="syntax-string">&quot;2026-10-31&quot;</span>,<span class="syntax-string">&quot;time_zone&quot;</span>:<span class="syntax-string">&quot;&quot;</span>,<span class="syntax-string">&quot;description&quot;</span>:<span class="syntax-string">&quot;Read the source first&quot;</span>,<span class="syntax-string">&quot;location&quot;</span>:<span class="syntax-string">&quot;&quot;</span>,<span class="syntax-string">&quot;url&quot;</span>:<span class="syntax-string">&quot;&quot;</span>,<span class="syntax-string">&quot;note_id&quot;</span>:<span class="syntax-string">&quot;&quot;</span>,<span class="syntax-string">&quot;status&quot;</span>:<span class="syntax-string">&quot;confirmed&quot;</span>,<span class="syntax-string">&quot;deleted&quot;</span>:<!-- -->false<!-- -->}<!-- -->
+<!-- -->JSON<!-- -->
+<!-- -->track<!-- --> <!-- -->event<!-- --> <!-- -->save<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa<!-- --> <!-- -->-<!-- -->-<!-- -->expect<!-- --> <span class="syntax-number">0</span> <!-- -->-<!-- -->-<!-- -->operation<!-- --> <!-- -->bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb<!-- --> <!-- -->&lt;<!-- --> <!-- -->/<!-- -->tmp<!-- -->/<!-- -->track-event-example<!-- -->.<!-- -->json<!-- -->
+<!-- -->track<!-- --> <!-- -->event<!-- --> <!-- -->list<!-- -->
+<!-- -->track<!-- --> <!-- -->event<!-- --> <!-- -->get<!-- --> <!-- -->-<!-- -->-<!-- -->id<!-- --> <!-- -->aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa</code></pre></div>
+<p>Use <code class="inline-code">--expect 0</code> only for creation. For an edit, use the current revision returned by get/list,
+and a new operation UUID. <code class="inline-code">deleted:true</code> moves an existing event to trash with its other fields
+unchanged; <code class="inline-code">deleted:false</code> restores it using the latest revision. <code class="inline-code">track event list --deleted</code>
+includes trash. Timed JSON may provide local <code class="inline-code">YYYY-MM-DDTHH:mm</code> values with <code class="inline-code">time_zone</code>, or
+explicit RFC3339 values with a matching UTC offset.</p>
+<h2 id="h-storage-and-limits">Storage and limits</h2>
+<p>Events are authoritative, versioned files under <code class="inline-code">calendar/events/</code> in the vault. Include that
+directory in vault backups and sync. Reindexing notes does not erase or recreate events, and no
+existing notes or tasks are migrated. A corrupt event file is reported as an error rather than
+silently omitted. Non-regular record files, including named pipes, are refused without
+waiting for another process to open them.</p>
+<p>Static site export does not publish event files or event descriptions. The published calendar
+continues to show its dated-task snapshot. Events currently work in the live Web workspace and
+the desktop app that shares it. Actual native interactions require platform verification.</p>
+<p>This slice handles single events. Recurring series, reminders, external calendar synchronization,
+invitations, and automatic research actions are not provided. A source URL and related note can
+prepare a manual research workflow without starting an external action.</p>
+<h2 id="h-read-only-range-api">Read-only range API</h2>
+<p>Native clients can request a bounded event summary without loading event descriptions or URLs:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>curl<!-- --> <span class="syntax-string">&#x27;http://127.0.0.1:8765/api/calendar-events/range?since=2024-02-01&amp;until=2024-03-13&amp;time_zone=UTC&amp;vault=work&#x27;</span></code></pre></div>
+<p>Replace <code class="inline-code">work</code> with a configured vault name. <code class="inline-code">since</code> and <code class="inline-code">until</code> are inclusive real civil dates
+in years 0001 through 9998, with at most 42 days. An explicit supported IANA <code class="inline-code">time_zone</code> is required.
+The response contains <code class="inline-code">vault</code>, <code class="inline-code">since</code>, <code class="inline-code">until</code>, <code class="inline-code">time_zone</code>, and an ascending <code class="inline-code">days</code> array, including
+empty dates. Each day has <code class="inline-code">date</code>, an exact <code class="inline-code">count</code>, and at most three <code class="inline-code">previews</code>, each containing
+only <code class="inline-code">id</code>, <code class="inline-code">revision</code>, <code class="inline-code">title</code>, and <code class="inline-code">status</code>. Previews use stored start, title, then ID order.
+Titles retain the existing 500-byte UTF-8 limit; summaries do not truncate them.</p>
+<p>Cancelled events count; deleted events do not. All-day ranges retain their exclusive end date.
+Timed events overlap the selected zone&#x27;s civil-day interval, so touching midnight alone does not
+count. The endpoint uses the same daylight-saving and skipped-date rules as the day projection;
+a nonexistent civil date fails the entire range rather than returning a misleading empty day.</p>
+<p>Only GET is supported. Invalid dates, reversed or oversized ranges, unsupported zones, and any
+<code class="inline-code">deleted</code> parameter return an error. More than 4096 stored source records, including trash,
+corrupt or unreadable storage, cancellation, or exceeded processing budgets also fail the whole
+request. There is no partial-success or stale cached fallback. Reads do not create or repair event
+storage, notes, indexes, or journals. Existing list and day APIs are unchanged.</p>
+<h2 id="h-read-only-month-task-and-note-summaries">Read-only month task and note summaries</h2>
+<p>Native clients can read a verified index summary for the selected vault:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>curl<!-- --> <span class="syntax-string">&#x27;http://127.0.0.1:8765/api/calendar-activity/range?since=2024-02-01&amp;until=2024-03-13&amp;time_zone=Asia%2FTokyo&amp;vault=work&#x27;</span></code></pre></div>
+<p>This additive endpoint does not change the live web Calendar or the existing notes, tasks, agenda,
+activity, or event APIs. Unlike the event range endpoint, it requires an already-open, verified
+index. It never opens or initializes an index, starts a refresh, reparses the vault, or writes notes
+or journals. An unavailable, provisional, incomplete, failed, or concurrently replaced snapshot
+returns an error, not a successful zero count. Existing activity reads can prepare the index first;
+a cold request may need a retry after that work finishes. There is no stale-response fallback.
+SQLite may update its existing WAL shared-memory reader marks during the read transaction; the
+endpoint does not publish index data, migrate its schema, or create index directories.</p>
+<p>The query uses the same inclusive 1–42 civil-date range and explicit supported IANA zone contract
+as the event range. The response includes <code class="inline-code">vault</code>, <code class="inline-code">since</code>, <code class="inline-code">until</code>, <code class="inline-code">time_zone</code>, <code class="inline-code">today</code>, and every
+requested date in ascending <code class="inline-code">days</code> order. <code class="inline-code">today</code> is calculated by the engine in the requested zone
+for deadline styling. The zone does not move stored task dates or note activity dates.</p>
+<p>Each day contains <code class="inline-code">task_count</code>, <code class="inline-code">tasks</code>, <code class="inline-code">note_count</code>, and <code class="inline-code">notes</code>. Counts are exact; each preview
+array contains at most three items, with independent overflow. Tasks include completed and cancelled
+states. A task belongs on its scheduled and due dates, counted once when both dates match. Preview
+order is note ID then line. Notes appear on all recorded activity days, using their created date
+only for legacy metadata without activity days; journals do not contribute note activity. Note
+previews use modified-time descending, then note ID ascending order.</p>
+<p>Task previews contain <code class="inline-code">note_id</code>, <code class="inline-code">file_kind</code>, <code class="inline-code">line</code>, <code class="inline-code">text</code>, <code class="inline-code">text_truncated</code>, <code class="inline-code">state</code>, <code class="inline-code">done</code>,
+<code class="inline-code">priority</code>, <code class="inline-code">scheduled</code>, and <code class="inline-code">due</code>. Note previews contain <code class="inline-code">note_id</code>, <code class="inline-code">file_kind</code>, <code class="inline-code">title</code>, and
+<code class="inline-code">title_truncated</code>. Labels are at most 256 UTF-8 bytes; a shortened label ends with an ellipsis and
+sets its truncation flag. Control characters become spaces in previews only. Source note bodies, paths, and complete activity histories are omitted.</p>
+<p>Each query accepts at most 16,384 matching task rows and 16,384 matching note-day memberships.
+Exceeding either limit fails the entire summary. The SQL work has a one-second context budget;
+very large histories can exceed that budget even when few rows match, because scheduled task dates
+have no dedicated index. A success response is limited to 512 KiB. Unready or changed snapshots,
+resource limits, and cancellation return 503; invalid requests return 400; storage errors return
+500. Only GET is supported. The launch vault is labeled <code class="inline-code">&quot;&quot;</code> even when addressed by its registered
+name; other vaults retain their registry label. Native clients use the selected vault consistently
+for event, task, and note summaries.</p>
+<h2 id="h-look-up-an-existing-journal-without-creating-one">Look up an existing journal without creating one</h2>
+<p>A read-only native Calendar can locate a daily or monthly journal with:</p>
+<div class="code-block" data-language="sh"><button type="button" class="code-copy" aria-label="Copy code">Copy</button><pre class="code-block-pre"><code>curl<!-- --> <span class="syntax-string">&#x27;http://127.0.0.1:8765/api/journal/lookup?title=20240229&amp;vault=work&#x27;</span>
+<!-- -->curl<!-- --> <span class="syntax-string">&#x27;http://127.0.0.1:8765/api/journal/lookup?title=202402&amp;vault=work&#x27;</span></code></pre></div>
+<p><code class="inline-code">title</code> must be an exact real <code class="inline-code">YYYYMMDD</code> or <code class="inline-code">YYYYMM</code> title in years 0001 through 9998.
+It is never interpreted as a note ID, keyword, link target, or path. The lookup requires
+<code class="inline-code">file_kind: &quot;journal&quot;</code>; an ordinary note with the same title does not shadow a journal.
+It uses only an already-open verified index in the selected vault, without initializing,
+refreshing, publishing, or migrating it. It does not create journals or repair month/year summaries.</p>
+<p>A successful response contains <code class="inline-code">vault</code>, <code class="inline-code">title</code>, <code class="inline-code">found</code>, and <code class="inline-code">note</code>. When found, <code class="inline-code">note</code> contains
+only <code class="inline-code">note_id</code>, <code class="inline-code">file_kind: &quot;journal&quot;</code>, and the exact <code class="inline-code">title</code>. When not found, <code class="inline-code">found</code> is <code class="inline-code">false</code>
+and <code class="inline-code">note</code> is <code class="inline-code">null</code>. This means the verified index snapshot contains no matching journal;
+it is not a new filesystem-wide scan proving that no unindexed journal exists. A cold or incomplete
+index is unavailable, not missing. The launch vault retains its empty wire label, including when
+requested by its registered name; other vaults retain their registry name.</p>
+<p>Two matching journals produce 409 (ambiguous), never an arbitrary first match. Invalid titles or
+unknown vaults produce 400; unavailable, incomplete, changed, or cancelled reads produce 503.
+Storage query failures produce 500. Only GET is supported. The lookup reads at most two matching
+index rows and uses a one-second request context; a large journal catalog can time out because
+there is no dedicated title index. No successful response is served from a stale fallback cache.</p>
+<p>Before reporting a found journal, the engine verifies its bounded canonical note read and exact
+ID, kind, and title using the existing reader. Missing files, renamed titles, changed kinds, and
+unreadable sources are unavailable rather than missing or replaced with another note. Paths are
+derived from the selected vault and indexed ID, never accepted from a request. Existing regular-file
+symlink handling is retained; the resolved source must still classify as a journal in that vault. Clients must still
+check the final opened note&#x27;s vault, kind, and title: a file can change after lookup. SQLite&#x27;s existing
+shared-memory reader marks may change, but canonical files, index data, and schema are not written.</p></div></div></section></div><div class="note-aside"><section class="backlinks note-aside-tags" aria-labelledby="tags-heading"><h3 id="tags-heading">Tags</h3><div class="tag-list"><a href="/track-previews/pr-406/tags/help">#<!-- -->help</a></div></section><section class="backlinks note-toc" aria-labelledby="contents-heading"><h3 id="contents-heading">Contents</h3><div class="backlink-list"><a class="backlink note-toc-entry" href="#h-calendar-events">Calendar events</a><a class="backlink note-toc-entry" href="#h-register-and-edit" style="padding-left:2em">Register and edit</a><a class="backlink note-toc-entry" href="#h-calendar-display" style="padding-left:2em">Calendar display</a><a class="backlink note-toc-entry" href="#h-day-and-week-time-grid" style="padding-left:2em">Day and week time grid</a><a class="backlink note-toc-entry" href="#h-change-times-from-the-grid" style="padding-left:2em">Change times from the grid</a><a class="backlink note-toc-entry" href="#h-dates-and-details" style="padding-left:2em">Dates and details</a><a class="backlink note-toc-entry" href="#h-dates-and-clock-changes" style="padding-left:2em">Dates and clock changes</a><a class="backlink note-toc-entry" href="#h-trash-and-restore" style="padding-left:2em">Trash and restore</a><a class="backlink note-toc-entry" href="#h-cli" style="padding-left:2em">CLI</a><a class="backlink note-toc-entry" href="#h-storage-and-limits" style="padding-left:2em">Storage and limits</a><a class="backlink note-toc-entry" href="#h-read-only-range-api" style="padding-left:2em">Read-only range API</a><a class="backlink note-toc-entry" href="#h-read-only-month-task-and-note-summaries" style="padding-left:2em">Read-only month task and note summaries</a><a class="backlink note-toc-entry" href="#h-look-up-an-existing-journal-without-creating-one" style="padding-left:2em">Look up an existing journal without creating one</a></div></section><section class="backlinks" aria-labelledby="backlinks-heading"><h3 id="backlinks-heading">Backlinks<span class="backlinks-count">04</span></h3><div class="backlink-list"><a href="/track-previews/pr-406/notes/5bsKWpzrLcdY0SkLtwsCr9" class="backlink">CLI</a><a href="/track-previews/pr-406/notes/4natsB9HePrQdC0vJQKsvv" class="backlink">track</a><a href="/track-previews/pr-406/notes/2ttYx8EMEu4moyUaesc1p7" class="backlink">Tasks</a><a href="/track-previews/pr-406/notes/3eXzsvDeU80xrwTdpnyT2O" class="backlink">Web workspace</a></div></section></div></div></article><!--/$--></section></div><div class="mobile-dock"><button type="button" class="mobile-dock-fab" aria-label="Open note menu" aria-expanded="false"><img class="mobile-dock-mark theme-asset-light" src="/track-previews/pr-406/track-icon.svg" alt=""/><img class="mobile-dock-mark theme-asset-dark" src="/track-previews/pr-406/track-icon-dark.svg" alt=""/></button></div></main></div>
+  </body>
+</html>
